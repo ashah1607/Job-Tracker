@@ -248,6 +248,13 @@
       min-width: 0;
     }
 
+    .row2 .pillBtn{
+      width:100%;
+      height:46px;
+      border-radius:16px;
+      padding:10px 12px;
+    }
+
     .miniInput::placeholder{
       color: rgba(111,91,99,.55);
       font-weight: 700;
@@ -440,19 +447,23 @@
       <!-- Right: add fields + cards -->
       <div>
         <div class="row2">
-          <input class="miniInput" id="company" placeholder="Company" />
-          <input class="miniInput" id="position" placeholder="Position / Title" />
-          <input class="miniInput" id="workStyle" placeholder="Work style (Remote/Hybrid/On-site)" />
-          <input class="miniInput" id="location" placeholder="Location" />
-          <input class="miniInput" id="salary" placeholder="Salary (e.g., $60k–$75k)" />
-          <select id="statusDefault" title="default status">
-            <option>Applied</option>
-            <option>Awaiting Response</option>
-            <option>Interview</option>
-            <option>Offer</option>
-            <option>Rejected</option>
-          </select>
-        </div>
+  <input class="miniInput" id="company" placeholder="Company" />
+  <input class="miniInput" id="position" placeholder="Position / Title" />
+
+  <input class="miniInput" id="workStyle" placeholder="Work style (Remote/Hybrid/On-site)" />
+  <select id="statusDefault" title="default status">
+    <option>Applied</option>
+    <option>Awaiting Response</option>
+    <option>Interview</option>
+    <option>Offer</option>
+    <option>Rejected</option>
+  </select>
+
+  <input class="miniInput" id="salary" placeholder="Salary (e.g., $60k–$75k)" />
+  <button class="pillBtn" onclick="addJobManual()">ADD JOB (MANUAL)</button>
+
+  <input class="miniInput" id="location" placeholder="Location" />
+</div>
 
         <div class="jobsGrid" id="jobsGrid"></div>
       </div>
@@ -508,6 +519,33 @@
       clearAddFields();
       renderJobs();
     }
+
+  function addJobManual(){
+
+    const company = document.getElementById("company").value.trim();
+    const position = document.getElementById("position").value.trim();
+    const workStyle = document.getElementById("workStyle").value.trim();
+    const location = document.getElementById("location").value.trim();
+    const salary = document.getElementById("salary").value.trim();
+    const status = document.getElementById("statusDefault").value;
+
+  if(!company && !position) return;
+
+  jobs.unshift({
+    id: crypto.randomUUID(),
+    company: company || "Company",
+    position: position || "Position",
+    workStyle: workStyle || "Work style",
+    location: location || "Location",
+    salary: salary || "Salary",
+    url: "",
+    status
+  });
+
+  saveJobs();
+  clearAddFields();
+  renderJobs();
+ }
 
     function clearAddFields(){
       document.getElementById("jobLink").value = "";

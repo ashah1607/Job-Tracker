@@ -692,7 +692,15 @@
       from{ transform: translateY(-20px) rotate(0deg); opacity: 1;}
       to{ transform: translateY(520px) rotate(320deg); opacity: 0;}
     }
-
+/* ---- Paper plane FX ---- */
+.planeFx{
+  position: fixed;
+  z-index: 9997;
+  font-size: 20px;
+  transform: translate(-50%, -50%);
+  filter: drop-shadow(0 12px 18px rgba(111,91,99,.18));
+  will-change: transform, opacity;
+}
     @media (max-width: 1050px){
       .jobsGrid{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .main{ grid-template-columns: 340px 1fr; }
@@ -745,7 +753,7 @@
 
       <div class="row3">
         <button class="pillBtn" onclick="runSearch()">SEARCH</button>
-        <button class="pillBtn" onclick="addJobFromDescription()">ADD JOB</button>
+        <button class="pillBtn" id="addJobBtn" onclick="addJobFromDescription()">ADD JOB</button>     
         <button class="pillBtn" onclick="clearFilters()">CLEAR FILTERS</button>
       </div>
 
@@ -865,6 +873,7 @@
 
   <div class="toast" id="toast"></div>
   <div class="confetti" id="confetti"></div>
+  <div id="fxLayer" style="position:fixed; inset:0; pointer-events:none; z-index:9997;"></div>
 
   <script>
     // ----------------- Stable storage + migration -----------------
@@ -888,6 +897,8 @@
     }
 
     let jobs = loadJobs().map(normalizeJob);
+    let lastDeleted = null;      // { job, index, timeoutId }
+    let undoTimerId = null;
 
     function saveJobs(){
       localStorage.setItem(STORAGE_KEY, JSON.stringify(jobs));
@@ -933,15 +944,15 @@
 
     // ----------------- Motivation corner -----------------
     const QUOTES = [
-      "Manifesting an offer email today.",
+      "Yay I got the perfect job!",
       "HR will stop ghosting. I said what I said.",
       "My resume is sexy and they WILL notice.",
       "Today I am the applicant AND the prize.",
       "I don’t chase — I apply and attract.",
-      "Bag secured energy only.",
-      "If they reject me, it’s literally their loss.",
-      "Interview outfit already selected in my mind.",
-      "My next job is already mine."
+      "Everyone wants me.",
+      "If they reject me, it’s their loss.",
+      "I make so much money I love it.",
+      "The job is already mine."
     ];
     function rotateQuote(){
       const i = Math.floor(Math.random() * QUOTES.length);
@@ -949,12 +960,31 @@
     }
 
     // ----------------- Toast + confetti -----------------
-    function toast(msg){
+    function toast(msg, opts = {}){
       const el = document.getElementById("toast");
-      el.textContent = msg;
-      el.classList.add("show");
-      setTimeout(()=> el.classList.remove("show"), 2400);
-    }
+      const { actionText, onAction, duration = 2400 } = opts;
+
+  el.innerHTML = `
+    <div style="display:flex; gap:12px; align-items:center; justify-content:space-between;">
+      <div style="font-weight:900; line-height:1.2;">${escapeHtml(msg)}</div>
+      ${actionText ? `<button id="toastActionBtn" class="smallBtn primary" style="padding:10px 12px;">${escapeHtml(actionText)}</button>` : ""}
+    </div>
+  `;
+
+  el.classList.add("show");
+
+  const btn = document.getElementById("toastActionBtn");
+  if(btn && typeof onAction === "function"){
+    btn.onclick = () => {
+      el.classList.remove("show");
+      onAction();
+    };
+  }
+
+  // clear any existing timer for toast
+  if(undoTimerId) clearTimeout(undoTimerId);
+  undoTimerId = setTimeout(()=> el.classList.remove("show"), duration);
+}
 
     function confetti(){
       const box = document.getElementById("confetti");
@@ -973,7 +1003,47 @@
       }
       setTimeout(()=> box.classList.remove("show"), 980);
     }
+// ----------------- FX helpers (plane send) -----------------
+function rectCenter(el){
+  const r = el.getBoundingClientRect();
+  return { x: r.left + r.width/2, y: r.top + r.height/2 };
+}
 
+function spawnFx(html, className, x, y){
+  const fxLayer = document.getElementById("fxLayer");
+  if(!fxLayer) return null;
+  const el = document.createElement("div");
+  el.className = className;
+  el.innerHTML = html;
+  el.style.left = x + "px";
+  el.style.top = y + "px";
+  fxLayer.appendChild(el);
+  return el;
+}
+
+// ✈️ Paper plane from Add button -> jobs grid
+function planeSendAnimation(){
+  const btn = document.getElementById("addJobBtn");
+  const grid = document.getElementById("jobsGrid");
+  if(!btn || !grid) return;
+
+  const s = rectCenter(btn);
+  const t = rectCenter(grid);
+
+  const plane = spawnFx("✈️", "planeFx", s.x, s.y);
+  if(!plane) return;
+
+  const dx = t.x - s.x;
+  const dy = t.y - s.y;
+
+  plane.animate([
+    { transform: `translate(-50%, -50%) translate(0px, 0px) rotate(0deg) scale(1)`, opacity: 1 },
+    { transform: `translate(-50%, -50%) translate(${dx*0.7}px, ${dy*0.7}px) rotate(18deg) scale(1.05)`, opacity: 1 },
+    { transform: `translate(-50%, -50%) translate(${dx}px, ${dy}px) rotate(28deg) scale(0.95)`, opacity: 0 }
+  ], { duration: 650, easing: "cubic-bezier(.2,.9,.2,1)" });
+
+  setTimeout(()=> plane.remove(), 700);
+}
     // ----------------- Helpers -----------------
     function cssVar(name){
       return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
@@ -1265,6 +1335,7 @@
 
       jobs.unshift(job);
       saveJobs();
+      planeSendAnimation();
 
       document.getElementById("jobLink").value = "";
       document.getElementById("jobDesc").value = "";
@@ -1311,6 +1382,7 @@
 
       jobs.unshift(job);
       saveJobs();
+      planeSendAnimation();
 
       ["m_company","m_title","m_location","m_work","m_salary","m_url","m_followup"].forEach(id => document.getElementById(id).value = "");
       document.getElementById("m_status").value = "Applied";
@@ -1590,11 +1662,44 @@
     }
 
     function deleteJob(id){
-      jobs = jobs.filter(x => x.id !== id);
+  const idx = jobs.findIndex(x => x.id === id);
+  if(idx === -1) return;
+
+  const removed = jobs[idx];
+  jobs.splice(idx, 1);
+  saveJobs();
+  renderJobs(false);
+
+  // clear any previous pending undo
+  if(lastDeleted?.timeoutId) clearTimeout(lastDeleted.timeoutId);
+
+  lastDeleted = {
+    job: removed,
+    index: idx,
+    timeoutId: setTimeout(() => {
+      // after 5s, finalize (do nothing — it's already removed)
+      lastDeleted = null;
+    }, 5000)
+  };
+
+  toast("Deleted 🗑️", {
+    actionText: "UNDO",
+    duration: 5000,
+    onAction: () => {
+      if(!lastDeleted) return;
+      clearTimeout(lastDeleted.timeoutId);
+
+      // restore at original position if possible
+      const insertAt = Math.min(lastDeleted.index, jobs.length);
+      jobs.splice(insertAt, 0, lastDeleted.job);
+      lastDeleted = null;
+
       saveJobs();
-      toast("Deleted 🗑️");
       renderJobs(false);
+      toast("Restored ✅");
     }
+  });
+}
 
     function togglePin(id){
       const j = jobs.find(x => x.id === id);

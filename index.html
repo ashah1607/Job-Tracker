@@ -717,6 +717,14 @@
   opacity: 0;
   will-change: transform, opacity;
 }
+    .ghostFx{
+  position: fixed;
+  z-index: 9997;
+  font-size: 18px;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  will-change: transform, opacity;
+}
     @media (max-width: 1050px){
       .jobsGrid{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .main{ grid-template-columns: 340px 1fr; }
@@ -1082,6 +1090,24 @@ function sparkleBurstAround(el){
 
     setTimeout(()=> sp.remove(), 950+i*40);
   });
+}
+    // 👻 Ghost drift (Awaiting Response)
+function ghostDriftFrom(el){
+  if(!el) return;
+  const r = el.getBoundingClientRect();
+  const gx = r.right - 18;
+  const gy = r.top + 18;
+
+  const g = spawnFx("👻", "ghostFx", gx, gy);
+  if(!g) return;
+
+  g.animate([
+    { opacity: 0, transform: "translate(-50%,-50%) translateY(6px) scale(.9)" },
+    { opacity: 1, transform: "translate(-50%,-50%) translateY(0px) scale(1)" },
+    { opacity: 0, transform: "translate(-50%,-50%) translateY(-44px) scale(1.05)" }
+  ], { duration: 900, easing: "ease-out" });
+
+  setTimeout(()=> g.remove(), 950);
 }
     // ----------------- Helpers -----------------
     function cssVar(name){
@@ -1708,6 +1734,12 @@ if(newStatus === "Interview"){
   }
 }
     }
+    if(newStatus === "Awaiting Response"){
+  const card = document.getElementById(`card_${id}`);
+  if(card){
+    ghostDriftFrom(card);
+  }
+}
 
     function deleteJob(id){
   const idx = jobs.findIndex(x => x.id === id);

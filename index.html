@@ -520,17 +520,293 @@ Hybrid | $60k–$75k
 
   </div>
 
-  <script>
-    // Storage
-    let jobs = JSON.parse(localStorage.getItem("jobs_delusion_dashboard")) || [];
+<script>
+  // --------- Safety: if any JS error happens, show it ----------
+  window.addEventListener("error", (e) => {
+    alert("Something broke 😭\n\n" + (e?.message || "Unknown error") + "\n\n(Your data is still safe in your browser storage.)");
+  });
 
-    const STATUS_ORDER = ["Applied","Awaiting Response","Interview","Offer","Rejected"];
+  // --------- Storage (this is what saves on reload) ----------
+  const STORAGE_KEY = "jobs_delusion_dashboard_v2";
 
-    function cssVar(name){
-      return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  function loadJobs(){
+    try{
+      return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+    } catch {
+      return [];
+    }
+  }
+
+  function saveJobs(){
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(jobs));
+  }
+
+  let jobs = loadJobs();
+
+  const STATUS_ORDER = ["Applied","Awaiting Response","Interview","Offer","Rejected"];
+
+  function cssVar(name){
+    return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  }
+
+  // --------- Improved: parse description text (works for more formats) ----------
+  function parseJobDescription(text){
+    const raw = (text || "").replace(/\r/g, "\n");
+    const linesAll = raw.split("\n").map(l => l.trim());
+    const lines = linesAll.filter(Boolean);
+
+    const joined = " " + lines.join(" ") + " ";
+
+    const pickFirst = (...vals) => vals.find(v => v && String(v).trim()) || "";
+
+    const clean = (s) => String(s || "")
+      .replace(/\s+/g, " ")
+      .replace(/^\-+\s*/,"")
+      .replace(/\s*\|\s*.*$/,"")
+      .trim();
+
+    function lineAfterKeyword(keywordRegex){
+      for(let i=0;i<linesAll.length;i++){
+        const line = (linesAll[i] || "").trim();
+        if(keywordRegex.test(line.toLowerCase())){
+          for(let j=i+1;j<linesAll.length;j++){
+            const nxt = (linesAll[j] || "").trim();
+            if(nxt) return nxt;
+          }
+        }
+      }
+      return "";
     }
 
-    const PIE_COLORS = {
+    function afterLabel(labels){
+      for(const lab of labels){
+        const re = new RegExp(`(?:^|\\b)${lab}\\s*[:\\-–]\\s*([^\\n\\|]{2,160})`, "i");
+        const m = raw.match(re);
+        if(m && m[1]) return m[1].trim();
+      }
+      return "";
+    }
+
+    function looksLikeLocation(s){
+      if(!s) return false;
+      const x = s.trim();
+      if(/^[A-Za-z .'-]{2,40},\s?[A-Z]{2,3}$/.test(x)) return true; // City, ST
+      if(/^[A-Za-z .'-]{2,40},\s?[A-Za-z .'-]{2,40}$/.test(x)) return true; // City, Country
+      if(/\b(remote|hybrid|on[-\s]?site|in[-\s]?person)\b/i.test(x)) return true;
+      return false;
+    }
+
+    function looksLikeCompany(s){
+      if(!s) return false;
+      const x = s.trim();
+      if(/^(apply|locations?|time type|posted on|job requisition|requisition id|full time|part time|internship)$/i.test(x)) return false;
+      if(/\b(inc|llc|ltd|corp|corporation|company|co\.|foundation|university|group|agency|bank|institute|partners|systems|technologies|labs|studio|studios)\b/i.test(x)) return true;
+      if(/^[A-Z][A-Za-z0-9&.'-]+(?:\s+[A-Z][A-Za-z0-9&.'-]+){0,6}$/.test(x) && x.length <= 55) return true;
+      return false;
+    }
+
+    // 1) Title: first meaningful line
+    let position = "";
+    for(const l of lines){
+      if(!/^(apply|locations?|time type|posted on|job requisition|requisition id)$/i.test(l)){
+        position = l;
+        break;
+      }
+    }
+    position = clean(pickFirst(position, afterLabel(["role","position","job title","title","opening","opportunity"])));
+
+    // 2) Location
+    let location = clean(afterLabel(["location","based in","office location"]));
+    if(!location){
+      const locCandidate = lineAfterKeyword(/^locations?$/i);
+      if(looksLikeLocation(locCandidate)) location = clean(locCandidate);
+    }
+    if(!location){
+      const m2 = joined.match(/\b([A-Z][A-Za-z .'-]{2,40},\s?(?:USA|United States|UK|United Kingdom|Canada|India|Australia))\b/i);
+      const m1 = joined.match(/\b([A-Z][A-Za-z .'-]{2,40},\s?[A-Z]{2})\b/);
+      location = clean(pickFirst(m2?.[1], m1?.[1]));
+    }
+
+    // 3) Work style / time type
+    let workStyle = "";
+    if(/\bhybrid\b/i.test(joined)) workStyle = "Hybrid";
+    else if(/\bremote\b|\bwork from home\b|\bwfh\b/i.test(joined)) workStyle = "Remote";
+    else if(/\bon[-\s]?site\b|\bin[-\s]?person\b/i.test(joined)) workStyle = "On-site";
+
+    let timeType = clean(afterLabel(["employment type","time type"]));
+    if(!timeType){
+      const tt = lineAfterKeyword(/^time type$/i);
+      if(tt) timeType = clean(tt);
+    }
+    if(timeType){
+      if(!workStyle) workStyle = timeType;
+      else workStyle = `${workStyle} • ${timeType}`;
+    }
+
+    // 4) Salary
+    let salary = clean(afterLabel(["salary","pay","compensation","rate"]));
+    if(!salary){
+      const m =
+        joined.match(/(\$?\s?\d{2,3}\s?[,.\s]?\d{3}\s?(?:–|-|to)\s?\$?\s?\d{2,3}\s?[,.\s]?\d{3})/i) ||
+        joined.match(/(\$\s?\d+(?:\.\d+)?\s?\/\s?(?:hr|hour))\b/i) ||
+        joined.match(/\b(\$\s?\d+(?:,\d{3})+)\b/);
+      if(m) salary = clean(m[1]);
+    }
+
+    // 5) Company
+    let company = clean(afterLabel(["company","employer","organization","org","hiring organization"]));
+
+    // Look for: "The Ford Foundation's ..."
+    if(!company){
+      const m = raw.match(/\bThe\s+([A-Z][A-Za-z0-9&.'-]+(?:\s+[A-Z][A-Za-z0-9&.'-]+){0,6})['’]s\b/);
+      if(m && looksLikeCompany(m[1])) company = clean(m[1]);
+    }
+
+    // Look early in post for "The X ..." as company hint
+    if(!company){
+      const early = lines.slice(0, 30);
+      for(const l of early){
+        const mm = l.match(/\bThe\s+([A-Z][A-Za-z0-9&.'-]+(?:\s+[A-Z][A-Za-z0-9&.'-]+){0,6})\b/);
+        if(mm && looksLikeCompany(mm[1]) && !/program assistant/i.test(mm[1])){
+          company = clean(mm[1]);
+          break;
+        }
+      }
+    }
+
+    // Fallback: "at X"
+    if(!company){
+      const m = joined.match(/\b(?:at|with)\s+([A-Z][A-Za-z0-9&.'-]+(?:\s+[A-Z][A-Za-z0-9&.'-]+){0,6})\b/);
+      if(m && looksLikeCompany(m[1])) company = clean(m[1]);
+    }
+
+    return {
+      company: company || "",
+      position: position || "",
+      location: location || "",
+      workStyle: workStyle || "",
+      salary: salary || ""
+    };
+  }
+
+  // --------- ADD JOB (description-based) ----------
+  function addJobFromDescription(){
+    const url = document.getElementById("jobLink")?.value?.trim() || "";
+    const desc = document.getElementById("jobDesc")?.value?.trim() || "";
+
+    if(!desc && !url){
+      alert("Paste a description (or a link) first bestie 🙂");
+      return;
+    }
+
+    const parsed = parseJobDescription(desc);
+
+    const job = {
+      id: crypto.randomUUID(),
+      company: parsed.company || "Company",
+      position: parsed.position || "Title",
+      location: parsed.location || "Location",
+      workStyle: parsed.workStyle || "Work type",
+      salary: parsed.salary || "Salary",
+      url: url,
+      status: "Applied"
+    };
+
+    jobs.unshift(job);
+    saveJobs();
+
+    document.getElementById("jobLink").value = "";
+    document.getElementById("jobDesc").value = "";
+
+    renderJobs(false);
+  }
+
+  // --------- Search ----------
+  function runSearch(){
+    renderJobs(true);
+  }
+
+  // --------- Update / delete / edit ----------
+  function updateStatus(id, newStatus){
+    const j = jobs.find(x => x.id === id);
+    if(!j) return;
+    j.status = newStatus;
+    saveJobs();
+    renderJobs(false);
+  }
+
+  function deleteJob(id){
+    jobs = jobs.filter(x => x.id !== id);
+    saveJobs();
+    renderJobs(false);
+  }
+
+  function startEdit(id){
+    const j = jobs.find(x => x.id === id);
+    if(!j) return;
+    j._editing = true;
+    renderJobs(false);
+  }
+
+  function cancelEdit(id){
+    const j = jobs.find(x => x.id === id);
+    if(!j) return;
+    j._editing = false;
+    renderJobs(false);
+  }
+
+  function saveEdit(id){
+    const j = jobs.find(x => x.id === id);
+    if(!j) return;
+
+    j.company = document.getElementById(`e_company_${id}`).value.trim() || "Company";
+    j.position = document.getElementById(`e_position_${id}`).value.trim() || "Title";
+    j.workStyle = document.getElementById(`e_workStyle_${id}`).value.trim() || "Work type";
+    j.location = document.getElementById(`e_location_${id}`).value.trim() || "Location";
+    j.salary = document.getElementById(`e_salary_${id}`).value.trim() || "Salary";
+    j.url = document.getElementById(`e_url_${id}`).value.trim() || "";
+
+    j._editing = false;
+    saveJobs();
+    renderJobs(false);
+  }
+
+  // --------- Render ----------
+  function getStatusCounts(){
+    const counts = {};
+    STATUS_ORDER.forEach(s => counts[s] = 0);
+    jobs.forEach(j => {
+      const s = STATUS_ORDER.includes(j.status) ? j.status : "Applied";
+      counts[s] = (counts[s] || 0) + 1;
+    });
+    return counts;
+  }
+
+  function drawPie(){
+    const canvas = document.getElementById("pie");
+    const ctx = canvas.getContext("2d");
+    const counts = getStatusCounts();
+    const total = Object.values(counts).reduce((a,b)=>a+b,0);
+
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+
+    const cx = canvas.width/2;
+    const cy = canvas.height/2;
+    const r = Math.min(cx,cy) - 8;
+
+    if(total === 0){
+      ctx.beginPath();
+      ctx.arc(cx, cy, r, 0, Math.PI*2);
+      ctx.fillStyle = "rgba(255, 255, 255, .65)";
+      ctx.fill();
+      ctx.fillStyle = cssVar("--text");
+      ctx.font = "900 14px system-ui";
+      ctx.textAlign = "center";
+      ctx.fillText("No jobs yet", cx, cy);
+      return;
+    }
+
+    const sliceColors = {
       "Applied": cssVar("--p2"),
       "Awaiting Response": cssVar("--p3"),
       "Interview": cssVar("--p1"),
@@ -538,537 +814,175 @@ Hybrid | $60k–$75k
       "Rejected": cssVar("--p5")
     };
 
-    function saveJobs(){
-      localStorage.setItem("jobs_delusion_dashboard", JSON.stringify(jobs));
-    }
+    let start = -Math.PI/2;
+    STATUS_ORDER.forEach(status => {
+      const val = counts[status] || 0;
+      if(val <= 0) return;
+      const slice = (val/total) * Math.PI*2;
 
-    // --------- NEW: parse description text (no AI, keyword-based) ----------
-    function parseJobDescription(text){
-  const raw = (text || "").replace(/\r/g, "\n");
-  const linesAll = raw.split("\n").map(l => l.trim());
-  const lines = linesAll.filter(Boolean);
-
-  const joined = " " + lines.join(" ") + " ";
-  const lowerJoined = joined.toLowerCase();
-
-  // ----- helpers -----
-  const pickFirst = (...vals) => vals.find(v => v && String(v).trim()) || "";
-
-  const clean = (s) => String(s || "")
-    .replace(/\s+/g, " ")
-    .replace(/^\-+\s*/,"")
-    .replace(/\s*\|\s*.*$/,"")
-    .trim();
-
-  // find the first non-empty line AFTER a keyword line
-  function lineAfterKeyword(keywordRegex){
-    for(let i=0;i<linesAll.length;i++){
-      const line = (linesAll[i] || "").trim();
-      if(keywordRegex.test(line.toLowerCase())){
-        // find next non-empty line
-        for(let j=i+1;j<linesAll.length;j++){
-          const nxt = (linesAll[j] || "").trim();
-          if(nxt) return nxt;
-        }
-      }
-    }
-    return "";
-  }
-
-  // capture after labeled fields like "Location: X"
-  function afterLabel(labels){
-    for(const lab of labels){
-      const re = new RegExp(`(?:^|\\b)${lab}\\s*[:\\-–]\\s*([^\\n\\|]{2,160})`, "i");
-      const m = raw.match(re);
-      if(m && m[1]) return m[1].trim();
-    }
-    return "";
-  }
-
-  function looksLikeLocation(s){
-    if(!s) return false;
-    const x = s.trim();
-    // City, ST or City, Country or "New York, USA"
-    if(/^[A-Za-z .'-]{2,40},\s?[A-Z]{2,3}$/.test(x)) return true;
-    if(/^[A-Za-z .'-]{2,40},\s?[A-Za-z .'-]{2,40}$/.test(x)) return true;
-    // common full location words
-    if(/\b(new york|los angeles|san francisco|chicago|london|toronto|remote|hybrid)\b/i.test(x)) return true;
-    return false;
-  }
-
-  function looksLikeCompany(s){
-    if(!s) return false;
-    const x = s.trim();
-    // avoid junk labels
-    if(/^(apply|locations?|time type|posted on|job requisition|requisition id|full time|part time|internship)$/i.test(x)) return false;
-    // company-ish words
-    if(/\b(inc|llc|ltd|corp|corporation|company|co\.|foundation|university|group|agency|bank|institute|partners|systems|technologies|labs|studio|studios)\b/i.test(x)) return true;
-    // Title case name length
-    if(/^[A-Z][A-Za-z0-9&.'-]+(?:\s+[A-Z][A-Za-z0-9&.'-]+){0,5}$/.test(x) && x.length <= 45) return true;
-    return false;
-  }
-
-  // ----- 1) TITLE (strong: first line) -----
-  // Use first non-empty line that isn't a junk label
-  let position = "";
-  for(const l of lines){
-    if(!/^(apply|locations?|time type|posted on|job requisition|requisition id)$/i.test(l)){
-      position = l;
-      break;
-    }
-  }
-  // If we still have nothing, try labeled fields
-  position = clean(pickFirst(position, afterLabel(["role","position","job title","title","opening","opportunity"])));
-
-  // ----- 2) LOCATION -----
-  // Labeled
-  let location = clean(afterLabel(["location","based in","office location"]));
-
-  // Block style: "locations" then next line is the location
-  if(!location){
-    const locCandidate = lineAfterKeyword(/^locations?$/i);
-    if(looksLikeLocation(locCandidate)) location = clean(locCandidate);
-  }
-
-  // Fallback: first city/state or city/country pattern anywhere
-  if(!location){
-    const m1 = joined.match(/\b([A-Z][A-Za-z .'-]{2,40},\s?[A-Z]{2})\b/); // City, ST
-    const m2 = joined.match(/\b([A-Z][A-Za-z .'-]{2,40},\s?(?:USA|United States|UK|United Kingdom|Canada|India|Australia))\b/i);
-    location = clean(pickFirst(m2?.[1], m1?.[1]));
-  }
-
-  // ----- 3) WORK STYLE -----
-  let workStyle = "";
-  if(/\bhybrid\b/i.test(joined)) workStyle = "Hybrid";
-  else if(/\bremote\b|\bwork from home\b|\bwfh\b/i.test(joined)) workStyle = "Remote";
-  else if(/\bon[-\s]?site\b|\bin[-\s]?person\b/i.test(joined)) workStyle = "On-site";
-
-  // Employment type -> can map to "Full time" etc. (optional)
-  // We’ll store it as part of workStyle if we found it
-  let timeType = clean(afterLabel(["employment type","time type"]));
-  if(!timeType){
-    const tt = lineAfterKeyword(/^time type$/i);
-    // ex: Full time
-    if(tt) timeType = clean(tt);
-  }
-  if(timeType){
-    // If workStyle is empty, keep timeType as “Work style” field (better than blank)
-    if(!workStyle) workStyle = timeType;
-    else workStyle = `${workStyle} • ${timeType}`;
-  }
-
-  // ----- 4) SALARY -----
-  let salary = clean(afterLabel(["salary","pay","compensation","rate"]));
-  if(!salary){
-    const m =
-      joined.match(/(\$?\s?\d{2,3}\s?[,.\s]?\d{3}\s?(?:–|-|to)\s?\$?\s?\d{2,3}\s?[,.\s]?\d{3})/i) ||
-      joined.match(/(\$\s?\d+(?:\.\d+)?\s?\/\s?(?:hr|hour))\b/i) ||
-      joined.match(/\b(\$\s?\d+(?:,\d{3})+)\b/);
-    if(m) salary = clean(m[1]);
-  }
-
-  // ----- 5) COMPANY -----
-  let company = clean(afterLabel(["company","employer","organization","org","hiring organization"]));
-
-  // If not labeled, look for “The X Foundation’s…” / “X’s mission…”
-  if(!company){
-    const m = raw.match(/\bThe\s+([A-Z][A-Za-z0-9&.'-]+(?:\s+[A-Z][A-Za-z0-9&.'-]+){0,6})’s\b/);
-    if(m && looksLikeCompany(m[1])) company = clean(m[1]);
-  }
-
-  // Another heuristic: look for a line containing mission/company name early in the post
-  if(!company){
-    const early = lines.slice(0, 25);
-    for(const l of early){
-      // ex: "The Ford Foundation’s core mission..."
-      const mm = l.match(/\bThe\s+([A-Z][A-Za-z0-9&.'-]+(?:\s+[A-Z][A-Za-z0-9&.'-]+){0,6})\b/);
-      if(mm && looksLikeCompany(mm[1]) && !/program assistant/i.test(mm[1])){
-        company = clean(mm[1]);
-        break;
-      }
-    }
-  }
-
-  // Fallback: try "at X" pattern
-  if(!company){
-    const m = joined.match(/\b(?:at|with)\s+([A-Z][A-Za-z0-9&.'-]+(?:\s+[A-Z][A-Za-z0-9&.'-]+){0,5})\b/);
-    if(m && looksLikeCompany(m[1])) company = clean(m[1]);
-  }
-
-  // Final cleanups
-  if(company && company.length > 60) company = company.slice(0,60).trim();
-  if(position && position.length > 120) position = position.slice(0,120).trim();
-
-  return {
-    company: company || "",
-    position: position || "",
-    location: location || "",
-    workStyle: workStyle || "",
-    salary: salary || ""
-  };
-}
-
-      // Title
-      let position = after(["role","position","job title","title","opening","opportunity"]);
-      if(!position){
-        // fallback: first line that looks like a title
-        const maybe = lines.find(l => l.length <= 80 && /intern|associate|manager|engineer|analyst|coordinator|specialist|assistant|director|designer/i.test(l));
-        if(maybe) position = maybe;
-      }
-
-      // Company
-      let company = after(["company","employer","organization","org"]);
-      if(!company){
-        // fallback: look for "at X" patterns
-        const m = joined.match(/\b(?:at|with)\s+([A-Z][A-Za-z0-9&.\- ]{2,40})\b/);
-        if(m) company = m[1].trim();
-      }
-
-      // Location
-      let location = after(["location","based in","office"]);
-      if(!location){
-        const m = joined.match(/\b([A-Z][a-zA-Z]+,\s?[A-Z]{2})\b/); // City, ST
-        if(m) location = m[1];
-      }
-
-      // Work style
-      let workStyle = "";
-      if (/\bhybrid\b/i.test(joined)) workStyle = "Hybrid";
-      else if (/\bremote\b|\bwork from home\b|\bWFH\b/i.test(joined)) workStyle = "Remote";
-      else if (/\bon[-\s]?site\b|\bin[-\s]?person\b/i.test(joined)) workStyle = "On-site";
-
-      // Salary
-      let salary = after(["salary","pay","compensation","rate"]);
-      if(!salary){
-        const m =
-          joined.match(/(\$?\s?\d{2,3}\s?[,.\s]?\d{3}\s?(?:–|-|to)\s?\$?\s?\d{2,3}\s?[,.\s]?\d{3})/i) ||
-          joined.match(/(\$\s?\d+(?:\.\d+)?\s?\/\s?(?:hr|hour)|\$\s?\d+(?:,\d{3})+)\b/i);
-        if(m) salary = m[1].replace(/\s+/g," ").trim();
-      }
-
-      // Clean common trailing junk
-      const clean = (s) => String(s || "").replace(/\s+\|\s+.*$/,"").trim();
-
-      return {
-        company: clean(company),
-        position: clean(position),
-        location: clean(location),
-        workStyle: workStyle || "",
-        salary: clean(salary)
-      };
-    }
-
-    function addJobFromDescription(){
-      const url = document.getElementById("jobLink").value.trim();
-      const desc = document.getElementById("jobDesc").value.trim();
-
-      // allow adding even if user only pasted link OR only pasted description
-      if(!desc && !url) return;
-
-      const parsed = parseJobDescription(desc);
-
-      const company = parsed.company || "Company";
-      const position = parsed.position || "Position";
-      const location = parsed.location || "Location";
-      const workStyle = parsed.workStyle || "Work style";
-      const salary = parsed.salary || "Salary";
-
-      jobs.unshift({
-        id: crypto.randomUUID(),
-        company,
-        position,
-        workStyle,
-        location,
-        salary,
-        url,
-        status: "Applied"
-      });
-
-      saveJobs();
-
-      document.getElementById("jobLink").value = "";
-      document.getElementById("jobDesc").value = "";
-      renderJobs();
-    }
-
-    function updateStatus(id, newStatus){
-      const j = jobs.find(x => x.id === id);
-      if(!j) return;
-      j.status = newStatus;
-      saveJobs();
-      renderJobs();
-    }
-
-    function deleteJob(id){
-      jobs = jobs.filter(x => x.id !== id);
-      saveJobs();
-      renderJobs();
-    }
-
-    // Edit mode
-    function startEdit(id){
-      const j = jobs.find(x => x.id === id);
-      if(!j) return;
-      j._editing = true;
-      renderJobs();
-    }
-
-    function cancelEdit(id){
-      const j = jobs.find(x => x.id === id);
-      if(!j) return;
-      j._editing = false;
-      renderJobs();
-    }
-
-    function saveEdit(id){
-      const j = jobs.find(x => x.id === id);
-      if(!j) return;
-
-      const company = document.getElementById(`e_company_${id}`).value.trim() || "Company";
-      const position = document.getElementById(`e_position_${id}`).value.trim() || "Position";
-      const workStyle = document.getElementById(`e_workStyle_${id}`).value.trim() || "Work style";
-      const location = document.getElementById(`e_location_${id}`).value.trim() || "Location";
-      const salary = document.getElementById(`e_salary_${id}`).value.trim() || "Salary";
-      const url = document.getElementById(`e_url_${id}`).value.trim();
-
-      j.company = company;
-      j.position = position;
-      j.workStyle = workStyle;
-      j.location = location;
-      j.salary = salary;
-      j.url = url;
-      j._editing = false;
-
-      saveJobs();
-      renderJobs();
-    }
-
-    // Search (button + also Enter key)
-    function runSearch(){
-      renderJobs(true);
-    }
-
-    document.addEventListener("keydown", (e) => {
-      if(e.key === "Enter"){
-        const active = document.activeElement?.id;
-        if(active === "search"){
-          e.preventDefault();
-          runSearch();
-        }
-      }
-    });
-
-    function renderJobs(popMatches=false){
-      const q = (document.getElementById("search").value || "").toLowerCase().trim();
-      const grid = document.getElementById("jobsGrid");
-      grid.innerHTML = "";
-
-      const filtered = jobs.filter(j => {
-        if(!q) return true;
-        const hay = `${j.company} ${j.position} ${j.location} ${j.workStyle} ${j.salary} ${j.status}`.toLowerCase();
-        return hay.includes(q);
-      });
-
-      document.getElementById("totalApps").textContent = String(jobs.length);
-      document.getElementById("shownCount").textContent = `Showing: ${filtered.length}`;
-      document.getElementById("searchNote").textContent = q ? `Matches for “${q}”` : "";
-
-      let firstMatchEl = null;
-
-      filtered.forEach(job => {
-        const card = document.createElement("div");
-        card.className = "jobCard";
-
-        // mark match for animation/highlight
-        if(q){
-          card.classList.add("match");
-        }
-
-        const hasLink = !!(job.url && job.url.trim());
-        const linkHtml = hasLink
-          ? `<a class="linkBtn" href="${escapeAttr(job.url)}" target="_blank" rel="noreferrer">Link</a>`
-          : `<span class="linkBtn" style="opacity:.6; cursor:default;">No link</span>`;
-
-        if(job._editing){
-          card.innerHTML = `
-            <div class="jobTop">
-              <span class="tag">Editing</span>
-              <select onchange="updateStatus('${job.id}', this.value)">
-                ${STATUS_ORDER.map(s => `<option ${s===job.status ? "selected":""}>${s}</option>`).join("")}
-              </select>
-            </div>
-
-            <div class="jobText">
-              <div><b>Company</b><br><input class="miniInput" id="e_company_${job.id}" value="${escapeAttr(job.company)}"></div>
-              <div><b>Position</b><br><input class="miniInput" id="e_position_${job.id}" value="${escapeAttr(job.position)}"></div>
-              <div><b>Work style</b><br><input class="miniInput" id="e_workStyle_${job.id}" value="${escapeAttr(job.workStyle)}"></div>
-              <div><b>Location</b><br><input class="miniInput" id="e_location_${job.id}" value="${escapeAttr(job.location)}"></div>
-              <div><b>Salary</b><br><input class="miniInput" id="e_salary_${job.id}" value="${escapeAttr(job.salary)}"></div>
-              <div><b>Link</b><br><input class="miniInput" id="e_url_${job.id}" value="${escapeAttr(job.url || "")}" placeholder="optional link"></div>
-            </div>
-
-            <div class="actionsRow">
-              <button class="smallBtn" onclick="cancelEdit('${job.id}')">Cancel</button>
-              <button class="smallBtn primary" onclick="saveEdit('${job.id}')">Save</button>
-              <button class="smallBtn" onclick="deleteJob('${job.id}')">Delete</button>
-            </div>
-          `;
-        } else {
-          card.innerHTML = `
-            <div class="jobTop">
-              <span class="tag">${escapeHtml(job.status)}</span>
-              <select onchange="updateStatus('${job.id}', this.value)">
-                ${STATUS_ORDER.map(s => `<option ${s===job.status ? "selected":""}>${s}</option>`).join("")}
-              </select>
-            </div>
-
-            <div class="jobText">
-              <div><b>Company:</b> ${escapeHtml(job.company)}</div>
-              <div><b>Title:</b> ${escapeHtml(job.position)}</div>
-              <div><b>Work:</b> ${escapeHtml(job.workStyle)}</div>
-              <div><b>Location:</b> ${escapeHtml(job.location)}</div>
-              <div><b>Salary:</b> ${escapeHtml(job.salary)}</div>
-            </div>
-
-            <div class="jobLinkRow">
-              ${linkHtml}
-              <button class="smallBtn" onclick="startEdit('${job.id}')">Edit</button>
-              <button class="smallBtn" onclick="deleteJob('${job.id}')">Delete</button>
-            </div>
-          `;
-        }
-
-        grid.appendChild(card);
-
-        if(!firstMatchEl) firstMatchEl = card;
-      });
-
-      // cute “zoom” behavior: scroll to the first match
-      if(popMatches && firstMatchEl){
-        firstMatchEl.scrollIntoView({ behavior: "smooth", block: "start" });
-      }
-
-      drawPie();
-      drawLegend();
-    }
-
-    function getStatusCounts(){
-      const counts = {};
-      STATUS_ORDER.forEach(s => counts[s] = 0);
-      jobs.forEach(j => {
-        const s = STATUS_ORDER.includes(j.status) ? j.status : "Applied";
-        counts[s] = (counts[s] || 0) + 1;
-      });
-      return counts;
-    }
-
-    function drawPie(){
-      const canvas = document.getElementById("pie");
-      const ctx = canvas.getContext("2d");
-      const counts = getStatusCounts();
-      const total = Object.values(counts).reduce((a,b)=>a+b,0);
-
-      ctx.clearRect(0,0,canvas.width,canvas.height);
-
-      const cx = canvas.width/2;
-      const cy = canvas.height/2;
-      const r = Math.min(cx,cy) - 8;
-
-      if(total === 0){
-        ctx.beginPath();
-        ctx.arc(cx, cy, r, 0, Math.PI*2);
-        ctx.fillStyle = "rgba(255, 255, 255, .65)";
-        ctx.fill();
-
-        ctx.fillStyle = cssVar("--text");
-        ctx.font = "900 14px system-ui, -apple-system, Segoe UI, Roboto, Arial";
-        ctx.textAlign = "center";
-        ctx.fillText("No jobs yet", cx, cy);
-        return;
-      }
-
-      const sliceColors = {
-        "Applied": cssVar("--p2"),
-        "Awaiting Response": cssVar("--p3"),
-        "Interview": cssVar("--p1"),
-        "Offer": cssVar("--p4"),
-        "Rejected": cssVar("--p5")
-      };
-
-      let start = -Math.PI/2;
-      STATUS_ORDER.forEach(status => {
-        const val = counts[status] || 0;
-        if(val <= 0) return;
-        const slice = (val/total) * Math.PI*2;
-
-        ctx.beginPath();
-        ctx.moveTo(cx,cy);
-        ctx.arc(cx, cy, r, start, start + slice);
-        ctx.closePath();
-        ctx.fillStyle = sliceColors[status];
-        ctx.fill();
-
-        start += slice;
-      });
-
-      // donut hole
       ctx.beginPath();
-      ctx.arc(cx, cy, r*0.58, 0, Math.PI*2);
-      ctx.fillStyle = "rgba(255,255,255,.78)";
+      ctx.moveTo(cx,cy);
+      ctx.arc(cx, cy, r, start, start + slice);
+      ctx.closePath();
+      ctx.fillStyle = sliceColors[status];
       ctx.fill();
 
-      ctx.fillStyle = cssVar("--text");
-      ctx.font = "950 18px system-ui, -apple-system, Segoe UI, Roboto, Arial";
-      ctx.textAlign = "center";
-      ctx.fillText(`${total}`, cx, cy-2);
+      start += slice;
+    });
 
-      ctx.font = "900 11px system-ui, -apple-system, Segoe UI, Roboto, Arial";
-      ctx.fillStyle = cssVar("--muted");
-      ctx.fillText("total", cx, cy+14);
-    }
+    ctx.beginPath();
+    ctx.arc(cx, cy, r*0.58, 0, Math.PI*2);
+    ctx.fillStyle = "rgba(255,255,255,.78)";
+    ctx.fill();
 
-    function drawLegend(){
-      const el = document.getElementById("legend");
-      const counts = getStatusCounts();
-      const total = Object.values(counts).reduce((a,b)=>a+b,0) || 1;
+    ctx.fillStyle = cssVar("--text");
+    ctx.font = "950 18px system-ui";
+    ctx.textAlign = "center";
+    ctx.fillText(`${total}`, cx, cy-2);
 
-      const sliceColors = {
-        "Applied": cssVar("--p2"),
-        "Awaiting Response": cssVar("--p3"),
-        "Interview": cssVar("--p1"),
-        "Offer": cssVar("--p4"),
-        "Rejected": cssVar("--p5")
-      };
+    ctx.font = "900 11px system-ui";
+    ctx.fillStyle = cssVar("--muted");
+    ctx.fillText("total", cx, cy+14);
+  }
 
-      el.innerHTML = STATUS_ORDER.map(status => {
-        const val = counts[status] || 0;
-        const pct = Math.round((val/total)*100);
-        return `
-          <div class="legendItem">
-            <div class="legendLeft">
-              <span class="dot" style="background:${sliceColors[status]}"></span>
-              <span class="legendName">${status}</span>
-            </div>
-            <div>${val} • ${pct}%</div>
+  function drawLegend(){
+    const el = document.getElementById("legend");
+    const counts = getStatusCounts();
+    const total = Object.values(counts).reduce((a,b)=>a+b,0) || 1;
+
+    const sliceColors = {
+      "Applied": cssVar("--p2"),
+      "Awaiting Response": cssVar("--p3"),
+      "Interview": cssVar("--p1"),
+      "Offer": cssVar("--p4"),
+      "Rejected": cssVar("--p5")
+    };
+
+    el.innerHTML = STATUS_ORDER.map(status => {
+      const val = counts[status] || 0;
+      const pct = Math.round((val/total)*100);
+      return `
+        <div class="legendItem">
+          <div class="legendLeft">
+            <span class="dot" style="background:${sliceColors[status]}"></span>
+            <span class="legendName">${status}</span>
+          </div>
+          <div>${val} • ${pct}%</div>
+        </div>
+      `;
+    }).join("");
+  }
+
+  function renderJobs(scrollToMatch=false){
+    const q = (document.getElementById("search")?.value || "").toLowerCase().trim();
+    const grid = document.getElementById("jobsGrid");
+    grid.innerHTML = "";
+
+    const filtered = jobs.filter(j => {
+      if(!q) return true;
+      const hay = `${j.company} ${j.position} ${j.location} ${j.workStyle} ${j.salary} ${j.status}`.toLowerCase();
+      return hay.includes(q);
+    });
+
+    document.getElementById("totalApps").textContent = String(jobs.length);
+    document.getElementById("shownCount").textContent = `Showing: ${filtered.length}`;
+    document.getElementById("searchNote").textContent = q ? `Matches for “${q}”` : "";
+
+    let firstMatchEl = null;
+
+    filtered.forEach(job => {
+      const card = document.createElement("div");
+      card.className = "jobCard" + (q ? " match" : "");
+
+      const hasLink = !!(job.url && job.url.trim());
+      const linkHtml = hasLink
+        ? `<a class="linkBtn" href="${escapeAttr(job.url)}" target="_blank" rel="noreferrer">Link</a>`
+        : `<span class="linkBtn" style="opacity:.6; cursor:default;">No link</span>`;
+
+      if(job._editing){
+        card.innerHTML = `
+          <div class="jobTop">
+            <span class="tag">Editing</span>
+            <select onchange="updateStatus('${job.id}', this.value)">
+              ${STATUS_ORDER.map(s => `<option ${s===job.status ? "selected":""}>${s}</option>`).join("")}
+            </select>
+          </div>
+
+          <div class="jobText">
+            <div><b>Company</b><br><input class="miniInput" id="e_company_${job.id}" value="${escapeAttr(job.company)}"></div>
+            <div><b>Title</b><br><input class="miniInput" id="e_position_${job.id}" value="${escapeAttr(job.position)}"></div>
+            <div><b>Work type</b><br><input class="miniInput" id="e_workStyle_${job.id}" value="${escapeAttr(job.workStyle)}"></div>
+            <div><b>Location</b><br><input class="miniInput" id="e_location_${job.id}" value="${escapeAttr(job.location)}"></div>
+            <div><b>Salary</b><br><input class="miniInput" id="e_salary_${job.id}" value="${escapeAttr(job.salary)}"></div>
+            <div><b>Link</b><br><input class="miniInput" id="e_url_${job.id}" value="${escapeAttr(job.url || "")}" placeholder="optional link"></div>
+          </div>
+
+          <div class="actionsRow">
+            <button class="smallBtn" onclick="cancelEdit('${job.id}')">Cancel</button>
+            <button class="smallBtn primary" onclick="saveEdit('${job.id}')">Save</button>
+            <button class="smallBtn" onclick="deleteJob('${job.id}')">Delete</button>
           </div>
         `;
-      }).join("");
+      } else {
+        card.innerHTML = `
+          <div class="jobTop">
+            <span class="tag">${escapeHtml(job.status)}</span>
+            <select onchange="updateStatus('${job.id}', this.value)">
+              ${STATUS_ORDER.map(s => `<option ${s===job.status ? "selected":""}>${s}</option>`).join("")}
+            </select>
+          </div>
+
+          <div class="jobText">
+            <div><b>Company:</b> ${escapeHtml(job.company)}</div>
+            <div><b>Title:</b> ${escapeHtml(job.position)}</div>
+            <div><b>Work:</b> ${escapeHtml(job.workStyle)}</div>
+            <div><b>Location:</b> ${escapeHtml(job.location)}</div>
+            <div><b>Salary:</b> ${escapeHtml(job.salary)}</div>
+          </div>
+
+          <div class="jobLinkRow">
+            ${linkHtml}
+            <button class="smallBtn" onclick="startEdit('${job.id}')">Edit</button>
+            <button class="smallBtn" onclick="deleteJob('${job.id}')">Delete</button>
+          </div>
+        `;
+      }
+
+      grid.appendChild(card);
+      if(!firstMatchEl) firstMatchEl = card;
+    });
+
+    if(scrollToMatch && firstMatchEl){
+      firstMatchEl.scrollIntoView({ behavior: "smooth", block: "start" });
     }
 
-    function escapeHtml(str){
-      return String(str ?? "")
-        .replaceAll("&","&amp;")
-        .replaceAll("<","&lt;")
-        .replaceAll(">","&gt;")
-        .replaceAll('"',"&quot;")
-        .replaceAll("'","&#39;");
-    }
-    function escapeAttr(str){
-      return escapeHtml(str).replaceAll("`","&#96;");
-    }
+    drawPie();
+    drawLegend();
+  }
 
-    // Initial
-    renderJobs();
-  </script>
+  function escapeHtml(str){
+    return String(str ?? "")
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;")
+      .replaceAll("'","&#39;");
+  }
+  function escapeAttr(str){
+    return escapeHtml(str).replaceAll("`","&#96;");
+  }
+
+  // Make these functions accessible for onclick="" in HTML
+  window.addJobFromDescription = addJobFromDescription;
+  window.runSearch = runSearch;
+  window.updateStatus = updateStatus;
+  window.deleteJob = deleteJob;
+  window.startEdit = startEdit;
+  window.cancelEdit = cancelEdit;
+  window.saveEdit = saveEdit;
+
+  // Initial render
+  renderJobs(false);
+</script>
 </body>
 </html>

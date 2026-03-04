@@ -544,20 +544,169 @@ Hybrid | $60k–$75k
 
     // --------- NEW: parse description text (no AI, keyword-based) ----------
     function parseJobDescription(text){
-      const t = (text || "").replace(/\r/g, "\n");
-      const lines = t.split("\n").map(l => l.trim()).filter(Boolean);
+  const raw = (text || "").replace(/\r/g, "\n");
+  const linesAll = raw.split("\n").map(l => l.trim());
+  const lines = linesAll.filter(Boolean);
 
-      const joined = " " + lines.join(" ") + " ";
+  const joined = " " + lines.join(" ") + " ";
+  const lowerJoined = joined.toLowerCase();
 
-      // helper: capture after keywords
-      function after(keys){
-        for (const k of keys){
-          const re = new RegExp(`(?:^|\\b)${k}\\s*[:\\-–]\\s*([^\\n\\|]{2,120})`, "i");
-          const m = t.match(re);
-          if(m && m[1]) return m[1].trim();
+  // ----- helpers -----
+  const pickFirst = (...vals) => vals.find(v => v && String(v).trim()) || "";
+
+  const clean = (s) => String(s || "")
+    .replace(/\s+/g, " ")
+    .replace(/^\-+\s*/,"")
+    .replace(/\s*\|\s*.*$/,"")
+    .trim();
+
+  // find the first non-empty line AFTER a keyword line
+  function lineAfterKeyword(keywordRegex){
+    for(let i=0;i<linesAll.length;i++){
+      const line = (linesAll[i] || "").trim();
+      if(keywordRegex.test(line.toLowerCase())){
+        // find next non-empty line
+        for(let j=i+1;j<linesAll.length;j++){
+          const nxt = (linesAll[j] || "").trim();
+          if(nxt) return nxt;
         }
-        return "";
       }
+    }
+    return "";
+  }
+
+  // capture after labeled fields like "Location: X"
+  function afterLabel(labels){
+    for(const lab of labels){
+      const re = new RegExp(`(?:^|\\b)${lab}\\s*[:\\-–]\\s*([^\\n\\|]{2,160})`, "i");
+      const m = raw.match(re);
+      if(m && m[1]) return m[1].trim();
+    }
+    return "";
+  }
+
+  function looksLikeLocation(s){
+    if(!s) return false;
+    const x = s.trim();
+    // City, ST or City, Country or "New York, USA"
+    if(/^[A-Za-z .'-]{2,40},\s?[A-Z]{2,3}$/.test(x)) return true;
+    if(/^[A-Za-z .'-]{2,40},\s?[A-Za-z .'-]{2,40}$/.test(x)) return true;
+    // common full location words
+    if(/\b(new york|los angeles|san francisco|chicago|london|toronto|remote|hybrid)\b/i.test(x)) return true;
+    return false;
+  }
+
+  function looksLikeCompany(s){
+    if(!s) return false;
+    const x = s.trim();
+    // avoid junk labels
+    if(/^(apply|locations?|time type|posted on|job requisition|requisition id|full time|part time|internship)$/i.test(x)) return false;
+    // company-ish words
+    if(/\b(inc|llc|ltd|corp|corporation|company|co\.|foundation|university|group|agency|bank|institute|partners|systems|technologies|labs|studio|studios)\b/i.test(x)) return true;
+    // Title case name length
+    if(/^[A-Z][A-Za-z0-9&.'-]+(?:\s+[A-Z][A-Za-z0-9&.'-]+){0,5}$/.test(x) && x.length <= 45) return true;
+    return false;
+  }
+
+  // ----- 1) TITLE (strong: first line) -----
+  // Use first non-empty line that isn't a junk label
+  let position = "";
+  for(const l of lines){
+    if(!/^(apply|locations?|time type|posted on|job requisition|requisition id)$/i.test(l)){
+      position = l;
+      break;
+    }
+  }
+  // If we still have nothing, try labeled fields
+  position = clean(pickFirst(position, afterLabel(["role","position","job title","title","opening","opportunity"])));
+
+  // ----- 2) LOCATION -----
+  // Labeled
+  let location = clean(afterLabel(["location","based in","office location"]));
+
+  // Block style: "locations" then next line is the location
+  if(!location){
+    const locCandidate = lineAfterKeyword(/^locations?$/i);
+    if(looksLikeLocation(locCandidate)) location = clean(locCandidate);
+  }
+
+  // Fallback: first city/state or city/country pattern anywhere
+  if(!location){
+    const m1 = joined.match(/\b([A-Z][A-Za-z .'-]{2,40},\s?[A-Z]{2})\b/); // City, ST
+    const m2 = joined.match(/\b([A-Z][A-Za-z .'-]{2,40},\s?(?:USA|United States|UK|United Kingdom|Canada|India|Australia))\b/i);
+    location = clean(pickFirst(m2?.[1], m1?.[1]));
+  }
+
+  // ----- 3) WORK STYLE -----
+  let workStyle = "";
+  if(/\bhybrid\b/i.test(joined)) workStyle = "Hybrid";
+  else if(/\bremote\b|\bwork from home\b|\bwfh\b/i.test(joined)) workStyle = "Remote";
+  else if(/\bon[-\s]?site\b|\bin[-\s]?person\b/i.test(joined)) workStyle = "On-site";
+
+  // Employment type -> can map to "Full time" etc. (optional)
+  // We’ll store it as part of workStyle if we found it
+  let timeType = clean(afterLabel(["employment type","time type"]));
+  if(!timeType){
+    const tt = lineAfterKeyword(/^time type$/i);
+    // ex: Full time
+    if(tt) timeType = clean(tt);
+  }
+  if(timeType){
+    // If workStyle is empty, keep timeType as “Work style” field (better than blank)
+    if(!workStyle) workStyle = timeType;
+    else workStyle = `${workStyle} • ${timeType}`;
+  }
+
+  // ----- 4) SALARY -----
+  let salary = clean(afterLabel(["salary","pay","compensation","rate"]));
+  if(!salary){
+    const m =
+      joined.match(/(\$?\s?\d{2,3}\s?[,.\s]?\d{3}\s?(?:–|-|to)\s?\$?\s?\d{2,3}\s?[,.\s]?\d{3})/i) ||
+      joined.match(/(\$\s?\d+(?:\.\d+)?\s?\/\s?(?:hr|hour))\b/i) ||
+      joined.match(/\b(\$\s?\d+(?:,\d{3})+)\b/);
+    if(m) salary = clean(m[1]);
+  }
+
+  // ----- 5) COMPANY -----
+  let company = clean(afterLabel(["company","employer","organization","org","hiring organization"]));
+
+  // If not labeled, look for “The X Foundation’s…” / “X’s mission…”
+  if(!company){
+    const m = raw.match(/\bThe\s+([A-Z][A-Za-z0-9&.'-]+(?:\s+[A-Z][A-Za-z0-9&.'-]+){0,6})’s\b/);
+    if(m && looksLikeCompany(m[1])) company = clean(m[1]);
+  }
+
+  // Another heuristic: look for a line containing mission/company name early in the post
+  if(!company){
+    const early = lines.slice(0, 25);
+    for(const l of early){
+      // ex: "The Ford Foundation’s core mission..."
+      const mm = l.match(/\bThe\s+([A-Z][A-Za-z0-9&.'-]+(?:\s+[A-Z][A-Za-z0-9&.'-]+){0,6})\b/);
+      if(mm && looksLikeCompany(mm[1]) && !/program assistant/i.test(mm[1])){
+        company = clean(mm[1]);
+        break;
+      }
+    }
+  }
+
+  // Fallback: try "at X" pattern
+  if(!company){
+    const m = joined.match(/\b(?:at|with)\s+([A-Z][A-Za-z0-9&.'-]+(?:\s+[A-Z][A-Za-z0-9&.'-]+){0,5})\b/);
+    if(m && looksLikeCompany(m[1])) company = clean(m[1]);
+  }
+
+  // Final cleanups
+  if(company && company.length > 60) company = company.slice(0,60).trim();
+  if(position && position.length > 120) position = position.slice(0,120).trim();
+
+  return {
+    company: company || "",
+    position: position || "",
+    location: location || "",
+    workStyle: workStyle || "",
+    salary: salary || ""
+  };
+}
 
       // Title
       let position = after(["role","position","job title","title","opening","opportunity"]);

@@ -7,7 +7,6 @@
 
   <style>
     :root{
-      /* girly + clean */
       --bg:#FFF1F5;
       --panel:#FFFFFFCC;
       --text:#6F5B63;
@@ -23,7 +22,6 @@
 
       --chip:#FFFFFF99;
 
-      /* pie colors */
       --p1:#F6B4C4;
       --p2:#FFD6E2;
       --p3:#E8F0EE;
@@ -44,270 +42,246 @@
       color: var(--text);
     }
 
-    .wrap{
-      max-width: 1180px;
-      margin: 0 auto;
-    }
+    .wrap{ max-width:1180px; margin:0 auto; }
 
     .titlePill{
       background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 26px;
-      padding: 18px 16px 14px;
+      border:1px solid var(--border);
+      border-radius:26px;
+      padding:18px 16px 14px;
       text-align:center;
-      box-shadow: 0 14px 30px var(--shadow);
+      box-shadow:0 14px 30px var(--shadow);
       backdrop-filter: blur(10px);
     }
     .titlePill h1{
       margin:0;
-      font-size: 30px;
-      letter-spacing: .8px;
-      text-transform: uppercase;
-      font-weight: 900;
+      font-size:30px;
+      letter-spacing:.8px;
+      text-transform:uppercase;
+      font-weight:900;
     }
     .titlePill p{
-      margin: 6px 0 0;
-      font-size: 13px;
-      letter-spacing: .9px;
-      text-transform: uppercase;
-      color: var(--muted);
-      font-weight: 800;
+      margin:6px 0 0;
+      font-size:13px;
+      letter-spacing:.9px;
+      text-transform:uppercase;
+      color:var(--muted);
+      font-weight:800;
     }
 
-    .controls{
-      margin-top: 14px;
-      display:grid;
-      gap: 12px;
-    }
+    .controls{ margin-top:14px; display:grid; gap:12px; }
 
-    .grid2{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
+    .grid2{ display:grid; grid-template-columns: 1fr 1fr; gap:12px; }
 
     .pillInput{
-      background: var(--input);
-      border-radius: 18px;
-      padding: 12px 14px;
+      background:var(--input);
+      border-radius:18px;
+      padding:12px 14px;
       display:flex;
       align-items:center;
-      gap: 10px;
-      border: 1px solid var(--border);
-      box-shadow: 0 10px 18px rgba(111,91,99,.10);
-      min-width: 0;
+      gap:10px;
+      border:1px solid var(--border);
+      box-shadow:0 10px 18px rgba(111,91,99,.10);
+      min-width:0;
     }
-
     .pillInput label{
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: .7px;
-      font-size: 12px;
+      color:var(--muted);
+      text-transform:uppercase;
+      letter-spacing:.7px;
+      font-size:12px;
       white-space:nowrap;
-      font-weight: 900;
+      font-weight:900;
     }
-
     .pillInput input{
       width:100%;
-      border: none;
+      border:none;
       outline:none;
-      background: transparent;
-      color: var(--text);
-      font-size: 15px;
-      font-weight: 700;
-      min-width: 0;
+      background:transparent;
+      color:var(--text);
+      font-size:15px;
+      font-weight:700;
+      min-width:0;
     }
 
     .textareaWrap{
-      background: var(--input);
-      border-radius: 18px;
-      padding: 12px 14px;
-      border: 1px solid var(--border);
-      box-shadow: 0 10px 18px rgba(111,91,99,.10);
+      background:var(--input);
+      border-radius:18px;
+      padding:12px 14px;
+      border:1px solid var(--border);
+      box-shadow:0 10px 18px rgba(111,91,99,.10);
     }
-
     .textareaWrap .labelRow{
       display:flex;
-      justify-content: space-between;
-      gap: 10px;
+      justify-content:space-between;
+      gap:10px;
       align-items:center;
-      margin-bottom: 8px;
+      margin-bottom:8px;
     }
-
     .textareaWrap label{
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: .7px;
-      font-size: 12px;
-      font-weight: 900;
+      color:var(--muted);
+      text-transform:uppercase;
+      letter-spacing:.7px;
+      font-size:12px;
+      font-weight:900;
     }
-
+    .subnote{
+      font-size:12px;
+      color: rgba(111,91,99,.74);
+      font-weight:650;
+    }
     textarea{
-      width: 100%;
-      min-height: 110px;
-      border: none;
-      outline: none;
-      resize: vertical;
-      background: transparent;
-      color: var(--text);
-      font-size: 14px;
-      font-weight: 650;
-      line-height: 1.35;
+      width:100%;
+      min-height:110px;
+      border:none;
+      outline:none;
+      resize:vertical;
+      background:transparent;
+      color:var(--text);
+      font-size:14px;
+      font-weight:650;
+      line-height:1.35;
     }
     textarea::placeholder{
       color: rgba(111,91,99,.55);
-      font-weight: 650;
+      font-weight:650;
     }
 
     .btnRow{
       display:grid;
       grid-template-columns: 1fr 260px;
-      gap: 12px;
+      gap:12px;
       align-items:stretch;
+    }
+    .btnRow.two{
+      grid-template-columns: 1fr 1fr;
     }
 
     .pillBtn{
-      border: 1px solid rgba(111,91,99,.18);
+      border:1px solid rgba(111,91,99,.18);
       cursor:pointer;
-      border-radius: 18px;
-      padding: 12px 16px;
-      font-weight: 900;
-      letter-spacing: .6px;
-      text-transform: uppercase;
-      background: var(--btn);
-      color: #fff;
-      box-shadow: 0 12px 20px rgba(246,180,196,.35);
-      transition: transform .05s ease, filter .2s ease;
+      border-radius:18px;
+      padding:12px 16px;
+      font-weight:900;
+      letter-spacing:.6px;
+      text-transform:uppercase;
+      background:var(--btn);
+      color:#fff;
+      box-shadow:0 12px 20px rgba(246,180,196,.35);
+      transition: transform .05s ease, filter .2s ease, background .2s ease;
     }
-    .pillBtn:hover{ background: var(--btnHover); }
+    .pillBtn:hover{ background:var(--btnHover); }
     .pillBtn:active{ transform: translateY(1px); }
 
     .main{
-      margin-top: 14px;
+      margin-top:14px;
       display:grid;
       grid-template-columns: 340px 1fr;
-      gap: 16px;
+      gap:16px;
       align-items:start;
     }
 
     .statCard{
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 22px;
-      padding: 16px;
-      box-shadow: 0 14px 26px rgba(111,91,99,.12);
+      background:var(--panel);
+      border:1px solid var(--border);
+      border-radius:22px;
+      padding:16px;
+      box-shadow:0 14px 26px rgba(111,91,99,.12);
       backdrop-filter: blur(10px);
     }
-
     .statTitle{
-      text-transform: uppercase;
-      letter-spacing: .8px;
-      font-weight: 900;
-      font-size: 12px;
-      margin: 0 0 6px;
-      color: var(--muted);
+      text-transform:uppercase;
+      letter-spacing:.8px;
+      font-weight:900;
+      font-size:12px;
+      margin:0 0 6px;
+      color:var(--muted);
     }
-
     .statBig{
-      font-size: 44px;
-      font-weight: 950;
-      line-height: 1;
-      margin: 0;
-      color: var(--text);
+      font-size:44px;
+      font-weight:950;
+      line-height:1;
+      margin:0;
+      color:var(--text);
     }
 
     .chartBox{
-      margin-top: 12px;
+      margin-top:12px;
       background: rgba(255,255,255,.55);
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      padding: 12px;
-      overflow: hidden;
+      border:1px solid var(--border);
+      border-radius:18px;
+      padding:12px;
+      overflow:hidden;
     }
 
     .legend{
-      margin-top: 10px;
+      margin-top:10px;
       display:grid;
-      gap: 8px;
-      font-size: 12.5px;
-      color: var(--text);
-      font-weight: 800;
+      gap:8px;
+      font-size:12.5px;
+      color:var(--text);
+      font-weight:800;
     }
-
     .legendItem{
       display:flex;
-      justify-content: space-between;
+      justify-content:space-between;
       gap:10px;
       align-items:center;
     }
     .dot{
       width:10px;
       height:10px;
-      border-radius: 999px;
+      border-radius:999px;
       display:inline-block;
       margin-right:8px;
       border:1px solid rgba(111,91,99,.25);
       flex:0 0 auto;
     }
-    .legendLeft{
-      display:flex;
-      align-items:center;
-      min-width:0;
-    }
-    .legendName{
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow: ellipsis;
-    }
+    .legendLeft{ display:flex; align-items:center; min-width:0; }
+    .legendName{ white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 
     .hint{
-      margin-top: 10px;
-      font-size: 12px;
+      margin-top:10px;
+      font-size:12px;
       color: rgba(111,91,99,.75);
-      font-weight: 700;
+      font-weight:700;
     }
 
-    /* Jobs grid */
     .jobsHeader{
       display:flex;
-      justify-content: space-between;
+      justify-content:space-between;
       align-items:center;
-      gap: 10px;
-      margin: 6px 0 10px;
+      gap:10px;
+      margin:6px 0 10px;
     }
-
-    .jobsHeader .countPill{
-      background: var(--chip);
-      border: 1px solid var(--border);
-      border-radius: 999px;
-      padding: 8px 12px;
-      font-weight: 850;
-      color: var(--text);
-      box-shadow: 0 10px 16px rgba(111,91,99,.08);
-      white-space: nowrap;
+    .countPill{
+      background:var(--chip);
+      border:1px solid var(--border);
+      border-radius:999px;
+      padding:8px 12px;
+      font-weight:850;
+      color:var(--text);
+      box-shadow:0 10px 16px rgba(111,91,99,.08);
+      white-space:nowrap;
     }
 
     .jobsGrid{
       display:grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 14px;
+      gap:14px;
     }
 
     .jobCard{
-      background: var(--card);
-      border-radius: 20px;
-      padding: 14px;
-      border: 1px solid rgba(111,91,99,.18);
-      box-shadow: 0 14px 20px rgba(111,91,99,.10);
-      color: var(--text);
-      overflow: hidden;
+      background:var(--card);
+      border-radius:20px;
+      padding:14px;
+      border:1px solid rgba(111,91,99,.18);
+      box-shadow:0 14px 20px rgba(111,91,99,.10);
+      overflow:hidden;
       transform-origin: top center;
     }
-
-    /* Aesthetic search animation */
     .jobCard.match{
-      outline: 2px solid rgba(246,180,196,.85);
-      box-shadow: 0 18px 30px rgba(246,180,196,.28);
+      outline:2px solid rgba(246,180,196,.85);
+      box-shadow:0 18px 30px rgba(246,180,196,.28);
       animation: pop .22s ease-out;
     }
     @keyframes pop{
@@ -318,146 +292,147 @@
     .jobTop{
       display:flex;
       align-items:flex-start;
-      justify-content: space-between;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin-bottom: 10px;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-bottom:10px;
     }
-
     .tag{
       display:inline-flex;
       align-items:center;
-      border: 1px solid rgba(111,91,99,.18);
+      border:1px solid rgba(111,91,99,.18);
       background: rgba(255,255,255,.55);
-      color: var(--text);
-      border-radius: 999px;
-      padding: 6px 10px;
-      font-size: 12px;
-      font-weight: 900;
-      letter-spacing: .5px;
-      text-transform: uppercase;
-      max-width: 100%;
+      border-radius:999px;
+      padding:6px 10px;
+      font-size:12px;
+      font-weight:900;
+      letter-spacing:.5px;
+      text-transform:uppercase;
+      max-width:100%;
       overflow:hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+      text-overflow:ellipsis;
+      white-space:nowrap;
     }
 
     .jobText{
       display:grid;
-      gap: 7px;
-      font-size: 13px;
-      font-weight: 720;
-      line-height: 1.25;
-      word-break: break-word;
+      gap:7px;
+      font-size:13px;
+      font-weight:720;
+      line-height:1.25;
+      word-break:break-word;
     }
-    .jobText b{ font-weight: 900; color: rgba(111,91,99,.92); }
+    .jobText b{ font-weight:900; color: rgba(111,91,99,.92); }
 
     .jobLinkRow{
-      margin-top: 12px;
+      margin-top:12px;
       display:flex;
-      gap: 10px;
+      gap:10px;
       align-items:center;
-      justify-content: space-between;
-      flex-wrap: wrap;
+      justify-content:space-between;
+      flex-wrap:wrap;
     }
-
     .linkBtn{
       display:inline-block;
-      padding: 9px 12px;
-      border-radius: 14px;
+      padding:9px 12px;
+      border-radius:14px;
       background: rgba(255,255,255,.60);
-      border: 1px solid rgba(111,91,99,.18);
-      color: var(--text);
-      text-decoration: none;
-      font-weight: 900;
-      text-transform: uppercase;
-      letter-spacing: .6px;
-      font-size: 12px;
-      white-space: nowrap;
-      max-width: 100%;
+      border:1px solid rgba(111,91,99,.18);
+      color:var(--text);
+      text-decoration:none;
+      font-weight:900;
+      text-transform:uppercase;
+      letter-spacing:.6px;
+      font-size:12px;
+      white-space:nowrap;
+      max-width:100%;
     }
 
     .miniInput{
       width:100%;
-      padding: 10px 11px;
-      border-radius: 14px;
-      border: 1px solid var(--border);
+      padding:10px 11px;
+      border-radius:14px;
+      border:1px solid var(--border);
       background: rgba(255,255,255,.65);
-      color: var(--text);
+      color:var(--text);
       outline:none;
-      font-weight: 700;
+      font-weight:700;
       min-width:0;
     }
 
     select{
-      border-radius: 14px;
-      border: 1px solid var(--border);
-      padding: 9px 10px;
+      border-radius:14px;
+      border:1px solid var(--border);
+      padding:9px 10px;
       background: rgba(255,255,255,.65);
-      color: var(--text);
-      font-weight: 850;
+      color:var(--text);
+      font-weight:850;
       cursor:pointer;
-      min-width: 0;
+      min-width:0;
     }
 
     .actionsRow{
-      margin-top: 10px;
+      margin-top:10px;
       display:flex;
-      gap: 10px;
+      gap:10px;
       justify-content:flex-end;
-      flex-wrap: wrap;
+      flex-wrap:wrap;
     }
-
     .smallBtn{
-      padding: 10px 12px;
-      border-radius: 14px;
-      font-weight: 900;
-      text-transform: uppercase;
-      letter-spacing: .6px;
-      border: 1px solid rgba(111,91,99,.18);
+      padding:10px 12px;
+      border-radius:14px;
+      font-weight:900;
+      text-transform:uppercase;
+      letter-spacing:.6px;
+      border:1px solid rgba(111,91,99,.18);
       background: rgba(255,255,255,.60);
-      color: var(--text);
+      color:var(--text);
       cursor:pointer;
-      white-space: nowrap;
+      white-space:nowrap;
     }
-
     .smallBtn.primary{
-      background: var(--btn);
-      color: #fff;
+      background:var(--btn);
+      color:#fff;
       border-color: rgba(255,255,255,0);
     }
-    .smallBtn.primary:hover{ background: var(--btnHover); }
+    .smallBtn.primary:hover{ background:var(--btnHover); }
 
-    .subnote{
-      font-size: 12px;
-      color: rgba(111,91,99,.74);
-      font-weight: 650;
+    .manualGrid{
+      display:grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap:10px;
+      margin-top:10px;
+    }
+    .manualGrid .pillBtn{
+      height:44px;
+      border-radius:14px;
+      padding:10px 12px;
+      width:100%;
     }
 
     @media (max-width: 1050px){
       .jobsGrid{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .main{ grid-template-columns: 320px 1fr; }
       .btnRow{ grid-template-columns: 1fr; }
+      .manualGrid{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
     @media (max-width: 780px){
       .main{ grid-template-columns: 1fr; }
       .jobsGrid{ grid-template-columns: 1fr; }
       .grid2{ grid-template-columns: 1fr; }
+      .manualGrid{ grid-template-columns: 1fr; }
     }
   </style>
 </head>
 
 <body>
   <div class="wrap">
-
     <div class="titlePill">
       <h1>THE DELUSION DASHBOARD</h1>
       <p>MANIFESTING EMPLOYMENT</p>
     </div>
 
-    <!-- Inputs -->
     <div class="controls">
-
       <div class="grid2">
         <div class="pillInput">
           <label>Job Link</label>
@@ -473,867 +448,615 @@
       <div class="textareaWrap">
         <div class="labelRow">
           <label>Job Description</label>
-          <span class="subnote">Paste anything from the posting — we’ll extract the basics ✨</span>
+          <span class="subnote">Paste anything — we’ll extract fields ✨</span>
         </div>
-        <textarea id="jobDesc" placeholder="Paste the job description here (or the top part of the posting). Example:
-Company: Spotify
-Role: Marketing Intern
-Location: New York, NY
-Hybrid | $60k–$75k
-..."></textarea>
+        <textarea id="jobDesc" placeholder="Paste the posting text here..."></textarea>
       </div>
 
       <div class="btnRow">
         <button class="pillBtn" onclick="runSearch()">SEARCH</button>
         <button class="pillBtn" onclick="addJobFromDescription()">ADD JOB</button>
       </div>
+
+      <div class="btnRow two">
+        <button class="pillBtn" onclick="exportJobs()">EXPORT</button>
+        <button class="pillBtn" onclick="importJobs()">IMPORT</button>
+      </div>
+      <input id="importFile" type="file" accept="application/json" style="display:none" />
+
+      <!-- Manual add is back -->
+      <div class="textareaWrap">
+        <div class="labelRow">
+          <label>Manual Add</label>
+          <span class="subnote">If extraction misses something, just type it in</span>
+        </div>
+
+        <div class="manualGrid">
+          <input class="miniInput" id="m_company" placeholder="Company" />
+          <input class="miniInput" id="m_title" placeholder="Title" />
+          <input class="miniInput" id="m_location" placeholder="Location" />
+
+          <input class="miniInput" id="m_work" placeholder="Work type (Remote/Hybrid/On-site)" />
+          <input class="miniInput" id="m_salary" placeholder="Salary / Pay" />
+          <input class="miniInput" id="m_url" placeholder="Link (optional)" />
+
+          <select id="m_status">
+            <option>Applied</option>
+            <option>Awaiting Response</option>
+            <option>Interview</option>
+            <option>Offer</option>
+            <option>Rejected</option>
+          </select>
+
+          <button class="pillBtn" onclick="addJobManual()">ADD MANUALLY</button>
+        </div>
+      </div>
     </div>
 
     <div class="main">
-      <!-- Left: stats -->
       <div>
         <div class="statCard">
           <div class="statTitle">Total Applications</div>
           <p class="statBig" id="totalApps">0</p>
 
           <div class="chartBox">
-            <canvas id="pie" width="260" height="260" aria-label="status pie chart"></canvas>
+            <canvas id="pie" width="260" height="260"></canvas>
             <div class="legend" id="legend"></div>
           </div>
 
           <div class="hint">
-            Tip: search highlights matching cards with a cute pop ✨
+            Data saves on reload ✅ Export gives you a backup file ✅
           </div>
         </div>
       </div>
 
-      <!-- Right: cards -->
       <div>
         <div class="jobsHeader">
           <div class="countPill" id="shownCount">Showing: 0</div>
           <div class="subnote" id="searchNote"></div>
         </div>
-
         <div class="jobsGrid" id="jobsGrid"></div>
       </div>
     </div>
-
   </div>
 
-<script>
+  <script>
+    // ---------- NEVER CHANGE THIS KEY AGAIN ----------
+    const STORAGE_KEY = "delusion_dashboard_jobs";
 
-  function exportJobs(){
-  const data = {
-    exportedAt: new Date().toISOString(),
-    version: 1,
-    jobs
-  };
+    // Previous keys from earlier versions (we migrate them so your data comes back)
+    const OLD_KEYS = [
+      "jobs_delusion_dashboard",
+      "jobs_delusion_dashboard_v2",
+      "jobs_delusion_dashboard_v1",
+      "jobs_delusion_dashboard_v3",
+      "jobs_delusion_dashboard_v4"
+    ];
 
-  const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
-  const url = URL.createObjectURL(blob);
-
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = `delusion-dashboard-jobs-${new Date().toISOString().slice(0,10)}.json`;
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-
-  URL.revokeObjectURL(url);
-}
-
-function importJobs(){
-  const input = document.getElementById("importFile");
-  input.value = "";
-  input.click();
-
-  input.onchange = async () => {
-    const file = input.files?.[0];
-    if(!file) return;
-
-    try{
-      const text = await file.text();
-      const parsed = JSON.parse(text);
-
-      const incoming = parsed.jobs || parsed; // allow importing raw array too
-      if(!Array.isArray(incoming)) throw new Error("Invalid file format");
-
-      // Normalize
-      jobs = incoming.map(j => ({
-        id: j.id || crypto.randomUUID(),
-        company: j.company || "Company",
-        position: j.position || "Title",
-        workStyle: j.workStyle || "Work type",
-        location: j.location || "Location",
-        salary: j.salary || "Salary",
-        url: j.url || "",
-        status: j.status || "Applied"
-      }));
-
-      saveJobs();
-      renderJobs(false);
-      alert("Imported successfully ✨");
-    } catch(e){
-      alert("Import failed 😭 Make sure it’s a valid export JSON file.");
+    function safeJsonParse(v){
+      try{ return JSON.parse(v); } catch { return null; }
     }
-  };
-}
-  // --------- Safety: if any JS error happens, show it ----------
-  window.addEventListener("error", (e) => {
-    alert("Something broke 😭\n\n" + (e?.message || "Unknown error") + "\n\n(Your data is still safe in your browser storage.)");
-  });
-  window.exportJobs = exportJobs;
-  window.importJobs = importJobs;
 
-  // --------- Storage (this is what saves on reload) ----------
-  const STORAGE_KEY = "jobs_delusion_dashboard_v2";
+    function loadJobs(){
+      // 1) Try current key
+      const current = safeJsonParse(localStorage.getItem(STORAGE_KEY));
+      if (Array.isArray(current) && current.length) return current;
 
-  function loadJobs(){
-    try{
-      return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-    } catch {
+      // 2) Try old keys and migrate first one found
+      for (const k of OLD_KEYS){
+        const old = safeJsonParse(localStorage.getItem(k));
+        if (Array.isArray(old) && old.length){
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(old));
+          return old;
+        }
+      }
       return [];
     }
-  }
 
-  function saveJobs(){
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(jobs));
-  }
+    let jobs = loadJobs();
 
-  let jobs = loadJobs();
-
-  const STATUS_ORDER = ["Applied","Awaiting Response","Interview","Offer","Rejected"];
-
-  function cssVar(name){
-    return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
-  }
-
-  // --------- Improved: parse description text (works for more formats) ----------
-  function parseJobDescription(text){
-  const raw = (text || "").replace(/\r/g, "\n");
-  const linesAll = raw.split("\n").map(l => (l || "").trim());
-  const lines = linesAll.filter(Boolean);
-  const joined = " " + lines.join(" ") + " ";
-
-  const clean = (s) => String(s || "").replace(/\s+/g, " ").trim();
-
-  // Things we NEVER want as company/title
-  const BAD_PHRASES = [
-    "about the job","premium access","see who you know","linkedin","easy apply",
-    "apply","applicant","applicants","promoted","new","save","share","report",
-    "benefits","requirements","responsibilities","qualifications",
-    "job details","job description","company overview",
-    "posted","posted on","time type","job requisition id","requisition id",
-    "locations","location",
-  ];
-
-  function isBadValue(s){
-    const x = clean(s).toLowerCase();
-    if(!x) return true;
-    if (BAD_PHRASES.some(p => x === p || x.startsWith(p + " ") || x.includes(" " + p + " "))) return true;
-    if (/^r\d{2,}$/i.test(x)) return true; // requisition IDs like R1198
-    if (x.length < 2) return true;
-    return false;
-  }
-
-  function afterLabel(labels){
-    // Supports: "Position: X", "Position - X", "Position – X", and even "Position X" (looser)
-    for(const lab of labels){
-      const strict = new RegExp(`(?:^|\\b)${lab}\\s*[:\\-–]\\s*([^\\n]{2,220})`, "i");
-      const m1 = raw.match(strict);
-      if(m1 && m1[1] && !isBadValue(m1[1])) return clean(m1[1]);
-
-      // looser: "Position  Field Outreach Representative" (no colon)
-      const loose = new RegExp(`(?:^|\\b)${lab}\\s{1,3}([^\\n]{2,220})`, "i");
-      const m2 = raw.match(loose);
-      if(m2 && m2[1] && !isBadValue(m2[1])) return clean(m2[1]);
+    function saveJobs(){
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(jobs));
     }
-    return "";
-  }
 
-  // ------------ TITLE ------------
-  // Strongest: explicit labels
-  let position = afterLabel(["position","role","job title","title"]);
+    const STATUS_ORDER = ["Applied","Awaiting Response","Interview","Offer","Rejected"];
 
-  // Next best: first “title-like” line (but NOT junk)
-  if(!position){
-    const titleRegex = /(intern|assistant|associate|representative|coordinator|manager|engineer|analyst|specialist|director|designer|consultant|administrator|officer)/i;
-    const firstGood = lines.find(l => !isBadValue(l) && l.length <= 140 && titleRegex.test(l));
-    if(firstGood) position = clean(firstGood);
-  }
-
-  // Final fallback: first non-bad line
-  if(!position){
-    const firstNonBad = lines.find(l => !isBadValue(l) && l.length <= 140);
-    if(firstNonBad) position = clean(firstNonBad);
-  }
-
-  // ------------ LOCATION ------------
-  let location = afterLabel(["location","locations","based in","office location"]);
-  if(!location){
-    // common: "On site, New York", "New York, USA"
-    const m = joined.match(/\b([A-Z][A-Za-z .'-]{2,45},\s?(?:USA|United States|UK|United Kingdom|Canada|India|Australia|[A-Z]{2,3}))\b/);
-    if(m && m[1] && !isBadValue(m[1])) location = clean(m[1]);
-  }
-
-  // ------------ WORK STYLE ------------
-  let workStyle = "";
-  if(/\bhybrid\b/i.test(joined)) workStyle = "Hybrid";
-  else if(/\bremote\b|\bwork from home\b|\bwfh\b/i.test(joined)) workStyle = "Remote";
-  else if(/\bon[-\s]?site\b|\bonsite\b|\bin[-\s]?person\b/i.test(joined)) workStyle = "On-site";
-
-  // if the location line itself includes onsite/remote, keep it too
-  const locLower = (location || "").toLowerCase();
-  if(!workStyle){
-    if(locLower.includes("on site") || locLower.includes("onsite")) workStyle = "On-site";
-    if(locLower.includes("remote")) workStyle = "Remote";
-    if(locLower.includes("hybrid")) workStyle = "Hybrid";
-  }
-
-  // also capture time type
-  const timeType = afterLabel(["time type","employment type"]);
-  if(timeType && !isBadValue(timeType)){
-    if(!workStyle) workStyle = timeType;
-    else workStyle = `${workStyle} • ${timeType}`;
-  }
-
-  // ------------ SALARY / PAY ------------
-  let salary = afterLabel(["salary","pay","compensation","rate"]);
-  if(!salary){
-    // ranges like $60k–$75k or $60,000 - $75,000
-    const mRange =
-      joined.match(/(\$?\s?\d{2,3}\s?[,.\s]?\d{3}\s?(?:–|-|to)\s?\$?\s?\d{2,3}\s?[,.\s]?\d{3})/i) ||
-      joined.match(/(\$\s?\d{1,3}(?:,\d{3})+\s?(?:–|-|to)\s?\$\s?\d{1,3}(?:,\d{3})+)/i);
-    if(mRange) salary = clean(mRange[1]);
-  }
-  if(!salary){
-    // “We pay $100 per sale”
-    const mPay = joined.match(/\b(?:we\s+pay|pay\s+is|pay)\s*(\$\s?\d+(?:\.\d+)?)\s*(?:per\s+(sale|hour|hr|week|month|year)|\/\s*(hr|hour))?/i);
-    if(mPay){
-      const amount = clean(mPay[1]);
-      const unit = clean(mPay[2] || mPay[3] || "");
-      salary = unit ? `${amount} per ${unit}` : amount;
+    function cssVar(name){
+      return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
     }
-  }
 
-  // ------------ COMPANY ------------
-  let company = afterLabel(["company","employer","organization","hiring organization"]);
+    // ---------- Parsing (description-based) ----------
+    function parseJobDescription(text){
+      const raw = (text || "").replace(/\r/g, "\n");
+      const linesAll = raw.split("\n").map(l => (l || "").trim());
+      const lines = linesAll.filter(Boolean);
+      const joined = " " + lines.join(" ") + " ";
 
-  // Best real-world signal: "At Whizz, we are..."
-  if(!company){
-    const mAt = raw.match(/\bAt\s+([A-Z][A-Za-z0-9&.'-]+(?:\s+[A-Z][A-Za-z0-9&.'-]+){0,4})\b\s*(?:,|\s)\s*(?:we|our|i)\b/i);
-    if(mAt && mAt[1] && !isBadValue(mAt[1])) company = clean(mAt[1]);
-  }
+      const clean = (s) => String(s || "").replace(/\s+/g, " ").trim();
 
-  // Also: "Whizz is a ..." / "Whizz is on a mission ..."
-  if(!company){
-    const mIs = raw.match(/\b([A-Z][A-Za-z0-9&.'-]+(?:\s+[A-Z][A-Za-z0-9&.'-]+){0,4})\s+is\s+(?:a|an|on)\b/);
-    if(mIs && mIs[1] && !isBadValue(mIs[1]) && mIs[1].length <= 40) company = clean(mIs[1]);
-  }
+      const BAD_PHRASES = [
+        "about the job","premium access","see who you know","linkedin","easy apply",
+        "apply","applicant","applicants","promoted","new","save","share","report",
+        "benefits","requirements","responsibilities","qualifications",
+        "job details","job description","company overview",
+        "posted","posted on","time type","job requisition id","requisition id",
+        "locations","location"
+      ];
 
-  // Also: "Join Whizz ..."
-  if(!company){
-    const mJoin = raw.match(/\bJoin\s+([A-Z][A-Za-z0-9&.'-]+(?:\s+[A-Z][A-Za-z0-9&.'-]+){0,4})\b/i);
-    if(mJoin && mJoin[1] && !isBadValue(mJoin[1])) company = clean(mJoin[1]);
-  }
+      function isBadValue(s){
+        const x = clean(s).toLowerCase();
+        if(!x) return true;
+        if (BAD_PHRASES.some(p => x === p || x.startsWith(p + " ") || x.includes(" " + p + " "))) return true;
+        if (/^r\d{2,}$/i.test(x)) return true;
+        return false;
+      }
 
-  // Ford style: "The Ford Foundation’s..."
-  if(!company){
-    const mThe = raw.match(/\bThe\s+([A-Z][A-Za-z0-9&.'-]+(?:\s+[A-Z][A-Za-z0-9&.'-]+){0,6})['’]s\b/);
-    if(mThe && mThe[1] && !isBadValue(mThe[1])) company = clean(mThe[1]);
-  }
+      function afterLabel(labels){
+        for(const lab of labels){
+          const strict = new RegExp(`(?:^|\\b)${lab}\\s*[:\\-–]\\s*([^\\n]{2,220})`, "i");
+          const m1 = raw.match(strict);
+          if(m1 && m1[1] && !isBadValue(m1[1])) return clean(m1[1]);
 
-  // Final cleanup: if company/title are bad, blank them so fallback can handle it
-  if(isBadValue(company)) company = "";
-  if(isBadValue(position)) position = "";
+          const loose = new RegExp(`(?:^|\\b)${lab}\\s{1,3}([^\\n]{2,220})`, "i");
+          const m2 = raw.match(loose);
+          if(m2 && m2[1] && !isBadValue(m2[1])) return clean(m2[1]);
+        }
+        return "";
+      }
 
-  return {
-    company: company || "",
-    position: position || "",
-    location: location || "",
-    workStyle: workStyle || "",
-    salary: salary || ""
-  };
-}
+      // Title
+      let position = afterLabel(["position","role","job title","title"]);
+      if(!position){
+        const titleRegex = /(intern|assistant|associate|representative|coordinator|manager|engineer|analyst|specialist|director|designer|consultant|administrator|officer)/i;
+        const firstGood = lines.find(l => !isBadValue(l) && l.length <= 140 && titleRegex.test(l));
+        if(firstGood) position = clean(firstGood);
+      }
+      if(!position){
+        const firstNonBad = lines.find(l => !isBadValue(l) && l.length <= 140);
+        if(firstNonBad) position = clean(firstNonBad);
+      }
+      if(isBadValue(position)) position = "";
 
-  function isJunkLine(s){
-    const x = (s || "").trim().toLowerCase();
-    if(!x) return true;
-    if(JUNK_LINES.has(x)) return true;
-    if(/^(posted|updated)\b/i.test(x)) return true;
-    if(/^r\d+/i.test(x)) return true; // requisition ids like R1198
-    return false;
-  }
+      // Location
+      let location = afterLabel(["location","locations","based in","office location"]);
+      if(!location){
+        const m = joined.match(/\b([A-Z][A-Za-z .'-]{2,45},\s?(?:USA|United States|UK|United Kingdom|Canada|India|Australia|[A-Z]{2,3}))\b/);
+        if(m && m[1] && !isBadValue(m[1])) location = clean(m[1]);
+      }
 
-  function afterLabel(labels){
-    for(const lab of labels){
-      const re = new RegExp(`(?:^|\\b)${lab}\\s*[:\\-–]\\s*([^\\n]{2,220})`, "i");
-      const m = raw.match(re);
-      if(m && m[1]) return clean(m[1]);
-    }
-    return "";
-  }
+      // Work style
+      let workStyle = "";
+      if(/\bhybrid\b/i.test(joined)) workStyle = "Hybrid";
+      else if(/\bremote\b|\bwork from home\b|\bwfh\b/i.test(joined)) workStyle = "Remote";
+      else if(/\bon[-\s]?site\b|\bonsite\b|\bin[-\s]?person\b/i.test(joined)) workStyle = "On-site";
 
-  function lineAfterKeyword(keywordRegex){
-    for(let i=0;i<linesAll.length;i++){
-      const line = (linesAll[i] || "").trim();
-      if(keywordRegex.test(line.toLowerCase())){
-        for(let j=i+1;j<linesAll.length;j++){
-          const nxt = (linesAll[j] || "").trim();
-          if(nxt) return nxt.trim();
+      const timeType = afterLabel(["time type","employment type"]);
+      if(timeType && !isBadValue(timeType)){
+        if(!workStyle) workStyle = timeType;
+        else workStyle = `${workStyle} • ${timeType}`;
+      }
+
+      // Salary / pay
+      let salary = afterLabel(["salary","pay","compensation","rate"]);
+      if(!salary){
+        const mPay = joined.match(/\b(?:we\s+pay|pay\s+is|pay)\s*(\$\s?\d+(?:\.\d+)?)\s*(?:per\s+(sale|hour|hr|week|month|year)|\/\s*(hr|hour))?/i);
+        if(mPay){
+          const amount = clean(mPay[1]);
+          const unit = clean(mPay[2] || mPay[3] || "");
+          salary = unit ? `${amount} per ${unit}` : amount;
         }
       }
-    }
-    return "";
-  }
-
-  function looksLikeLocation(s){
-    if(!s) return false;
-    const x = s.trim();
-    if(/^[A-Za-z .'-]{2,40},\s?[A-Z]{2,3}$/.test(x)) return true; // City, ST
-    if(/^[A-Za-z .'-]{2,40},\s?[A-Za-z .'-]{2,40}$/.test(x)) return true; // City, Country
-    if(/\b(remote|hybrid|on[-\s]?site|in[-\s]?person)\b/i.test(x)) return true;
-    return false;
-  }
-
-  function looksLikeCompany(s){
-    if(!s) return false;
-    const x = s.trim();
-    if(x.length < 2 || x.length > 60) return false;
-    if(isJunkLine(x)) return false;
-    if(/\b(inc|llc|ltd|corp|corporation|company|co\.|foundation|university|group|agency|bank|institute|partners|systems|technologies|labs|studio|studios)\b/i.test(x)) return true;
-    // Title-case name
-    if(/^[A-Z][A-Za-z0-9&.'-]+(?:\s+[A-Z][A-Za-z0-9&.'-]+){0,6}$/.test(x)) return true;
-    return false;
-  }
-
-  // ---------------- TITLE ----------------
-  // Strongest: "Position: X" / "Role: X" / "Job Title: X"
-  let position = afterLabel(["position","role","job title","title"]);
-  // If that fails: choose first non-junk line that looks like a job title
-  if(!position){
-    const firstGood = lines.find(l => !isJunkLine(l) && l.length <= 120);
-    position = clean(firstGood);
-  }
-  // If the parser accidentally grabs "About the job", keep searching
-  if(position && isJunkLine(position)){
-    const alt = lines.find(l => !isJunkLine(l) && l.length <= 120 && !/about the job/i.test(l));
-    position = clean(alt);
-  }
-
-  // ---------------- LOCATION ----------------
-  let location = afterLabel(["location","locations","based in","office location"]);
-  if(!location){
-    // if "locations" appears as its own line, use next line
-    const locCandidate = lineAfterKeyword(/^locations?$/i);
-    if(looksLikeLocation(locCandidate)) location = clean(locCandidate);
-  }
-  if(!location){
-    // Common pattern: "On site, New York" / "New York, USA"
-    const m = joined.match(/\b([A-Z][A-Za-z .'-]{2,40},\s?(?:USA|United States|UK|United Kingdom|Canada|India|Australia|[A-Z]{2}))\b/);
-    if(m) location = clean(m[1]);
-  }
-
-  // ---------------- WORK STYLE ----------------
-  let workStyle = "";
-  // detect onsite spelling variations
-  if(/\bhybrid\b/i.test(joined)) workStyle = "Hybrid";
-  else if(/\bremote\b|\bwork from home\b|\bwfh\b/i.test(joined)) workStyle = "Remote";
-  else if(/\bon[-\s]?site\b|\bonsite\b|\bin[-\s]?person\b/i.test(joined)) workStyle = "On-site";
-
-  // employment/time type
-  let timeType = afterLabel(["employment type","time type"]);
-  if(!timeType){
-    const tt = lineAfterKeyword(/^time type$/i);
-    if(tt) timeType = clean(tt);
-  }
-  if(timeType){
-    if(!workStyle) workStyle = timeType;
-    else workStyle = `${workStyle} • ${timeType}`;
-  }
-
-  // ---------------- SALARY / PAY ----------------
-  let salary = afterLabel(["salary","pay","compensation","rate"]);
-  if(!salary){
-    // ranges like $60k–$75k or $60,000 - $75,000
-    const mRange =
-      joined.match(/(\$?\s?\d{2,3}\s?[,.\s]?\d{3}\s?(?:–|-|to)\s?\$?\s?\d{2,3}\s?[,.\s]?\d{3})/i) ||
-      joined.match(/(\$\s?\d{1,3}(?:,\d{3})+\s?(?:–|-|to)\s?\$\s?\d{1,3}(?:,\d{3})+)/i);
-    if(mRange) salary = clean(mRange[1]);
-
-    // “We pay $100 per sale”
-    if(!salary){
-      const mPay = joined.match(/\b(?:we\s+pay|pay\s+is|pay)\s*(\$\s?\d+(?:\.\d+)?)\s*(?:per\s+(sale|hour|hr|week|month|year)|\/\s*(hr|hour))?/i);
-      if(mPay){
-        const amount = clean(mPay[1]);
-        const unit = clean(mPay[2] || mPay[3] || "");
-        salary = unit ? `${amount} per ${unit}` : amount;
+      if(!salary){
+        const mRange =
+          joined.match(/(\$?\s?\d{2,3}\s?[,.\s]?\d{3}\s?(?:–|-|to)\s?\$?\s?\d{2,3}\s?[,.\s]?\d{3})/i) ||
+          joined.match(/(\$\s?\d{1,3}(?:,\d{3})+\s?(?:–|-|to)\s?\$\s?\d{1,3}(?:,\d{3})+)/i);
+        if(mRange) salary = clean(mRange[1]);
       }
-    }
 
-    // hourly like $22/hr
-    if(!salary){
-      const mHr = joined.match(/(\$\s?\d+(?:\.\d+)?\s?(?:\/\s?(?:hr|hour)|per\s+(?:hour|hr)))/i);
-      if(mHr) salary = clean(mHr[1]);
-    }
-  }
-
-  // ---------------- COMPANY ----------------
-  let company = afterLabel(["company","employer","organization","hiring organization"]);
-
-  // Pattern: "At Whizz, we are..."
-  if(!company){
-    const mAt = raw.match(/\bAt\s+([A-Z][A-Za-z0-9&.'-]+(?:\s+[A-Z][A-Za-z0-9&.'-]+){0,4})\b\s*,/);
-    if(mAt && looksLikeCompany(mAt[1])) company = clean(mAt[1]);
-  }
-
-  // Pattern: "As Whizz Field Outreach Representative" -> company is first token "Whizz"
-  if(!company){
-    const mAs = raw.match(/\bAs\s+([A-Z][A-Za-z0-9&.'-]+)\b/i);
-    if(mAs && looksLikeCompany(mAs[1])) company = clean(mAs[1]);
-  }
-
-  // Pattern: "The Ford Foundation’s..."
-  if(!company){
-    const mThe = raw.match(/\bThe\s+([A-Z][A-Za-z0-9&.'-]+(?:\s+[A-Z][A-Za-z0-9&.'-]+){0,6})['’]s\b/);
-    if(mThe && looksLikeCompany(mThe[1])) company = clean(mThe[1]);
-  }
-
-  // Fallback: if we saw “At X” in first ~25 lines
-  if(!company){
-    const early = lines.slice(0, 25).join(" ");
-    const m = early.match(/\bAt\s+([A-Z][A-Za-z0-9&.'-]+(?:\s+[A-Z][A-Za-z0-9&.'-]+){0,4})\b/i);
-    if(m && looksLikeCompany(m[1])) company = clean(m[1]);
-  }
-
-  return {
-    company: company || "",
-    position: position || "",
-    location: location || "",
-    workStyle: workStyle || "",
-    salary: salary || ""
-  };
-}
-
-    function afterLabel(labels){
-      for(const lab of labels){
-        const re = new RegExp(`(?:^|\\b)${lab}\\s*[:\\-–]\\s*([^\\n\\|]{2,160})`, "i");
-        const m = raw.match(re);
-        if(m && m[1]) return m[1].trim();
+      // Company
+      let company = afterLabel(["company","employer","organization","hiring organization"]);
+      if(!company){
+        const mAt = raw.match(/\bAt\s+([A-Z][A-Za-z0-9&.'-]+(?:\s+[A-Z][A-Za-z0-9&.'-]+){0,4})\b\s*(?:,|\s)\s*(?:we|our|i)\b/i);
+        if(mAt && mAt[1] && !isBadValue(mAt[1])) company = clean(mAt[1]);
       }
-      return "";
-    }
-
-    function looksLikeLocation(s){
-      if(!s) return false;
-      const x = s.trim();
-      if(/^[A-Za-z .'-]{2,40},\s?[A-Z]{2,3}$/.test(x)) return true; // City, ST
-      if(/^[A-Za-z .'-]{2,40},\s?[A-Za-z .'-]{2,40}$/.test(x)) return true; // City, Country
-      if(/\b(remote|hybrid|on[-\s]?site|in[-\s]?person)\b/i.test(x)) return true;
-      return false;
-    }
-
-    function looksLikeCompany(s){
-      if(!s) return false;
-      const x = s.trim();
-      if(/^(apply|locations?|time type|posted on|job requisition|requisition id|full time|part time|internship)$/i.test(x)) return false;
-      if(/\b(inc|llc|ltd|corp|corporation|company|co\.|foundation|university|group|agency|bank|institute|partners|systems|technologies|labs|studio|studios)\b/i.test(x)) return true;
-      if(/^[A-Z][A-Za-z0-9&.'-]+(?:\s+[A-Z][A-Za-z0-9&.'-]+){0,6}$/.test(x) && x.length <= 55) return true;
-      return false;
-    }
-
-    // 1) Title: first meaningful line
-    let position = "";
-    for(const l of lines){
-      if(!/^(apply|locations?|time type|posted on|job requisition|requisition id)$/i.test(l)){
-        position = l;
-        break;
+      if(!company){
+        const mThe = raw.match(/\bThe\s+([A-Z][A-Za-z0-9&.'-]+(?:\s+[A-Z][A-Za-z0-9&.'-]+){0,6})['’]s\b/);
+        if(mThe && mThe[1] && !isBadValue(mThe[1])) company = clean(mThe[1]);
       }
-    }
-    position = clean(pickFirst(position, afterLabel(["role","position","job title","title","opening","opportunity"])));
+      if(isBadValue(company)) company = "";
 
-    // 2) Location
-    let location = clean(afterLabel(["location","based in","office location"]));
-    if(!location){
-      const locCandidate = lineAfterKeyword(/^locations?$/i);
-      if(looksLikeLocation(locCandidate)) location = clean(locCandidate);
-    }
-    if(!location){
-      const m2 = joined.match(/\b([A-Z][A-Za-z .'-]{2,40},\s?(?:USA|United States|UK|United Kingdom|Canada|India|Australia))\b/i);
-      const m1 = joined.match(/\b([A-Z][A-Za-z .'-]{2,40},\s?[A-Z]{2})\b/);
-      location = clean(pickFirst(m2?.[1], m1?.[1]));
+      return { company, position, location, workStyle, salary };
     }
 
-    // 3) Work style / time type
-    let workStyle = "";
-    if(/\bhybrid\b/i.test(joined)) workStyle = "Hybrid";
-    else if(/\bremote\b|\bwork from home\b|\bwfh\b/i.test(joined)) workStyle = "Remote";
-    else if(/\bon[-\s]?site\b|\bin[-\s]?person\b/i.test(joined)) workStyle = "On-site";
+    // ---------- Add job (from description) ----------
+    function addJobFromDescription(){
+      const url = document.getElementById("jobLink")?.value?.trim() || "";
+      const desc = document.getElementById("jobDesc")?.value?.trim() || "";
 
-    let timeType = clean(afterLabel(["employment type","time type"]));
-    if(!timeType){
-      const tt = lineAfterKeyword(/^time type$/i);
-      if(tt) timeType = clean(tt);
+      if(!desc && !url){
+        alert("Paste a description (or a link) first 🙂");
+        return;
+      }
+
+      const parsed = parseJobDescription(desc);
+
+      // if missing, ask once so it never saves garbage
+      let company = parsed.company;
+      let position = parsed.position;
+
+      if(!company){
+        company = (prompt("Couldn’t confidently find the company. What’s the company name?", "") || "").trim();
+      }
+      if(!position){
+        position = (prompt("Couldn’t confidently find the job title. What’s the title?", "") || "").trim();
+      }
+
+      const job = {
+        id: crypto.randomUUID(),
+        company: company || "Company",
+        position: position || "Title",
+        location: parsed.location || "Location",
+        workStyle: parsed.workStyle || "Work type",
+        salary: parsed.salary || "Salary",
+        url,
+        status: "Applied"
+      };
+
+      jobs.unshift(job);
+      saveJobs();
+
+      document.getElementById("jobLink").value = "";
+      document.getElementById("jobDesc").value = "";
+      renderJobs(false);
     }
-    if(timeType){
-      if(!workStyle) workStyle = timeType;
-      else workStyle = `${workStyle} • ${timeType}`;
+
+    // ---------- Manual add ----------
+    function addJobManual(){
+      const company = (document.getElementById("m_company").value || "").trim();
+      const position = (document.getElementById("m_title").value || "").trim();
+      const location = (document.getElementById("m_location").value || "").trim();
+      const workStyle = (document.getElementById("m_work").value || "").trim();
+      const salary = (document.getElementById("m_salary").value || "").trim();
+      const url = (document.getElementById("m_url").value || "").trim();
+      const status = document.getElementById("m_status").value;
+
+      if(!company && !position){
+        alert("Add at least Company or Title 🙂");
+        return;
+      }
+
+      jobs.unshift({
+        id: crypto.randomUUID(),
+        company: company || "Company",
+        position: position || "Title",
+        location: location || "Location",
+        workStyle: workStyle || "Work type",
+        salary: salary || "Salary",
+        url,
+        status
+      });
+
+      saveJobs();
+      // clear manual fields
+      ["m_company","m_title","m_location","m_work","m_salary","m_url"].forEach(id => document.getElementById(id).value = "");
+      document.getElementById("m_status").value = "Applied";
+      renderJobs(false);
     }
 
-    // 4) Salary
-    let salary = clean(afterLabel(["salary","pay","compensation","rate"]));
-    if(!salary){
-      const m =
-        joined.match(/(\$?\s?\d{2,3}\s?[,.\s]?\d{3}\s?(?:–|-|to)\s?\$?\s?\d{2,3}\s?[,.\s]?\d{3})/i) ||
-        joined.match(/(\$\s?\d+(?:\.\d+)?\s?\/\s?(?:hr|hour))\b/i) ||
-        joined.match(/\b(\$\s?\d+(?:,\d{3})+)\b/);
-      if(m) salary = clean(m[1]);
+    // ---------- Search ----------
+    function runSearch(){ renderJobs(true); }
+
+    // ---------- Export / Import ----------
+    function exportJobs(){
+      const data = {
+        exportedAt: new Date().toISOString(),
+        version: 1,
+        jobs
+      };
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type:"application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `delusion-dashboard-jobs-${new Date().toISOString().slice(0,10)}.json`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
     }
 
-    // 5) Company
-    let company = clean(afterLabel(["company","employer","organization","org","hiring organization"]));
+    function importJobs(){
+      const input = document.getElementById("importFile");
+      input.value = "";
+      input.click();
 
-    // Look for: "The Ford Foundation's ..."
-    if(!company){
-      const m = raw.match(/\bThe\s+([A-Z][A-Za-z0-9&.'-]+(?:\s+[A-Z][A-Za-z0-9&.'-]+){0,6})['’]s\b/);
-      if(m && looksLikeCompany(m[1])) company = clean(m[1]);
-    }
+      input.onchange = async () => {
+        const file = input.files?.[0];
+        if(!file) return;
 
-    // Look early in post for "The X ..." as company hint
-    if(!company){
-      const early = lines.slice(0, 30);
-      for(const l of early){
-        const mm = l.match(/\bThe\s+([A-Z][A-Za-z0-9&.'-]+(?:\s+[A-Z][A-Za-z0-9&.'-]+){0,6})\b/);
-        if(mm && looksLikeCompany(mm[1]) && !/program assistant/i.test(mm[1])){
-          company = clean(mm[1]);
-          break;
+        try{
+          const text = await file.text();
+          const parsed = JSON.parse(text);
+          const incoming = parsed.jobs || parsed;
+          if(!Array.isArray(incoming)) throw new Error("Invalid format");
+
+          jobs = incoming.map(j => ({
+            id: j.id || crypto.randomUUID(),
+            company: j.company || "Company",
+            position: j.position || "Title",
+            workStyle: j.workStyle || "Work type",
+            location: j.location || "Location",
+            salary: j.salary || "Salary",
+            url: j.url || "",
+            status: j.status || "Applied"
+          }));
+
+          saveJobs();
+          renderJobs(false);
+          alert("Imported successfully ✨");
+        } catch {
+          alert("Import failed 😭 Use a valid export JSON file.");
         }
+      };
+    }
+
+    // ---------- Card actions ----------
+    function updateStatus(id, newStatus){
+      const j = jobs.find(x => x.id === id);
+      if(!j) return;
+      j.status = newStatus;
+      saveJobs();
+      renderJobs(false);
+    }
+
+    function deleteJob(id){
+      jobs = jobs.filter(x => x.id !== id);
+      saveJobs();
+      renderJobs(false);
+    }
+
+    function startEdit(id){
+      const j = jobs.find(x => x.id === id);
+      if(!j) return;
+      j._editing = true;
+      renderJobs(false);
+    }
+
+    function cancelEdit(id){
+      const j = jobs.find(x => x.id === id);
+      if(!j) return;
+      j._editing = false;
+      renderJobs(false);
+    }
+
+    function saveEdit(id){
+      const j = jobs.find(x => x.id === id);
+      if(!j) return;
+
+      j.company = document.getElementById(`e_company_${id}`).value.trim() || "Company";
+      j.position = document.getElementById(`e_position_${id}`).value.trim() || "Title";
+      j.workStyle = document.getElementById(`e_workStyle_${id}`).value.trim() || "Work type";
+      j.location = document.getElementById(`e_location_${id}`).value.trim() || "Location";
+      j.salary = document.getElementById(`e_salary_${id}`).value.trim() || "Salary";
+      j.url = document.getElementById(`e_url_${id}`).value.trim() || "";
+
+      j._editing = false;
+      saveJobs();
+      renderJobs(false);
+    }
+
+    // ---------- Render + charts ----------
+    function getStatusCounts(){
+      const counts = {};
+      STATUS_ORDER.forEach(s => counts[s] = 0);
+      jobs.forEach(j => {
+        const s = STATUS_ORDER.includes(j.status) ? j.status : "Applied";
+        counts[s] = (counts[s] || 0) + 1;
+      });
+      return counts;
+    }
+
+    function drawPie(){
+      const canvas = document.getElementById("pie");
+      const ctx = canvas.getContext("2d");
+      const counts = getStatusCounts();
+      const total = Object.values(counts).reduce((a,b)=>a+b,0);
+
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+
+      const cx = canvas.width/2;
+      const cy = canvas.height/2;
+      const r = Math.min(cx,cy) - 8;
+
+      if(total === 0){
+        ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI*2);
+        ctx.fillStyle = "rgba(255,255,255,.65)";
+        ctx.fill();
+        ctx.fillStyle = cssVar("--text");
+        ctx.font = "900 14px system-ui";
+        ctx.textAlign = "center";
+        ctx.fillText("No jobs yet", cx, cy);
+        return;
       }
-    }
 
-    // Fallback: "at X"
-    if(!company){
-      const m = joined.match(/\b(?:at|with)\s+([A-Z][A-Za-z0-9&.'-]+(?:\s+[A-Z][A-Za-z0-9&.'-]+){0,6})\b/);
-      if(m && looksLikeCompany(m[1])) company = clean(m[1]);
-    }
+      const sliceColors = {
+        "Applied": cssVar("--p2"),
+        "Awaiting Response": cssVar("--p3"),
+        "Interview": cssVar("--p1"),
+        "Offer": cssVar("--p4"),
+        "Rejected": cssVar("--p5")
+      };
 
-    return {
-      company: company || "",
-      position: position || "",
-      location: location || "",
-      workStyle: workStyle || "",
-      salary: salary || ""
-    };
-  }
+      let start = -Math.PI/2;
+      STATUS_ORDER.forEach(status => {
+        const val = counts[status] || 0;
+        if(val <= 0) return;
+        const slice = (val/total) * Math.PI*2;
 
-  // --------- ADD JOB (description-based) ----------
-  function addJobFromDescription(){
-    const url = document.getElementById("jobLink")?.value?.trim() || "";
-    const desc = document.getElementById("jobDesc")?.value?.trim() || "";
+        ctx.beginPath();
+        ctx.moveTo(cx,cy);
+        ctx.arc(cx, cy, r, start, start + slice);
+        ctx.closePath();
+        ctx.fillStyle = sliceColors[status];
+        ctx.fill();
 
-    if(!desc && !url){
-      alert("Paste a description (or a link) first bestie 🙂");
-      return;
-    }
+        start += slice;
+      });
 
-    const parsed = parseJobDescription(desc);
-    // If parser is unsure, ask you (so it NEVER saves junk like “Premium Access”)
-let companyFixed = parsed.company;
-let positionFixed = parsed.position;
-
-if(!companyFixed){
-  companyFixed = prompt("Couldn’t confidently find the company. What’s the company name?", "") || "";
-}
-if(!positionFixed){
-  positionFixed = prompt("Couldn’t confidently find the job title. What’s the title?", "") || "";
-}
-
-// write back
-parsed.company = companyFixed.trim();
-parsed.position = positionFixed.trim();
-
-    const job = {
-      id: crypto.randomUUID(),
-      company: parsed.company || "Company",
-      position: parsed.position || "Title",
-      location: parsed.location || "Location",
-      workStyle: parsed.workStyle || "Work type",
-      salary: parsed.salary || "Salary",
-      url: url,
-      status: "Applied"
-    };
-
-    jobs.unshift(job);
-    saveJobs();
-
-    document.getElementById("jobLink").value = "";
-    document.getElementById("jobDesc").value = "";
-
-    renderJobs(false);
-  }
-
-  // --------- Search ----------
-  function runSearch(){
-    renderJobs(true);
-  }
-
-  // --------- Update / delete / edit ----------
-  function updateStatus(id, newStatus){
-    const j = jobs.find(x => x.id === id);
-    if(!j) return;
-    j.status = newStatus;
-    saveJobs();
-    renderJobs(false);
-  }
-
-  function deleteJob(id){
-    jobs = jobs.filter(x => x.id !== id);
-    saveJobs();
-    renderJobs(false);
-  }
-
-  function startEdit(id){
-    const j = jobs.find(x => x.id === id);
-    if(!j) return;
-    j._editing = true;
-    renderJobs(false);
-  }
-
-  function cancelEdit(id){
-    const j = jobs.find(x => x.id === id);
-    if(!j) return;
-    j._editing = false;
-    renderJobs(false);
-  }
-
-  function saveEdit(id){
-    const j = jobs.find(x => x.id === id);
-    if(!j) return;
-
-    j.company = document.getElementById(`e_company_${id}`).value.trim() || "Company";
-    j.position = document.getElementById(`e_position_${id}`).value.trim() || "Title";
-    j.workStyle = document.getElementById(`e_workStyle_${id}`).value.trim() || "Work type";
-    j.location = document.getElementById(`e_location_${id}`).value.trim() || "Location";
-    j.salary = document.getElementById(`e_salary_${id}`).value.trim() || "Salary";
-    j.url = document.getElementById(`e_url_${id}`).value.trim() || "";
-
-    j._editing = false;
-    saveJobs();
-    renderJobs(false);
-  }
-
-  // --------- Render ----------
-  function getStatusCounts(){
-    const counts = {};
-    STATUS_ORDER.forEach(s => counts[s] = 0);
-    jobs.forEach(j => {
-      const s = STATUS_ORDER.includes(j.status) ? j.status : "Applied";
-      counts[s] = (counts[s] || 0) + 1;
-    });
-    return counts;
-  }
-
-  function drawPie(){
-    const canvas = document.getElementById("pie");
-    const ctx = canvas.getContext("2d");
-    const counts = getStatusCounts();
-    const total = Object.values(counts).reduce((a,b)=>a+b,0);
-
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-
-    const cx = canvas.width/2;
-    const cy = canvas.height/2;
-    const r = Math.min(cx,cy) - 8;
-
-    if(total === 0){
       ctx.beginPath();
-      ctx.arc(cx, cy, r, 0, Math.PI*2);
-      ctx.fillStyle = "rgba(255, 255, 255, .65)";
+      ctx.arc(cx, cy, r*0.58, 0, Math.PI*2);
+      ctx.fillStyle = "rgba(255,255,255,.78)";
       ctx.fill();
+
       ctx.fillStyle = cssVar("--text");
-      ctx.font = "900 14px system-ui";
+      ctx.font = "950 18px system-ui";
       ctx.textAlign = "center";
-      ctx.fillText("No jobs yet", cx, cy);
-      return;
+      ctx.fillText(`${total}`, cx, cy-2);
+
+      ctx.font = "900 11px system-ui";
+      ctx.fillStyle = cssVar("--muted");
+      ctx.fillText("total", cx, cy+14);
     }
 
-    const sliceColors = {
-      "Applied": cssVar("--p2"),
-      "Awaiting Response": cssVar("--p3"),
-      "Interview": cssVar("--p1"),
-      "Offer": cssVar("--p4"),
-      "Rejected": cssVar("--p5")
-    };
+    function drawLegend(){
+      const el = document.getElementById("legend");
+      const counts = getStatusCounts();
+      const total = Object.values(counts).reduce((a,b)=>a+b,0) || 1;
 
-    let start = -Math.PI/2;
-    STATUS_ORDER.forEach(status => {
-      const val = counts[status] || 0;
-      if(val <= 0) return;
-      const slice = (val/total) * Math.PI*2;
+      const sliceColors = {
+        "Applied": cssVar("--p2"),
+        "Awaiting Response": cssVar("--p3"),
+        "Interview": cssVar("--p1"),
+        "Offer": cssVar("--p4"),
+        "Rejected": cssVar("--p5")
+      };
 
-      ctx.beginPath();
-      ctx.moveTo(cx,cy);
-      ctx.arc(cx, cy, r, start, start + slice);
-      ctx.closePath();
-      ctx.fillStyle = sliceColors[status];
-      ctx.fill();
-
-      start += slice;
-    });
-
-    ctx.beginPath();
-    ctx.arc(cx, cy, r*0.58, 0, Math.PI*2);
-    ctx.fillStyle = "rgba(255,255,255,.78)";
-    ctx.fill();
-
-    ctx.fillStyle = cssVar("--text");
-    ctx.font = "950 18px system-ui";
-    ctx.textAlign = "center";
-    ctx.fillText(`${total}`, cx, cy-2);
-
-    ctx.font = "900 11px system-ui";
-    ctx.fillStyle = cssVar("--muted");
-    ctx.fillText("total", cx, cy+14);
-  }
-
-  function drawLegend(){
-    const el = document.getElementById("legend");
-    const counts = getStatusCounts();
-    const total = Object.values(counts).reduce((a,b)=>a+b,0) || 1;
-
-    const sliceColors = {
-      "Applied": cssVar("--p2"),
-      "Awaiting Response": cssVar("--p3"),
-      "Interview": cssVar("--p1"),
-      "Offer": cssVar("--p4"),
-      "Rejected": cssVar("--p5")
-    };
-
-    el.innerHTML = STATUS_ORDER.map(status => {
-      const val = counts[status] || 0;
-      const pct = Math.round((val/total)*100);
-      return `
-        <div class="legendItem">
-          <div class="legendLeft">
-            <span class="dot" style="background:${sliceColors[status]}"></span>
-            <span class="legendName">${status}</span>
-          </div>
-          <div>${val} • ${pct}%</div>
-        </div>
-      `;
-    }).join("");
-  }
-
-  function renderJobs(scrollToMatch=false){
-    const q = (document.getElementById("search")?.value || "").toLowerCase().trim();
-    const grid = document.getElementById("jobsGrid");
-    grid.innerHTML = "";
-
-    const filtered = jobs.filter(j => {
-      if(!q) return true;
-      const hay = `${j.company} ${j.position} ${j.location} ${j.workStyle} ${j.salary} ${j.status}`.toLowerCase();
-      return hay.includes(q);
-    });
-
-    document.getElementById("totalApps").textContent = String(jobs.length);
-    document.getElementById("shownCount").textContent = `Showing: ${filtered.length}`;
-    document.getElementById("searchNote").textContent = q ? `Matches for “${q}”` : "";
-
-    let firstMatchEl = null;
-
-    filtered.forEach(job => {
-      const card = document.createElement("div");
-      card.className = "jobCard" + (q ? " match" : "");
-
-      const hasLink = !!(job.url && job.url.trim());
-      const linkHtml = hasLink
-        ? `<a class="linkBtn" href="${escapeAttr(job.url)}" target="_blank" rel="noreferrer">Link</a>`
-        : `<span class="linkBtn" style="opacity:.6; cursor:default;">No link</span>`;
-
-      if(job._editing){
-        card.innerHTML = `
-          <div class="jobTop">
-            <span class="tag">Editing</span>
-            <select onchange="updateStatus('${job.id}', this.value)">
-              ${STATUS_ORDER.map(s => `<option ${s===job.status ? "selected":""}>${s}</option>`).join("")}
-            </select>
-          </div>
-
-          <div class="jobText">
-            <div><b>Company</b><br><input class="miniInput" id="e_company_${job.id}" value="${escapeAttr(job.company)}"></div>
-            <div><b>Title</b><br><input class="miniInput" id="e_position_${job.id}" value="${escapeAttr(job.position)}"></div>
-            <div><b>Work type</b><br><input class="miniInput" id="e_workStyle_${job.id}" value="${escapeAttr(job.workStyle)}"></div>
-            <div><b>Location</b><br><input class="miniInput" id="e_location_${job.id}" value="${escapeAttr(job.location)}"></div>
-            <div><b>Salary</b><br><input class="miniInput" id="e_salary_${job.id}" value="${escapeAttr(job.salary)}"></div>
-            <div><b>Link</b><br><input class="miniInput" id="e_url_${job.id}" value="${escapeAttr(job.url || "")}" placeholder="optional link"></div>
-          </div>
-
-          <div class="actionsRow">
-            <button class="smallBtn" onclick="cancelEdit('${job.id}')">Cancel</button>
-            <button class="smallBtn primary" onclick="saveEdit('${job.id}')">Save</button>
-            <button class="smallBtn" onclick="deleteJob('${job.id}')">Delete</button>
+      el.innerHTML = STATUS_ORDER.map(status => {
+        const val = counts[status] || 0;
+        const pct = Math.round((val/total)*100);
+        return `
+          <div class="legendItem">
+            <div class="legendLeft">
+              <span class="dot" style="background:${sliceColors[status]}"></span>
+              <span class="legendName">${status}</span>
+            </div>
+            <div>${val} • ${pct}%</div>
           </div>
         `;
-      } else {
-        card.innerHTML = `
-          <div class="jobTop">
-            <span class="tag">${escapeHtml(job.status)}</span>
-            <select onchange="updateStatus('${job.id}', this.value)">
-              ${STATUS_ORDER.map(s => `<option ${s===job.status ? "selected":""}>${s}</option>`).join("")}
-            </select>
-          </div>
+      }).join("");
+    }
 
-          <div class="jobText">
-            <div><b>Company:</b> ${escapeHtml(job.company)}</div>
-            <div><b>Title:</b> ${escapeHtml(job.position)}</div>
-            <div><b>Work:</b> ${escapeHtml(job.workStyle)}</div>
-            <div><b>Location:</b> ${escapeHtml(job.location)}</div>
-            <div><b>Salary:</b> ${escapeHtml(job.salary)}</div>
-          </div>
+    function escapeHtml(str){
+      return String(str ?? "")
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#39;");
+    }
+    function escapeAttr(str){
+      return escapeHtml(str).replaceAll("`","&#96;");
+    }
 
-          <div class="jobLinkRow">
-            ${linkHtml}
-            <button class="smallBtn" onclick="startEdit('${job.id}')">Edit</button>
-            <button class="smallBtn" onclick="deleteJob('${job.id}')">Delete</button>
-          </div>
-        `;
+    function renderJobs(scrollToMatch=false){
+      const q = (document.getElementById("search")?.value || "").toLowerCase().trim();
+      const grid = document.getElementById("jobsGrid");
+      grid.innerHTML = "";
+
+      const filtered = jobs.filter(j => {
+        if(!q) return true;
+        const hay = `${j.company} ${j.position} ${j.location} ${j.workStyle} ${j.salary} ${j.status}`.toLowerCase();
+        return hay.includes(q);
+      });
+
+      document.getElementById("totalApps").textContent = String(jobs.length);
+      document.getElementById("shownCount").textContent = `Showing: ${filtered.length}`;
+      document.getElementById("searchNote").textContent = q ? `Matches for “${q}”` : "";
+
+      let firstMatchEl = null;
+
+      filtered.forEach(job => {
+        const card = document.createElement("div");
+        card.className = "jobCard" + (q ? " match" : "");
+
+        const hasLink = !!(job.url && job.url.trim());
+        const linkHtml = hasLink
+          ? `<a class="linkBtn" href="${escapeAttr(job.url)}" target="_blank" rel="noreferrer">Link</a>`
+          : `<span class="linkBtn" style="opacity:.6; cursor:default;">No link</span>`;
+
+        if(job._editing){
+          card.innerHTML = `
+            <div class="jobTop">
+              <span class="tag">Editing</span>
+              <select onchange="updateStatus('${job.id}', this.value)">
+                ${STATUS_ORDER.map(s => `<option ${s===job.status ? "selected":""}>${s}</option>`).join("")}
+              </select>
+            </div>
+
+            <div class="jobText">
+              <div><b>Company</b><br><input class="miniInput" id="e_company_${job.id}" value="${escapeAttr(job.company)}"></div>
+              <div><b>Title</b><br><input class="miniInput" id="e_position_${job.id}" value="${escapeAttr(job.position)}"></div>
+              <div><b>Work type</b><br><input class="miniInput" id="e_workStyle_${job.id}" value="${escapeAttr(job.workStyle)}"></div>
+              <div><b>Location</b><br><input class="miniInput" id="e_location_${job.id}" value="${escapeAttr(job.location)}"></div>
+              <div><b>Salary</b><br><input class="miniInput" id="e_salary_${job.id}" value="${escapeAttr(job.salary)}"></div>
+              <div><b>Link</b><br><input class="miniInput" id="e_url_${job.id}" value="${escapeAttr(job.url || "")}" placeholder="optional link"></div>
+            </div>
+
+            <div class="actionsRow">
+              <button class="smallBtn" onclick="cancelEdit('${job.id}')">Cancel</button>
+              <button class="smallBtn primary" onclick="saveEdit('${job.id}')">Save</button>
+              <button class="smallBtn" onclick="deleteJob('${job.id}')">Delete</button>
+            </div>
+          `;
+        } else {
+          card.innerHTML = `
+            <div class="jobTop">
+              <span class="tag">${escapeHtml(job.status)}</span>
+              <select onchange="updateStatus('${job.id}', this.value)">
+                ${STATUS_ORDER.map(s => `<option ${s===job.status ? "selected":""}>${s}</option>`).join("")}
+              </select>
+            </div>
+
+            <div class="jobText">
+              <div><b>Company:</b> ${escapeHtml(job.company)}</div>
+              <div><b>Title:</b> ${escapeHtml(job.position)}</div>
+              <div><b>Work:</b> ${escapeHtml(job.workStyle)}</div>
+              <div><b>Location:</b> ${escapeHtml(job.location)}</div>
+              <div><b>Salary:</b> ${escapeHtml(job.salary)}</div>
+            </div>
+
+            <div class="jobLinkRow">
+              ${linkHtml}
+              <button class="smallBtn" onclick="startEdit('${job.id}')">Edit</button>
+              <button class="smallBtn" onclick="deleteJob('${job.id}')">Delete</button>
+            </div>
+          `;
+        }
+
+        grid.appendChild(card);
+        if(!firstMatchEl) firstMatchEl = card;
+      });
+
+      if(scrollToMatch && firstMatchEl){
+        firstMatchEl.scrollIntoView({ behavior:"smooth", block:"start" });
       }
 
-      grid.appendChild(card);
-      if(!firstMatchEl) firstMatchEl = card;
-    });
-
-    if(scrollToMatch && firstMatchEl){
-      firstMatchEl.scrollIntoView({ behavior: "smooth", block: "start" });
+      drawPie();
+      drawLegend();
     }
 
-    drawPie();
-    drawLegend();
-  }
+    // ---------- IMPORTANT: expose functions so onclick works ----------
+    window.addJobFromDescription = addJobFromDescription;
+    window.addJobManual = addJobManual;
+    window.runSearch = runSearch;
+    window.exportJobs = exportJobs;
+    window.importJobs = importJobs;
+    window.updateStatus = updateStatus;
+    window.deleteJob = deleteJob;
+    window.startEdit = startEdit;
+    window.cancelEdit = cancelEdit;
+    window.saveEdit = saveEdit;
 
-  function escapeHtml(str){
-    return String(str ?? "")
-      .replaceAll("&","&amp;")
-      .replaceAll("<","&lt;")
-      .replaceAll(">","&gt;")
-      .replaceAll('"',"&quot;")
-      .replaceAll("'","&#39;");
-  }
-  function escapeAttr(str){
-    return escapeHtml(str).replaceAll("`","&#96;");
-  }
-
-  // Make these functions accessible for onclick="" in HTML
-  window.addJobFromDescription = addJobFromDescription;
-  window.runSearch = runSearch;
-  window.updateStatus = updateStatus;
-  window.deleteJob = deleteJob;
-  window.startEdit = startEdit;
-  window.cancelEdit = cancelEdit;
-  window.saveEdit = saveEdit;
-
-  // Initial render
-  renderJobs(false);
-</script>
+    renderJobs(false);
+  </script>
 </body>
 </html>

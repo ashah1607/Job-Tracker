@@ -77,7 +77,10 @@ border-radius:6px;
 </div>
 
 <div class="inputBox">
-<input id="jobLink" placeholder="Paste job link here">
+<input id="jobLink" placeholder="Paste job link">
+<input id="title" placeholder="Job Title">
+<input id="company" placeholder="Company">
+<input id="location" placeholder="Location">
 <button onclick="addJob()">Add Job</button>
 </div>
 
@@ -107,7 +110,9 @@ card.innerHTML=`
 
 <h3>${job.title}</h3>
 <p>${job.company}</p>
-<p>${job.url}</p>
+<p>🏢 ${job.company}</p>
+<p>📍 ${job.location}</p>
+<p>🔗 <a href="${job.url}" target="_blank">View Job</a></p>
 
 <select onchange="updateStatus(${index},this.value)">
 <option ${job.status=="Applied"?"selected":""}>Applied</option>
@@ -127,13 +132,17 @@ container.appendChild(card)
 function addJob(){
 
 const link=document.getElementById("jobLink").value
+const title=document.getElementById("title").value
+const company=document.getElementById("company").value
+const location=document.getElementById("location").value
 
-if(!link)return
+if(!title)return
 
 jobs.push({
 
-title:"New Job",
-company:"Company",
+title,
+company,
+location,
 status:"Applied",
 url:link
 
@@ -144,9 +153,11 @@ saveJobs()
 renderJobs()
 
 document.getElementById("jobLink").value=""
+document.getElementById("title").value=""
+document.getElementById("company").value=""
+document.getElementById("location").value=""
 
 }
-
 function updateStatus(index,status){
 
 jobs[index].status=status

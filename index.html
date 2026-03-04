@@ -1,260 +1,653 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-<title>Ayushi's Job Tracker</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>The Delusion Dashboard</title>
 
-<style>
+  <style>
+    :root{
+      --c1:#D8E2DC; /* sage */
+      --c2:#EDFFEC; /* mint bg */
+      --c3:#FFCAD4; /* light pink */
+      --c4:#F4ACB7; /* rose pink */
+      --c5:#9D8189; /* mauve */
+    }
 
-body{
-font-family: 'Segoe UI', sans-serif;
-background:#EDFFEC;
-margin:0;
-padding:40px;
-color:#9D8189;
-}
+    *{ box-sizing:border-box; }
 
-.container{
-max-width:1100px;
-margin:auto;
-}
+    body{
+      margin:0;
+      padding:28px 18px 60px;
+      font-family: ui-serif, Georgia, "Times New Roman", serif;
+      background: var(--c2);
+      color: var(--c5);
+    }
 
-.header{
-font-size:36px;
-font-weight:600;
-margin-bottom:20px;
-color:#9D8189;
-}
+    .wrap{
+      max-width: 1180px;
+      margin: 0 auto;
+    }
 
-.inputBox{
-display:flex;
-gap:10px;
-margin-bottom:20px;
-flex-wrap:wrap;
-}
+    /* Header pill */
+    .titlePill{
+      background: var(--c5);
+      color: var(--c2);
+      border-radius: 28px;
+      padding: 22px 18px 16px;
+      text-align:center;
+      box-shadow: 0 10px 24px rgba(157,129,137,.25);
+    }
+    .titlePill h1{
+      margin:0;
+      font-size: 34px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+    .titlePill p{
+      margin: 6px 0 0;
+      font-size: 16px;
+      letter-spacing: .6px;
+      text-transform: uppercase;
+      color: var(--c3);
+      font-family: ui-serif, Georgia, "Times New Roman", serif;
+    }
 
-.logoBox{
-text-align:center;
-margin-bottom:30px;
-}
+    /* Control rows */
+    .controls{
+      margin-top: 18px;
+      display:grid;
+      gap: 14px;
+    }
 
-.logoTitle{
-font-size:42px;
-color:#9D8189;
-margin:0;
-letter-spacing:1px;
-}
+    .controlRow{
+      display:grid;
+      grid-template-columns: 1fr 300px;
+      gap: 14px;
+      align-items: stretch;
+    }
 
-.logoTag{
-font-size:18px;
-margin-top:6px;
-color:#F4ACB7;
-font-style:italic;
-}
+    .pillInput{
+      background: var(--c5);
+      border-radius: 22px;
+      padding: 14px 18px;
+      display:flex;
+      align-items:center;
+      gap: 10px;
+      box-shadow: 0 10px 20px rgba(157,129,137,.15);
+    }
 
-input{
-padding:12px;
-border-radius:12px;
-border:none;
-background:white;
-box-shadow:0 2px 6px rgba(0,0,0,0.05);
-}
+    .pillInput label{
+      color: var(--c3);
+      text-transform: uppercase;
+      letter-spacing: .8px;
+      font-size: 14px;
+      white-space:nowrap;
+    }
 
-button{
-padding:12px 18px;
-border:none;
-background:#F4ACB7;
-color:white;
-border-radius:12px;
-cursor:pointer;
-font-weight:500;
-}
+    .pillInput input{
+      width:100%;
+      border: none;
+      outline:none;
+      background: transparent;
+      color: var(--c2);
+      font-size: 16px;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    }
+    .pillInput input::placeholder{
+      color: rgba(237,255,236,.75);
+    }
 
-button:hover{
-background:#FFCAD4;
-}
+    .pillBtn{
+      border:none;
+      cursor:pointer;
+      border-radius: 22px;
+      padding: 14px 18px;
+      font-weight: 800;
+      letter-spacing: .8px;
+      text-transform: uppercase;
+      background: var(--c4);
+      color: var(--c5);
+      box-shadow: 0 10px 20px rgba(244,172,183,.35);
+      transition: transform .05s ease, filter .2s ease;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    }
+    .pillBtn:hover{ filter: brightness(1.02); }
+    .pillBtn:active{ transform: translateY(1px); }
 
-.searchBox{
-margin-bottom:25px;
-}
+    /* Main layout */
+    .main{
+      margin-top: 18px;
+      display:grid;
+      grid-template-columns: 320px 1fr;
+      gap: 18px;
+      align-items:start;
+    }
 
-.jobs{
-display:grid;
-grid-template-columns:repeat(auto-fill,minmax(250px,1fr));
-gap:20px;
-}
+    /* Stats column */
+    .statCard{
+      background: var(--c5);
+      color: var(--c2);
+      border-radius: 22px;
+      padding: 18px;
+      box-shadow: 0 10px 20px rgba(157,129,137,.15);
+    }
 
-.card{
-background:white;
-padding:18px;
-border-radius:16px;
-box-shadow:0 4px 10px rgba(0,0,0,0.05);
-border-top:6px solid #FFCAD4;
-}
+    .statTitle{
+      text-transform: uppercase;
+      letter-spacing: .9px;
+      font-weight: 800;
+      font-size: 14px;
+      color: var(--c3);
+      margin: 0 0 8px;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    }
 
-.card h3{
-margin:0 0 5px 0;
-}
+    .statBig{
+      font-size: 46px;
+      font-weight: 900;
+      line-height: 1;
+      margin: 0;
+      color: var(--c2);
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    }
 
-.card p{
-margin:5px 0;
-}
+    .statSub{
+      margin: 10px 0 0;
+      color: rgba(237,255,236,.85);
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      font-size: 13px;
+      line-height: 1.35;
+    }
 
-select{
-margin-top:10px;
-padding:6px;
-border-radius:8px;
-border:1px solid #D8E2DC;
-}
+    .chartBox{
+      margin-top: 14px;
+      background: rgba(237,255,236,.08);
+      border: 1px solid rgba(255,202,212,.35);
+      border-radius: 18px;
+      padding: 12px;
+    }
 
-a{
-text-decoration:none;
-color:#9D8189;
-font-weight:500;
-}
+    .legend{
+      margin-top: 10px;
+      display:grid;
+      gap: 8px;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      font-size: 13px;
+      color: rgba(237,255,236,.9);
+    }
+    .legendItem{
+      display:flex;
+      justify-content: space-between;
+      gap:10px;
+      align-items:center;
+    }
+    .dot{
+      width:10px;
+      height:10px;
+      border-radius: 999px;
+      display:inline-block;
+      margin-right:8px;
+      flex: 0 0 auto;
+    }
+    .legendLeft{
+      display:flex;
+      align-items:center;
+      min-width: 0;
+    }
+    .legendName{
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow: ellipsis;
+    }
 
-</style>
+    /* Jobs grid */
+    .jobsGrid{
+      display:grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
 
+    .jobCard{
+      background: var(--c1);
+      border-radius: 22px;
+      padding: 16px 16px 14px;
+      box-shadow: 0 10px 20px rgba(157,129,137,.10);
+      border: 2px solid rgba(157,129,137,.22);
+      position: relative;
+    }
+
+    .jobCard .topLine{
+      display:flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items:flex-start;
+      margin-bottom: 10px;
+    }
+
+    .jobCompany{
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: .7px;
+      font-size: 14px;
+      margin: 0;
+      color: var(--c5);
+      font-family: ui-serif, Georgia, "Times New Roman", serif;
+    }
+
+    .jobTitle{
+      margin: 4px 0 0;
+      font-size: 15px;
+      color: rgba(157,129,137,.92);
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      font-weight: 700;
+    }
+
+    .tag{
+      background: var(--c3);
+      color: var(--c5);
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .6px;
+      text-transform: uppercase;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      white-space:nowrap;
+    }
+
+    .jobMeta{
+      display:grid;
+      gap: 6px;
+      margin-top: 8px;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      font-size: 13px;
+      color: rgba(157,129,137,.92);
+    }
+
+    .jobMeta b{ color: var(--c5); }
+
+    .jobLink{
+      margin-top: 10px;
+      display:flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items:center;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    }
+
+    .jobLink a{
+      color: var(--c5);
+      text-decoration: none;
+      font-weight: 900;
+      background: var(--c3);
+      padding: 8px 10px;
+      border-radius: 12px;
+      display:inline-block;
+    }
+    .jobLink a:hover{ background: var(--c4); }
+
+    select{
+      border-radius: 12px;
+      border: 1px solid rgba(157,129,137,.30);
+      padding: 8px 10px;
+      background: var(--c2);
+      color: var(--c5);
+      font-weight: 800;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      cursor:pointer;
+    }
+
+    .row2{
+      display:grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .miniInput{
+      width:100%;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(157,129,137,.18);
+      background: var(--c2);
+      color: var(--c5);
+      outline:none;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      font-weight: 700;
+    }
+
+    .miniInput::placeholder{
+      color: rgba(157,129,137,.55);
+      font-weight: 700;
+    }
+
+    .hint{
+      margin-top: 10px;
+      font-size: 12px;
+      color: rgba(157,129,137,.75);
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    }
+
+    @media (max-width: 1050px){
+      .jobsGrid{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .controlRow{ grid-template-columns: 1fr; }
+    }
+    @media (max-width: 760px){
+      .main{ grid-template-columns: 1fr; }
+      .jobsGrid{ grid-template-columns: 1fr; }
+    }
+  </style>
 </head>
 
 <body>
+  <div class="wrap">
 
-<div class="container">
+    <div class="titlePill">
+      <h1>THE DELUSION DASHBOARD</h1>
+      <p>MANIFESTING EMPLOYMENT</p>
+    </div>
 
-<div class="logoBox">
+    <div class="controls">
+      <div class="controlRow">
+        <div class="pillInput">
+          <label>Job Link</label>
+          <input id="jobLink" placeholder="paste link here..." />
+        </div>
+        <button class="pillBtn" onclick="addJob()">ADD JOB</button>
+      </div>
 
-<h1 class="logoTitle">
-✨ The Delusion Dashboard ✨
-</h1>
+      <div class="controlRow">
+        <div class="pillInput">
+          <label>Search Word</label>
+          <input id="search" placeholder="company, title, location..." />
+        </div>
+        <button class="pillBtn" onclick="renderJobs()">SEARCH JOB</button>
+      </div>
+    </div>
 
-<p class="logoTag">
-manifesting employment
-</p>
+    <div class="main">
+      <!-- Left: stats -->
+      <div>
+        <div class="statCard">
+          <div class="statTitle">Total Applications</div>
+          <p class="statBig" id="totalApps">0</p>
+          <p class="statSub">
+            Your breakdown updates automatically based on status.
+          </p>
 
-</div>
+          <div class="chartBox">
+            <canvas id="pie" width="260" height="260" aria-label="status pie chart"></canvas>
 
-<div class="inputBox">
+            <div class="legend" id="legend"></div>
+          </div>
 
-<input id="jobLink" placeholder="Job link">
+          <div class="hint">
+            Tip: update status on any card → chart + totals update instantly.
+          </div>
+        </div>
+      </div>
 
-<input id="title" placeholder="Job title">
+      <!-- Right: cards -->
+      <div>
+        <!-- Optional extra fields to keep it functional + neat -->
+        <div class="row2" style="margin-bottom:14px;">
+          <input class="miniInput" id="company" placeholder="Company (optional but nice)" />
+          <input class="miniInput" id="position" placeholder="Position / Title (optional but nice)" />
+          <input class="miniInput" id="workStyle" placeholder="Work style: Remote / Hybrid / On-site" />
+          <input class="miniInput" id="location" placeholder="Location" />
+          <input class="miniInput" id="salary" placeholder="Salary (e.g., $60k–$75k)" />
+          <select id="statusDefault" title="default status">
+            <option>Applied</option>
+            <option>Awaiting Response</option>
+            <option>Interview</option>
+            <option>Offer</option>
+            <option>Rejected</option>
+          </select>
+        </div>
 
-<input id="company" placeholder="Company">
+        <div class="jobsGrid" id="jobsGrid"></div>
+      </div>
+    </div>
 
-<input id="location" placeholder="Location">
+  </div>
 
-<button onclick="addJob()">Add Job</button>
+  <script>
+    // Local storage
+    let jobs = JSON.parse(localStorage.getItem("jobs_delusion_dashboard")) || [];
 
-</div>
+    const STATUS_ORDER = ["Applied","Awaiting Response","Interview","Offer","Rejected"];
 
-<div class="searchBox">
-<input id="search" placeholder="Search jobs..." onkeyup="renderJobs()">
-</div>
+    // Palette for chart slices (uses ONLY your palette colors)
+    const STATUS_COLORS = {
+      "Applied": "#FFCAD4",
+      "Awaiting Response": "#D8E2DC",
+      "Interview": "#F4ACB7",
+      "Offer": "#EDFFEC",
+      "Rejected": "#9D8189"
+    };
 
-<div class="jobs" id="jobs"></div>
+    function saveJobs(){
+      localStorage.setItem("jobs_delusion_dashboard", JSON.stringify(jobs));
+    }
 
-</div>
+    function addJob(){
+      const url = document.getElementById("jobLink").value.trim();
+      if(!url) return;
 
-<script>
+      const company = document.getElementById("company").value.trim() || "Company";
+      const position = document.getElementById("position").value.trim() || "Position";
+      const workStyle = document.getElementById("workStyle").value.trim() || "Work style";
+      const location = document.getElementById("location").value.trim() || "Location";
+      const salary = document.getElementById("salary").value.trim() || "Salary";
+      const status = document.getElementById("statusDefault").value;
 
-let jobs = JSON.parse(localStorage.getItem("jobs")) || []
+      jobs.unshift({
+        id: crypto.randomUUID(),
+        company,
+        position,
+        workStyle,
+        location,
+        salary,
+        url,
+        status
+      });
 
-function saveJobs(){
-localStorage.setItem("jobs",JSON.stringify(jobs))
-}
+      saveJobs();
+      clearAddFields();
+      renderJobs();
+    }
 
-function renderJobs(){
+    function clearAddFields(){
+      document.getElementById("jobLink").value = "";
+      document.getElementById("company").value = "";
+      document.getElementById("position").value = "";
+      document.getElementById("workStyle").value = "";
+      document.getElementById("location").value = "";
+      document.getElementById("salary").value = "";
+      document.getElementById("statusDefault").value = "Applied";
+    }
 
-const search=document.getElementById("search").value.toLowerCase()
+    function updateStatus(id, newStatus){
+      const j = jobs.find(x => x.id === id);
+      if(!j) return;
+      j.status = newStatus;
+      saveJobs();
+      renderJobs();
+    }
 
-const container=document.getElementById("jobs")
+    function deleteJob(id){
+      jobs = jobs.filter(x => x.id !== id);
+      saveJobs();
+      renderJobs();
+    }
 
-container.innerHTML=""
+    function renderJobs(){
+      const q = (document.getElementById("search").value || "").toLowerCase().trim();
+      const grid = document.getElementById("jobsGrid");
+      grid.innerHTML = "";
 
-jobs
-.filter(job =>
-job.title.toLowerCase().includes(search) ||
-job.company.toLowerCase().includes(search) ||
-job.location.toLowerCase().includes(search)
-)
-.forEach((job,index)=>{
+      const filtered = jobs.filter(j => {
+        if(!q) return true;
+        return (
+          (j.company || "").toLowerCase().includes(q) ||
+          (j.position || "").toLowerCase().includes(q) ||
+          (j.location || "").toLowerCase().includes(q) ||
+          (j.workStyle || "").toLowerCase().includes(q) ||
+          (j.salary || "").toLowerCase().includes(q)
+        );
+      });
 
-const card=document.createElement("div")
+      // total
+      document.getElementById("totalApps").textContent = String(jobs.length);
 
-card.className="card"
+      // cards
+      filtered.forEach(job => {
+        const card = document.createElement("div");
+        card.className = "jobCard";
 
-card.innerHTML=`
+        const tagColor = STATUS_COLORS[job.status] || "#FFCAD4";
 
-<h3>${job.title}</h3>
+        card.innerHTML = `
+          <div class="topLine">
+            <div>
+              <p class="jobCompany">${escapeHtml(job.company)}</p>
+              <p class="jobTitle">${escapeHtml(job.position)}</p>
+            </div>
+            <span class="tag" style="background:${tagColor}">${escapeHtml(job.status)}</span>
+          </div>
 
-<p>🏢 ${job.company}</p>
+          <div class="jobMeta">
+            <div><b>Work style:</b> ${escapeHtml(job.workStyle)}</div>
+            <div><b>Location:</b> ${escapeHtml(job.location)}</div>
+            <div><b>Salary:</b> ${escapeHtml(job.salary)}</div>
+          </div>
 
-<p>📍 ${job.location}</p>
+          <div class="jobLink">
+            <a href="${escapeAttr(job.url)}" target="_blank" rel="noreferrer">LINK</a>
 
-<p><a href="${job.url}" target="_blank">View Job</a></p>
+            <select onchange="updateStatus('${job.id}', this.value)">
+              ${STATUS_ORDER.map(s => `<option ${s===job.status ? "selected":""}>${s}</option>`).join("")}
+            </select>
+          </div>
 
-<select onchange="updateStatus(${index},this.value)">
+          <div style="margin-top:10px; display:flex; justify-content:flex-end;">
+            <button class="pillBtn" style="padding:10px 12px; border-radius:14px; background: var(--c3); box-shadow:none;"
+              onclick="deleteJob('${job.id}')">DELETE</button>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
 
-<option ${job.status=="Applied"?"selected":""}>Applied</option>
+      drawPie();
+      drawLegend();
+    }
 
-<option ${job.status=="Interview"?"selected":""}>Interview</option>
+    function getStatusCounts(){
+      const counts = {};
+      STATUS_ORDER.forEach(s => counts[s] = 0);
+      jobs.forEach(j => {
+        const s = STATUS_ORDER.includes(j.status) ? j.status : "Applied";
+        counts[s] = (counts[s] || 0) + 1;
+      });
+      return counts;
+    }
 
-<option ${job.status=="Offer"?"selected":""}>Offer</option>
+    function drawPie(){
+      const canvas = document.getElementById("pie");
+      const ctx = canvas.getContext("2d");
+      const counts = getStatusCounts();
+      const total = Object.values(counts).reduce((a,b)=>a+b,0);
 
-<option ${job.status=="Rejected"?"selected":""}>Rejected</option>
+      // clear
+      ctx.clearRect(0,0,canvas.width,canvas.height);
 
-</select>
+      // base ring
+      const cx = canvas.width/2;
+      const cy = canvas.height/2;
+      const r = Math.min(cx,cy) - 8;
 
-`
+      // if none
+      if(total === 0){
+        ctx.beginPath();
+        ctx.arc(cx, cy, r, 0, Math.PI*2);
+        ctx.fillStyle = "rgba(237,255,236,.12)";
+        ctx.fill();
 
-container.appendChild(card)
+        ctx.fillStyle = "rgba(237,255,236,.85)";
+        ctx.font = "800 14px system-ui, -apple-system, Segoe UI, Roboto, Arial";
+        ctx.textAlign = "center";
+        ctx.fillText("No jobs yet", cx, cy);
+        return;
+      }
 
-})
+      let start = -Math.PI/2;
+      STATUS_ORDER.forEach(status => {
+        const val = counts[status] || 0;
+        if(val <= 0) return;
+        const slice = (val/total) * Math.PI*2;
 
-}
+        ctx.beginPath();
+        ctx.moveTo(cx,cy);
+        ctx.arc(cx, cy, r, start, start + slice);
+        ctx.closePath();
+        ctx.fillStyle = STATUS_COLORS[status];
+        ctx.fill();
 
-function addJob(){
+        start += slice;
+      });
 
-const link=document.getElementById("jobLink").value
-const title=document.getElementById("title").value
-const company=document.getElementById("company").value
-const location=document.getElementById("location").value
+      // donut hole
+      ctx.beginPath();
+      ctx.arc(cx, cy, r*0.58, 0, Math.PI*2);
+      ctx.fillStyle = "rgba(157,129,137,.35)";
+      ctx.fill();
 
-if(!title)return
+      ctx.fillStyle = "#EDFFEC";
+      ctx.font = "900 18px system-ui, -apple-system, Segoe UI, Roboto, Arial";
+      ctx.textAlign = "center";
+      ctx.fillText(`${total}`, cx, cy-2);
 
-jobs.push({
+      ctx.font = "800 11px system-ui, -apple-system, Segoe UI, Roboto, Arial";
+      ctx.fillStyle = "rgba(237,255,236,.9)";
+      ctx.fillText("total", cx, cy+14);
+    }
 
-title,
-company,
-location,
-status:"Applied",
-url:link
+    function drawLegend(){
+      const el = document.getElementById("legend");
+      const counts = getStatusCounts();
+      const total = Object.values(counts).reduce((a,b)=>a+b,0) || 1;
 
-})
+      el.innerHTML = STATUS_ORDER.map(status => {
+        const val = counts[status] || 0;
+        const pct = Math.round((val/total)*100);
+        return `
+          <div class="legendItem">
+            <div class="legendLeft">
+              <span class="dot" style="background:${STATUS_COLORS[status]}"></span>
+              <span class="legendName">${status}</span>
+            </div>
+            <div>${val} • ${pct}%</div>
+          </div>
+        `;
+      }).join("");
+    }
 
-saveJobs()
+    function escapeHtml(str){
+      return String(str ?? "")
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#39;");
+    }
+    function escapeAttr(str){
+      return escapeHtml(str).replaceAll("`","&#96;");
+    }
 
-renderJobs()
-
-document.getElementById("jobLink").value=""
-document.getElementById("title").value=""
-document.getElementById("company").value=""
-document.getElementById("location").value=""
-
-}
-
-function updateStatus(index,status){
-
-jobs[index].status=status
-
-saveJobs()
-
-}
-
-renderJobs()
-
-</script>
-
+    // Initial render
+    renderJobs();
+  </script>
 </body>
-
 </html>

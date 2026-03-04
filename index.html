@@ -7,21 +7,32 @@
 
   <style>
     :root{
-      --c1:#D8E2DC; /* sage */
-      --c2:#EDFFEC; /* mint bg */
-      --c3:#FFCAD4; /* light pink */
-      --c4:#F4ACB7; /* rose pink */
-      --c5:#9D8189; /* mauve */
+      --bg:#F4ACB7;
+      --text:#9D8189;
+      --card:#D8E2DC;
+      --input:#FFE5D9;
+      --btn:#F4ACB7;
+
+      /* pie colors (use all + any from your palette family) */
+      --p1:#D8E2DC;
+      --p2:#FFE5D9;
+      --p3:#FFCAD4;
+      --p4:#F4ACB7;
+      --p5:#9D8189;
     }
 
     *{ box-sizing:border-box; }
 
+    /* One font everywhere */
+    body, input, button, select, textarea{
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    }
+
     body{
       margin:0;
       padding:28px 18px 60px;
-      font-family: ui-serif, Georgia, "Times New Roman", serif;
-      background: var(--c2);
-      color: var(--c5);
+      background: var(--bg);
+      color: var(--text);
     }
 
     .wrap{
@@ -31,32 +42,34 @@
 
     /* Header pill */
     .titlePill{
-      background: var(--c5);
-      color: var(--c2);
+      background: rgba(255,255,255,.35);
+      border: 2px solid rgba(157,129,137,.35);
+      color: var(--text);
       border-radius: 28px;
-      padding: 22px 18px 16px;
+      padding: 20px 18px 14px;
       text-align:center;
-      box-shadow: 0 10px 24px rgba(157,129,137,.25);
+      box-shadow: 0 10px 24px rgba(157,129,137,.18);
+      backdrop-filter: blur(6px);
     }
     .titlePill h1{
       margin:0;
       font-size: 34px;
       letter-spacing: 1px;
       text-transform: uppercase;
-      font-weight: 700;
+      font-weight: 800;
     }
     .titlePill p{
       margin: 6px 0 0;
-      font-size: 16px;
-      letter-spacing: .6px;
+      font-size: 14px;
+      letter-spacing: .9px;
       text-transform: uppercase;
-      color: var(--c3);
-      font-family: ui-serif, Georgia, "Times New Roman", serif;
+      font-weight: 700;
+      opacity: .95;
     }
 
     /* Control rows */
     .controls{
-      margin-top: 18px;
+      margin-top: 16px;
       display:grid;
       gap: 14px;
     }
@@ -69,21 +82,23 @@
     }
 
     .pillInput{
-      background: var(--c5);
+      background: var(--input);
       border-radius: 22px;
-      padding: 14px 18px;
+      padding: 14px 16px;
       display:flex;
       align-items:center;
-      gap: 10px;
-      box-shadow: 0 10px 20px rgba(157,129,137,.15);
+      gap: 12px;
+      border: 2px solid rgba(157,129,137,.35);
+      box-shadow: 0 10px 18px rgba(157,129,137,.12);
     }
 
     .pillInput label{
-      color: var(--c3);
+      color: var(--text);
       text-transform: uppercase;
       letter-spacing: .8px;
-      font-size: 14px;
+      font-size: 13px;
       white-space:nowrap;
+      font-weight: 800;
     }
 
     .pillInput input{
@@ -91,34 +106,34 @@
       border: none;
       outline:none;
       background: transparent;
-      color: var(--c2);
+      color: var(--text);
       font-size: 16px;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      font-weight: 700;
     }
     .pillInput input::placeholder{
-      color: rgba(237,255,236,.75);
+      color: rgba(157,129,137,.65);
+      font-weight: 700;
     }
 
     .pillBtn{
-      border:none;
+      border: 2px solid rgba(157,129,137,.55);
       cursor:pointer;
       border-radius: 22px;
       padding: 14px 18px;
-      font-weight: 800;
+      font-weight: 900;
       letter-spacing: .8px;
       text-transform: uppercase;
-      background: var(--c4);
-      color: var(--c5);
-      box-shadow: 0 10px 20px rgba(244,172,183,.35);
+      background: var(--btn);
+      color: var(--text);
+      box-shadow: 0 10px 18px rgba(157,129,137,.14);
       transition: transform .05s ease, filter .2s ease;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
     }
-    .pillBtn:hover{ filter: brightness(1.02); }
+    .pillBtn:hover{ filter: brightness(1.03); }
     .pillBtn:active{ transform: translateY(1px); }
 
     /* Main layout */
     .main{
-      margin-top: 18px;
+      margin-top: 16px;
       display:grid;
       grid-template-columns: 320px 1fr;
       gap: 18px;
@@ -127,21 +142,21 @@
 
     /* Stats column */
     .statCard{
-      background: var(--c5);
-      color: var(--c2);
+      background: rgba(255,255,255,.35);
+      border: 2px solid rgba(157,129,137,.35);
       border-radius: 22px;
       padding: 18px;
-      box-shadow: 0 10px 20px rgba(157,129,137,.15);
+      box-shadow: 0 10px 18px rgba(157,129,137,.12);
+      backdrop-filter: blur(6px);
     }
 
     .statTitle{
       text-transform: uppercase;
       letter-spacing: .9px;
-      font-weight: 800;
-      font-size: 14px;
-      color: var(--c3);
+      font-weight: 900;
+      font-size: 13px;
       margin: 0 0 8px;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color: var(--text);
     }
 
     .statBig{
@@ -149,22 +164,13 @@
       font-weight: 900;
       line-height: 1;
       margin: 0;
-      color: var(--c2);
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-    }
-
-    .statSub{
-      margin: 10px 0 0;
-      color: rgba(237,255,236,.85);
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      font-size: 13px;
-      line-height: 1.35;
+      color: var(--text);
     }
 
     .chartBox{
       margin-top: 14px;
-      background: rgba(237,255,236,.08);
-      border: 1px solid rgba(255,202,212,.35);
+      background: rgba(255,255,255,.25);
+      border: 2px solid rgba(157,129,137,.22);
       border-radius: 18px;
       padding: 12px;
     }
@@ -173,9 +179,9 @@
       margin-top: 10px;
       display:grid;
       gap: 8px;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       font-size: 13px;
-      color: rgba(237,255,236,.9);
+      color: var(--text);
+      font-weight: 800;
     }
     .legendItem{
       display:flex;
@@ -190,6 +196,7 @@
       display:inline-block;
       margin-right:8px;
       flex: 0 0 auto;
+      border:1px solid rgba(157,129,137,.35);
     }
     .legendLeft{
       display:flex;
@@ -210,92 +217,77 @@
     }
 
     .jobCard{
-      background: var(--c1);
+      background: var(--card);
       border-radius: 22px;
-      padding: 16px 16px 14px;
-      box-shadow: 0 10px 20px rgba(157,129,137,.10);
-      border: 2px solid rgba(157,129,137,.22);
+      padding: 14px;
+      box-shadow: 0 10px 18px rgba(157,129,137,.12);
+      border: 2px solid rgba(157,129,137,.35);
       position: relative;
+      color: var(--text);
     }
 
-    .jobCard .topLine{
+    .jobTop{
       display:flex;
       justify-content: space-between;
-      gap: 10px;
       align-items:flex-start;
+      gap: 10px;
       margin-bottom: 10px;
     }
 
-    .jobCompany{
-      font-weight: 900;
-      text-transform: uppercase;
-      letter-spacing: .7px;
-      font-size: 14px;
-      margin: 0;
-      color: var(--c5);
-      font-family: ui-serif, Georgia, "Times New Roman", serif;
-    }
-
-    .jobTitle{
-      margin: 4px 0 0;
-      font-size: 15px;
-      color: rgba(157,129,137,.92);
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      font-weight: 700;
-    }
-
     .tag{
-      background: var(--c3);
-      color: var(--c5);
+      border: 2px solid rgba(157,129,137,.35);
+      background: rgba(255,255,255,.25);
+      color: var(--text);
       border-radius: 999px;
       padding: 6px 10px;
       font-size: 12px;
-      font-weight: 800;
+      font-weight: 900;
       letter-spacing: .6px;
       text-transform: uppercase;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       white-space:nowrap;
     }
 
-    .jobMeta{
+    .jobText{
       display:grid;
-      gap: 6px;
-      margin-top: 8px;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      gap: 8px;
       font-size: 13px;
-      color: rgba(157,129,137,.92);
+      font-weight: 800;
     }
 
-    .jobMeta b{ color: var(--c5); }
+    .jobText b{
+      font-weight: 900;
+    }
 
-    .jobLink{
-      margin-top: 10px;
+    .jobLinkRow{
+      margin-top: 12px;
       display:flex;
       justify-content: space-between;
-      gap: 10px;
       align-items:center;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      gap: 10px;
     }
 
-    .jobLink a{
-      color: var(--c5);
+    .linkBtn{
+      display:inline-block;
+      padding: 9px 10px;
+      border-radius: 14px;
+      background: rgba(255,255,255,.35);
+      border: 2px solid rgba(157,129,137,.35);
+      color: var(--text);
       text-decoration: none;
       font-weight: 900;
-      background: var(--c3);
-      padding: 8px 10px;
-      border-radius: 12px;
-      display:inline-block;
+      text-transform: uppercase;
+      letter-spacing: .7px;
+      font-size: 12px;
+      white-space:nowrap;
     }
-    .jobLink a:hover{ background: var(--c4); }
 
     select{
-      border-radius: 12px;
-      border: 1px solid rgba(157,129,137,.30);
+      border-radius: 14px;
+      border: 2px solid rgba(157,129,137,.35);
       padding: 8px 10px;
-      background: var(--c2);
-      color: var(--c5);
-      font-weight: 800;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: var(--input);
+      color: var(--text);
+      font-weight: 900;
       cursor:pointer;
     }
 
@@ -303,31 +295,53 @@
       display:grid;
       grid-template-columns: repeat(2, minmax(0,1fr));
       gap: 10px;
-      margin-top: 10px;
+      margin-bottom:14px;
     }
 
     .miniInput{
       width:100%;
-      padding: 10px 12px;
-      border-radius: 14px;
-      border: 1px solid rgba(157,129,137,.18);
-      background: var(--c2);
-      color: var(--c5);
+      padding: 11px 12px;
+      border-radius: 16px;
+      border: 2px solid rgba(157,129,137,.30);
+      background: var(--input);
+      color: var(--text);
       outline:none;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      font-weight: 700;
+      font-weight: 800;
     }
 
     .miniInput::placeholder{
-      color: rgba(157,129,137,.55);
-      font-weight: 700;
+      color: rgba(157,129,137,.65);
+      font-weight: 800;
+    }
+
+    .actionsRow{
+      margin-top: 10px;
+      display:flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    .smallBtn{
+      padding: 10px 12px;
+      border-radius: 16px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: .7px;
+      border: 2px solid rgba(157,129,137,.55);
+      background: rgba(255,255,255,.30);
+      color: var(--text);
+      cursor:pointer;
+    }
+
+    .smallBtn.primary{
+      background: var(--btn);
     }
 
     .hint{
       margin-top: 10px;
       font-size: 12px;
-      color: rgba(157,129,137,.75);
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      font-weight: 800;
+      opacity: .9;
     }
 
     @media (max-width: 1050px){
@@ -361,7 +375,7 @@
       <div class="controlRow">
         <div class="pillInput">
           <label>Search Word</label>
-          <input id="search" placeholder="company, title, location..." />
+          <input id="search" placeholder="company, position, location..." />
         </div>
         <button class="pillBtn" onclick="renderJobs()">SEARCH JOB</button>
       </div>
@@ -373,29 +387,24 @@
         <div class="statCard">
           <div class="statTitle">Total Applications</div>
           <p class="statBig" id="totalApps">0</p>
-          <p class="statSub">
-            Your breakdown updates automatically based on status.
-          </p>
 
           <div class="chartBox">
             <canvas id="pie" width="260" height="260" aria-label="status pie chart"></canvas>
-
             <div class="legend" id="legend"></div>
           </div>
 
           <div class="hint">
-            Tip: update status on any card → chart + totals update instantly.
+            Change a card’s status → pie chart updates instantly.
           </div>
         </div>
       </div>
 
-      <!-- Right: cards -->
+      <!-- Right: add fields + cards -->
       <div>
-        <!-- Optional extra fields to keep it functional + neat -->
-        <div class="row2" style="margin-bottom:14px;">
-          <input class="miniInput" id="company" placeholder="Company (optional but nice)" />
-          <input class="miniInput" id="position" placeholder="Position / Title (optional but nice)" />
-          <input class="miniInput" id="workStyle" placeholder="Work style: Remote / Hybrid / On-site" />
+        <div class="row2">
+          <input class="miniInput" id="company" placeholder="Company" />
+          <input class="miniInput" id="position" placeholder="Position / Title" />
+          <input class="miniInput" id="workStyle" placeholder="Work style (Remote/Hybrid/On-site)" />
           <input class="miniInput" id="location" placeholder="Location" />
           <input class="miniInput" id="salary" placeholder="Salary (e.g., $60k–$75k)" />
           <select id="statusDefault" title="default status">
@@ -414,19 +423,22 @@
   </div>
 
   <script>
-    // Local storage
     let jobs = JSON.parse(localStorage.getItem("jobs_delusion_dashboard")) || [];
 
     const STATUS_ORDER = ["Applied","Awaiting Response","Interview","Offer","Rejected"];
 
-    // Palette for chart slices (uses ONLY your palette colors)
-    const STATUS_COLORS = {
-      "Applied": "#FFCAD4",
-      "Awaiting Response": "#D8E2DC",
-      "Interview": "#F4ACB7",
-      "Offer": "#EDFFEC",
-      "Rejected": "#9D8189"
+    // Pie chart uses all the allowed colors
+    const PIE_COLORS = {
+      "Applied": getCss("--p3"),
+      "Awaiting Response": getCss("--p1"),
+      "Interview": getCss("--p4"),
+      "Offer": getCss("--p2"),
+      "Rejected": getCss("--p5")
     };
+
+    function getCss(varName){
+      return getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
+    }
 
     function saveJobs(){
       localStorage.setItem("jobs_delusion_dashboard", JSON.stringify(jobs));
@@ -483,6 +495,45 @@
       renderJobs();
     }
 
+    // EDIT MODE
+    function startEdit(id){
+      const j = jobs.find(x => x.id === id);
+      if(!j) return;
+      j._editing = true;
+      renderJobs();
+    }
+
+    function cancelEdit(id){
+      const j = jobs.find(x => x.id === id);
+      if(!j) return;
+      j._editing = false;
+      renderJobs();
+    }
+
+    function saveEdit(id){
+      const j = jobs.find(x => x.id === id);
+      if(!j) return;
+
+      const company = document.getElementById(`e_company_${id}`).value.trim() || "Company";
+      const position = document.getElementById(`e_position_${id}`).value.trim() || "Position";
+      const workStyle = document.getElementById(`e_workStyle_${id}`).value.trim() || "Work style";
+      const location = document.getElementById(`e_location_${id}`).value.trim() || "Location";
+      const salary = document.getElementById(`e_salary_${id}`).value.trim() || "Salary";
+      const url = document.getElementById(`e_url_${id}`).value.trim() || j.url;
+
+      j.company = company;
+      j.position = position;
+      j.workStyle = workStyle;
+      j.location = location;
+      j.salary = salary;
+      j.url = url;
+
+      j._editing = false;
+
+      saveJobs();
+      renderJobs();
+    }
+
     function renderJobs(){
       const q = (document.getElementById("search").value || "").toLowerCase().trim();
       const grid = document.getElementById("jobsGrid");
@@ -499,44 +550,64 @@
         );
       });
 
-      // total
       document.getElementById("totalApps").textContent = String(jobs.length);
 
-      // cards
       filtered.forEach(job => {
         const card = document.createElement("div");
         card.className = "jobCard";
 
-        const tagColor = STATUS_COLORS[job.status] || "#FFCAD4";
-
-        card.innerHTML = `
-          <div class="topLine">
-            <div>
-              <p class="jobCompany">${escapeHtml(job.company)}</p>
-              <p class="jobTitle">${escapeHtml(job.position)}</p>
+        if(job._editing){
+          card.innerHTML = `
+            <div class="jobTop">
+              <span class="tag">EDITING</span>
+              <select onchange="updateStatus('${job.id}', this.value)">
+                ${STATUS_ORDER.map(s => `<option ${s===job.status ? "selected":""}>${s}</option>`).join("")}
+              </select>
             </div>
-            <span class="tag" style="background:${tagColor}">${escapeHtml(job.status)}</span>
-          </div>
 
-          <div class="jobMeta">
-            <div><b>Work style:</b> ${escapeHtml(job.workStyle)}</div>
-            <div><b>Location:</b> ${escapeHtml(job.location)}</div>
-            <div><b>Salary:</b> ${escapeHtml(job.salary)}</div>
-          </div>
+            <div class="jobText">
+              <div><b>Company</b> <input class="miniInput" id="e_company_${job.id}" value="${escapeAttr(job.company)}"></div>
+              <div><b>Position</b> <input class="miniInput" id="e_position_${job.id}" value="${escapeAttr(job.position)}"></div>
+              <div><b>Work style</b> <input class="miniInput" id="e_workStyle_${job.id}" value="${escapeAttr(job.workStyle)}"></div>
+              <div><b>Location</b> <input class="miniInput" id="e_location_${job.id}" value="${escapeAttr(job.location)}"></div>
+              <div><b>Salary</b> <input class="miniInput" id="e_salary_${job.id}" value="${escapeAttr(job.salary)}"></div>
+              <div><b>Link</b> <input class="miniInput" id="e_url_${job.id}" value="${escapeAttr(job.url)}"></div>
+            </div>
 
-          <div class="jobLink">
-            <a href="${escapeAttr(job.url)}" target="_blank" rel="noreferrer">LINK</a>
+            <div class="actionsRow">
+              <button class="smallBtn" onclick="cancelEdit('${job.id}')">Cancel</button>
+              <button class="smallBtn primary" onclick="saveEdit('${job.id}')">Save</button>
+              <button class="smallBtn" onclick="deleteJob('${job.id}')">Delete</button>
+            </div>
+          `;
+        } else {
+          card.innerHTML = `
+            <div class="jobTop">
+              <div class="tag">${escapeHtml(job.status)}</div>
+              <select onchange="updateStatus('${job.id}', this.value)">
+                ${STATUS_ORDER.map(s => `<option ${s===job.status ? "selected":""}>${s}</option>`).join("")}
+              </select>
+            </div>
 
-            <select onchange="updateStatus('${job.id}', this.value)">
-              ${STATUS_ORDER.map(s => `<option ${s===job.status ? "selected":""}>${s}</option>`).join("")}
-            </select>
-          </div>
+            <div class="jobText">
+              <div><b>Company:</b> ${escapeHtml(job.company)}</div>
+              <div><b>Position:</b> ${escapeHtml(job.position)}</div>
+              <div><b>Work style:</b> ${escapeHtml(job.workStyle)}</div>
+              <div><b>Location:</b> ${escapeHtml(job.location)}</div>
+              <div><b>Salary:</b> ${escapeHtml(job.salary)}</div>
+            </div>
 
-          <div style="margin-top:10px; display:flex; justify-content:flex-end;">
-            <button class="pillBtn" style="padding:10px 12px; border-radius:14px; background: var(--c3); box-shadow:none;"
-              onclick="deleteJob('${job.id}')">DELETE</button>
-          </div>
-        `;
+            <div class="jobLinkRow">
+              <a class="linkBtn" href="${escapeAttr(job.url)}" target="_blank" rel="noreferrer">Link</a>
+              <button class="smallBtn" onclick="startEdit('${job.id}')">Edit</button>
+            </div>
+
+            <div class="actionsRow">
+              <button class="smallBtn" onclick="deleteJob('${job.id}')">Delete</button>
+            </div>
+          `;
+        }
+
         grid.appendChild(card);
       });
 
@@ -560,29 +631,27 @@
       const counts = getStatusCounts();
       const total = Object.values(counts).reduce((a,b)=>a+b,0);
 
-      // clear
       ctx.clearRect(0,0,canvas.width,canvas.height);
 
-      // base ring
       const cx = canvas.width/2;
       const cy = canvas.height/2;
       const r = Math.min(cx,cy) - 8;
 
-      // if none
       if(total === 0){
         ctx.beginPath();
         ctx.arc(cx, cy, r, 0, Math.PI*2);
-        ctx.fillStyle = "rgba(237,255,236,.12)";
+        ctx.fillStyle = "rgba(255,229,217,.55)";
         ctx.fill();
 
-        ctx.fillStyle = "rgba(237,255,236,.85)";
-        ctx.font = "800 14px system-ui, -apple-system, Segoe UI, Roboto, Arial";
+        ctx.fillStyle = getCss("--text");
+        ctx.font = "900 14px system-ui, -apple-system, Segoe UI, Roboto, Arial";
         ctx.textAlign = "center";
         ctx.fillText("No jobs yet", cx, cy);
         return;
       }
 
       let start = -Math.PI/2;
+
       STATUS_ORDER.forEach(status => {
         const val = counts[status] || 0;
         if(val <= 0) return;
@@ -592,7 +661,7 @@
         ctx.moveTo(cx,cy);
         ctx.arc(cx, cy, r, start, start + slice);
         ctx.closePath();
-        ctx.fillStyle = STATUS_COLORS[status];
+        ctx.fillStyle = PIE_COLORS[status];
         ctx.fill();
 
         start += slice;
@@ -601,16 +670,16 @@
       // donut hole
       ctx.beginPath();
       ctx.arc(cx, cy, r*0.58, 0, Math.PI*2);
-      ctx.fillStyle = "rgba(157,129,137,.35)";
+      ctx.fillStyle = "rgba(255,229,217,.65)";
       ctx.fill();
 
-      ctx.fillStyle = "#EDFFEC";
+      ctx.fillStyle = getCss("--text");
       ctx.font = "900 18px system-ui, -apple-system, Segoe UI, Roboto, Arial";
       ctx.textAlign = "center";
       ctx.fillText(`${total}`, cx, cy-2);
 
-      ctx.font = "800 11px system-ui, -apple-system, Segoe UI, Roboto, Arial";
-      ctx.fillStyle = "rgba(237,255,236,.9)";
+      ctx.font = "900 11px system-ui, -apple-system, Segoe UI, Roboto, Arial";
+      ctx.fillStyle = getCss("--text");
       ctx.fillText("total", cx, cy+14);
     }
 
@@ -625,7 +694,7 @@
         return `
           <div class="legendItem">
             <div class="legendLeft">
-              <span class="dot" style="background:${STATUS_COLORS[status]}"></span>
+              <span class="dot" style="background:${PIE_COLORS[status]}"></span>
               <span class="legendName">${status}</span>
             </div>
             <div>${val} • ${pct}%</div>
@@ -646,7 +715,6 @@
       return escapeHtml(str).replaceAll("`","&#96;");
     }
 
-    // Initial render
     renderJobs();
   </script>
 </body>

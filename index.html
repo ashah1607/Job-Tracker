@@ -7,31 +7,32 @@
 
   <style>
     :root{
-      /* Aesthetic girly palette (softer + cleaner contrast) */
-      --bg:#FFF1F5;        /* blush background */
-      --panel:#FFFFFFCC;   /* frosted panels */
-      --text:#6F5B63;      /* soft mauve text */
+      /* girly + clean */
+      --bg:#FFF1F5;
+      --panel:#FFFFFFCC;
+      --text:#6F5B63;
       --muted:#8E7B83;
 
-      --card:#E8F0EE;      /* soft sage cards */
-      --input:#FFF7F0;     /* warm cream inputs */
-      --border:#E6CAD3;    /* blush border */
+      --card:#E8F0EE;
+      --input:#FFF7F0;
+      --border:#E6CAD3;
       --shadow: rgba(111,91,99,.16);
 
-      --btn:#F6B4C4;       /* rosy button */
+      --btn:#F6B4C4;
       --btnHover:#F39FB4;
 
-      /* Pie colors (cute + cohesive) */
-      --p1:#F6B4C4; /* rosy */
-      --p2:#FFD6E2; /* light pink */
-      --p3:#E8F0EE; /* sage */
-      --p4:#FFF7F0; /* cream */
-      --p5:#6F5B63; /* mauve */
+      --chip:#FFFFFF99;
+
+      /* pie colors */
+      --p1:#F6B4C4;
+      --p2:#FFD6E2;
+      --p3:#E8F0EE;
+      --p4:#FFF7F0;
+      --p5:#6F5B63;
     }
 
     *{ box-sizing:border-box; }
 
-    /* One font everywhere */
     body, input, button, select, textarea{
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
     }
@@ -48,7 +49,6 @@
       margin: 0 auto;
     }
 
-    /* Header pill */
     .titlePill{
       background: var(--panel);
       border: 1px solid var(--border);
@@ -74,18 +74,16 @@
       font-weight: 800;
     }
 
-    /* Control rows */
     .controls{
       margin-top: 14px;
       display:grid;
       gap: 12px;
     }
 
-    .controlRow{
+    .grid2{
       display:grid;
-      grid-template-columns: 1fr 240px;
+      grid-template-columns: 1fr 1fr;
       gap: 12px;
-      align-items: stretch;
     }
 
     .pillInput{
@@ -119,9 +117,53 @@
       font-weight: 700;
       min-width: 0;
     }
-    .pillInput input::placeholder{
+
+    .textareaWrap{
+      background: var(--input);
+      border-radius: 18px;
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      box-shadow: 0 10px 18px rgba(111,91,99,.10);
+    }
+
+    .textareaWrap .labelRow{
+      display:flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items:center;
+      margin-bottom: 8px;
+    }
+
+    .textareaWrap label{
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .7px;
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    textarea{
+      width: 100%;
+      min-height: 110px;
+      border: none;
+      outline: none;
+      resize: vertical;
+      background: transparent;
+      color: var(--text);
+      font-size: 14px;
+      font-weight: 650;
+      line-height: 1.35;
+    }
+    textarea::placeholder{
       color: rgba(111,91,99,.55);
-      font-weight: 700;
+      font-weight: 650;
+    }
+
+    .btnRow{
+      display:grid;
+      grid-template-columns: 1fr 260px;
+      gap: 12px;
+      align-items:stretch;
     }
 
     .pillBtn{
@@ -140,7 +182,6 @@
     .pillBtn:hover{ background: var(--btnHover); }
     .pillBtn:active{ transform: translateY(1px); }
 
-    /* Main layout */
     .main{
       margin-top: 14px;
       display:grid;
@@ -149,7 +190,6 @@
       align-items:start;
     }
 
-    /* Stats column */
     .statCard{
       background: var(--panel);
       border: 1px solid var(--border);
@@ -227,52 +267,26 @@
       font-weight: 700;
     }
 
-    /* Add fields row */
-    .row2{
-      display:grid;
-      grid-template-columns: repeat(2, minmax(0,1fr));
-      gap: 10px;
-      margin-bottom: 14px;
-    }
-
-    .miniInput{
-      width:100%;
-      padding: 11px 12px;
-      border-radius: 16px;
-      border: 1px solid var(--border);
-      background: var(--input);
-      color: var(--text);
-      outline:none;
-      font-weight: 700;
-      box-shadow: 0 8px 14px rgba(111,91,99,.08);
-      min-width: 0;
-    }
-
-    .row2 .pillBtn{
-      width:100%;
-      height:46px;
-      border-radius:16px;
-      padding:10px 12px;
-    }
-
-    .miniInput::placeholder{
-      color: rgba(111,91,99,.55);
-      font-weight: 700;
-    }
-
-    select{
-      width: 100%;
-      border-radius: 16px;
-      border: 1px solid var(--border);
-      padding: 10px 12px;
-      background: var(--input);
-      color: var(--text);
-      font-weight: 800;
-      cursor:pointer;
-      min-width: 0;
-    }
-
     /* Jobs grid */
+    .jobsHeader{
+      display:flex;
+      justify-content: space-between;
+      align-items:center;
+      gap: 10px;
+      margin: 6px 0 10px;
+    }
+
+    .jobsHeader .countPill{
+      background: var(--chip);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-weight: 850;
+      color: var(--text);
+      box-shadow: 0 10px 16px rgba(111,91,99,.08);
+      white-space: nowrap;
+    }
+
     .jobsGrid{
       display:grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -286,25 +300,33 @@
       border: 1px solid rgba(111,91,99,.18);
       box-shadow: 0 14px 20px rgba(111,91,99,.10);
       color: var(--text);
-
-      /* THIS prevents “poking out” */
       overflow: hidden;
+      transform-origin: top center;
     }
 
-    /* Make card header wrap nicely on small widths */
+    /* Aesthetic search animation */
+    .jobCard.match{
+      outline: 2px solid rgba(246,180,196,.85);
+      box-shadow: 0 18px 30px rgba(246,180,196,.28);
+      animation: pop .22s ease-out;
+    }
+    @keyframes pop{
+      from{ transform: scale(.985); }
+      to{ transform: scale(1); }
+    }
+
     .jobTop{
       display:flex;
       align-items:flex-start;
       justify-content: space-between;
       gap: 10px;
-      flex-wrap: wrap; /* <— prevents overflow */
+      flex-wrap: wrap;
       margin-bottom: 10px;
     }
 
     .tag{
       display:inline-flex;
       align-items:center;
-      gap: 6px;
       border: 1px solid rgba(111,91,99,.18);
       background: rgba(255,255,255,.55);
       color: var(--text);
@@ -320,25 +342,23 @@
       white-space: nowrap;
     }
 
-    /* Card content */
     .jobText{
       display:grid;
       gap: 7px;
       font-size: 13px;
-      font-weight: 750;
+      font-weight: 720;
       line-height: 1.25;
       word-break: break-word;
     }
     .jobText b{ font-weight: 900; color: rgba(111,91,99,.92); }
 
-    /* Link + edit row */
     .jobLinkRow{
       margin-top: 12px;
       display:flex;
       gap: 10px;
       align-items:center;
       justify-content: space-between;
-      flex-wrap: wrap; /* <— prevents overflow */
+      flex-wrap: wrap;
     }
 
     .linkBtn{
@@ -356,14 +376,36 @@
       white-space: nowrap;
       max-width: 100%;
     }
-    .linkBtn:hover{ filter: brightness(1.02); }
+
+    .miniInput{
+      width:100%;
+      padding: 10px 11px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.65);
+      color: var(--text);
+      outline:none;
+      font-weight: 700;
+      min-width:0;
+    }
+
+    select{
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      padding: 9px 10px;
+      background: rgba(255,255,255,.65);
+      color: var(--text);
+      font-weight: 850;
+      cursor:pointer;
+      min-width: 0;
+    }
 
     .actionsRow{
       margin-top: 10px;
       display:flex;
       gap: 10px;
       justify-content:flex-end;
-      flex-wrap: wrap; /* <— prevents overflow */
+      flex-wrap: wrap;
     }
 
     .smallBtn{
@@ -377,25 +419,30 @@
       color: var(--text);
       cursor:pointer;
       white-space: nowrap;
-      max-width: 100%;
     }
 
     .smallBtn.primary{
       background: var(--btn);
       color: #fff;
-      border-color: rgba(255,255,255,.0);
+      border-color: rgba(255,255,255,0);
     }
     .smallBtn.primary:hover{ background: var(--btnHover); }
 
-    /* Responsive */
+    .subnote{
+      font-size: 12px;
+      color: rgba(111,91,99,.74);
+      font-weight: 650;
+    }
+
     @media (max-width: 1050px){
       .jobsGrid{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .controlRow{ grid-template-columns: 1fr; }
       .main{ grid-template-columns: 320px 1fr; }
+      .btnRow{ grid-template-columns: 1fr; }
     }
     @media (max-width: 780px){
       .main{ grid-template-columns: 1fr; }
       .jobsGrid{ grid-template-columns: 1fr; }
+      .grid2{ grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -408,24 +455,38 @@
       <p>MANIFESTING EMPLOYMENT</p>
     </div>
 
+    <!-- Inputs -->
     <div class="controls">
-      <div class="controlRow">
+
+      <div class="grid2">
         <div class="pillInput">
           <label>Job Link</label>
-          <input id="jobLink" placeholder="paste link here..." />
+          <input id="jobLink" placeholder="optional — paste the link" />
         </div>
-        <button class="pillBtn" onclick="addJob()">ADD JOB</button>
+
+        <div class="pillInput">
+          <label>Search</label>
+          <input id="search" placeholder="company, title, location..." />
+        </div>
       </div>
 
-    <div class="controlRow" style="grid-template-columns: 1fr 240px 240px;">
-  <div class="pillInput">
-    <label>Job Link</label>
-    <input id="jobLink" placeholder="paste link here..." />
-  </div>
+      <div class="textareaWrap">
+        <div class="labelRow">
+          <label>Job Description</label>
+          <span class="subnote">Paste anything from the posting — we’ll extract the basics ✨</span>
+        </div>
+        <textarea id="jobDesc" placeholder="Paste the job description here (or the top part of the posting). Example:
+Company: Spotify
+Role: Marketing Intern
+Location: New York, NY
+Hybrid | $60k–$75k
+..."></textarea>
+      </div>
 
-  <button class="pillBtn" onclick="autoFillFromLink()">AUTO-FILL</button>
-  <button class="pillBtn" onclick="addJob()">ADD JOB</button>
-</div>
+      <div class="btnRow">
+        <button class="pillBtn" onclick="runSearch()">SEARCH</button>
+        <button class="pillBtn" onclick="addJobFromDescription()">ADD JOB</button>
+      </div>
     </div>
 
     <div class="main">
@@ -441,31 +502,17 @@
           </div>
 
           <div class="hint">
-            Change a card’s status → chart updates instantly.
+            Tip: search highlights matching cards with a cute pop ✨
           </div>
         </div>
       </div>
 
-      <!-- Right: add fields + cards -->
+      <!-- Right: cards -->
       <div>
-        <div class="row2">
-  <input class="miniInput" id="company" placeholder="Company" />
-  <input class="miniInput" id="position" placeholder="Position / Title" />
-
-  <input class="miniInput" id="workStyle" placeholder="Work style (Remote/Hybrid/On-site)" />
-  <select id="statusDefault" title="default status">
-    <option>Applied</option>
-    <option>Awaiting Response</option>
-    <option>Interview</option>
-    <option>Offer</option>
-    <option>Rejected</option>
-  </select>
-
-  <input class="miniInput" id="salary" placeholder="Salary (e.g., $60k–$75k)" />
-  <button class="pillBtn" onclick="addJobManual()">ADD JOB (MANUAL)</button>
-
-  <input class="miniInput" id="location" placeholder="Location" />
-</div>
+        <div class="jobsHeader">
+          <div class="countPill" id="shownCount">Showing: 0</div>
+          <div class="subnote" id="searchNote"></div>
+        </div>
 
         <div class="jobsGrid" id="jobsGrid"></div>
       </div>
@@ -474,6 +521,7 @@
   </div>
 
   <script>
+    // Storage
     let jobs = JSON.parse(localStorage.getItem("jobs_delusion_dashboard")) || [];
 
     const STATUS_ORDER = ["Applied","Awaiting Response","Interview","Offer","Rejected"];
@@ -482,7 +530,6 @@
       return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
     }
 
-    // Pie chart colors (uses all the theme colors)
     const PIE_COLORS = {
       "Applied": cssVar("--p2"),
       "Awaiting Response": cssVar("--p3"),
@@ -495,37 +542,87 @@
       localStorage.setItem("jobs_delusion_dashboard", JSON.stringify(jobs));
     }
 
-async function autoFillFromLink(){
-  const url = document.getElementById("jobLink").value.trim();
-  if(!url) return;
+    // --------- NEW: parse description text (no AI, keyword-based) ----------
+    function parseJobDescription(text){
+      const t = (text || "").replace(/\r/g, "\n");
+      const lines = t.split("\n").map(l => l.trim()).filter(Boolean);
 
-  // Optional: show loading in the button
-  try{
-    const r = await fetch(`/api/autofill?url=${encodeURIComponent(url)}`);
-    const data = await r.json();
+      const joined = " " + lines.join(" ") + " ";
 
-    if(data?.title) document.getElementById("position").value = data.title;
-    if(data?.company) document.getElementById("company").value = data.company;
-    if(data?.location) document.getElementById("location").value = data.location;
-    if(data?.salary) document.getElementById("salary").value = data.salary;
-    if(data?.workStyle) document.getElementById("workStyle").value = data.workStyle;
+      // helper: capture after keywords
+      function after(keys){
+        for (const k of keys){
+          const re = new RegExp(`(?:^|\\b)${k}\\s*[:\\-–]\\s*([^\\n\\|]{2,120})`, "i");
+          const m = t.match(re);
+          if(m && m[1]) return m[1].trim();
+        }
+        return "";
+      }
 
-  } catch(e){
-    // If it fails, you can still fill manually
-    alert("Auto-fill couldn't read this link. You can still add it manually ✨");
-  }
-}
-    
-    function addJob(){
+      // Title
+      let position = after(["role","position","job title","title","opening","opportunity"]);
+      if(!position){
+        // fallback: first line that looks like a title
+        const maybe = lines.find(l => l.length <= 80 && /intern|associate|manager|engineer|analyst|coordinator|specialist|assistant|director|designer/i.test(l));
+        if(maybe) position = maybe;
+      }
+
+      // Company
+      let company = after(["company","employer","organization","org"]);
+      if(!company){
+        // fallback: look for "at X" patterns
+        const m = joined.match(/\b(?:at|with)\s+([A-Z][A-Za-z0-9&.\- ]{2,40})\b/);
+        if(m) company = m[1].trim();
+      }
+
+      // Location
+      let location = after(["location","based in","office"]);
+      if(!location){
+        const m = joined.match(/\b([A-Z][a-zA-Z]+,\s?[A-Z]{2})\b/); // City, ST
+        if(m) location = m[1];
+      }
+
+      // Work style
+      let workStyle = "";
+      if (/\bhybrid\b/i.test(joined)) workStyle = "Hybrid";
+      else if (/\bremote\b|\bwork from home\b|\bWFH\b/i.test(joined)) workStyle = "Remote";
+      else if (/\bon[-\s]?site\b|\bin[-\s]?person\b/i.test(joined)) workStyle = "On-site";
+
+      // Salary
+      let salary = after(["salary","pay","compensation","rate"]);
+      if(!salary){
+        const m =
+          joined.match(/(\$?\s?\d{2,3}\s?[,.\s]?\d{3}\s?(?:–|-|to)\s?\$?\s?\d{2,3}\s?[,.\s]?\d{3})/i) ||
+          joined.match(/(\$\s?\d+(?:\.\d+)?\s?\/\s?(?:hr|hour)|\$\s?\d+(?:,\d{3})+)\b/i);
+        if(m) salary = m[1].replace(/\s+/g," ").trim();
+      }
+
+      // Clean common trailing junk
+      const clean = (s) => String(s || "").replace(/\s+\|\s+.*$/,"").trim();
+
+      return {
+        company: clean(company),
+        position: clean(position),
+        location: clean(location),
+        workStyle: workStyle || "",
+        salary: clean(salary)
+      };
+    }
+
+    function addJobFromDescription(){
       const url = document.getElementById("jobLink").value.trim();
-      if(!url) return;
+      const desc = document.getElementById("jobDesc").value.trim();
 
-      const company = document.getElementById("company").value.trim() || "Company";
-      const position = document.getElementById("position").value.trim() || "Position";
-      const workStyle = document.getElementById("workStyle").value.trim() || "Work style";
-      const location = document.getElementById("location").value.trim() || "Location";
-      const salary = document.getElementById("salary").value.trim() || "Salary";
-      const status = document.getElementById("statusDefault").value;
+      // allow adding even if user only pasted link OR only pasted description
+      if(!desc && !url) return;
+
+      const parsed = parseJobDescription(desc);
+
+      const company = parsed.company || "Company";
+      const position = parsed.position || "Position";
+      const location = parsed.location || "Location";
+      const workStyle = parsed.workStyle || "Work style";
+      const salary = parsed.salary || "Salary";
 
       jobs.unshift({
         id: crypto.randomUUID(),
@@ -535,49 +632,14 @@ async function autoFillFromLink(){
         location,
         salary,
         url,
-        status
+        status: "Applied"
       });
 
       saveJobs();
-      clearAddFields();
-      renderJobs();
-    }
 
-  function addJobManual(){
-
-    const company = document.getElementById("company").value.trim();
-    const position = document.getElementById("position").value.trim();
-    const workStyle = document.getElementById("workStyle").value.trim();
-    const location = document.getElementById("location").value.trim();
-    const salary = document.getElementById("salary").value.trim();
-    const status = document.getElementById("statusDefault").value;
-
-  if(!company && !position) return;
-
-  jobs.unshift({
-    id: crypto.randomUUID(),
-    company: company || "Company",
-    position: position || "Position",
-    workStyle: workStyle || "Work style",
-    location: location || "Location",
-    salary: salary || "Salary",
-    url: "",
-    status
-  });
-
-  saveJobs();
-  clearAddFields();
-  renderJobs();
- }
-
-    function clearAddFields(){
       document.getElementById("jobLink").value = "";
-      document.getElementById("company").value = "";
-      document.getElementById("position").value = "";
-      document.getElementById("workStyle").value = "";
-      document.getElementById("location").value = "";
-      document.getElementById("salary").value = "";
-      document.getElementById("statusDefault").value = "Applied";
+      document.getElementById("jobDesc").value = "";
+      renderJobs();
     }
 
     function updateStatus(id, newStatus){
@@ -594,7 +656,7 @@ async function autoFillFromLink(){
       renderJobs();
     }
 
-    // EDIT MODE
+    // Edit mode
     function startEdit(id){
       const j = jobs.find(x => x.id === id);
       if(!j) return;
@@ -618,7 +680,7 @@ async function autoFillFromLink(){
       const workStyle = document.getElementById(`e_workStyle_${id}`).value.trim() || "Work style";
       const location = document.getElementById(`e_location_${id}`).value.trim() || "Location";
       const salary = document.getElementById(`e_salary_${id}`).value.trim() || "Salary";
-      const url = document.getElementById(`e_url_${id}`).value.trim() || j.url;
+      const url = document.getElementById(`e_url_${id}`).value.trim();
 
       j.company = company;
       j.position = position;
@@ -626,33 +688,57 @@ async function autoFillFromLink(){
       j.location = location;
       j.salary = salary;
       j.url = url;
-
       j._editing = false;
+
       saveJobs();
       renderJobs();
     }
 
-    function renderJobs(){
+    // Search (button + also Enter key)
+    function runSearch(){
+      renderJobs(true);
+    }
+
+    document.addEventListener("keydown", (e) => {
+      if(e.key === "Enter"){
+        const active = document.activeElement?.id;
+        if(active === "search"){
+          e.preventDefault();
+          runSearch();
+        }
+      }
+    });
+
+    function renderJobs(popMatches=false){
       const q = (document.getElementById("search").value || "").toLowerCase().trim();
       const grid = document.getElementById("jobsGrid");
       grid.innerHTML = "";
 
       const filtered = jobs.filter(j => {
         if(!q) return true;
-        return (
-          (j.company || "").toLowerCase().includes(q) ||
-          (j.position || "").toLowerCase().includes(q) ||
-          (j.location || "").toLowerCase().includes(q) ||
-          (j.workStyle || "").toLowerCase().includes(q) ||
-          (j.salary || "").toLowerCase().includes(q)
-        );
+        const hay = `${j.company} ${j.position} ${j.location} ${j.workStyle} ${j.salary} ${j.status}`.toLowerCase();
+        return hay.includes(q);
       });
 
       document.getElementById("totalApps").textContent = String(jobs.length);
+      document.getElementById("shownCount").textContent = `Showing: ${filtered.length}`;
+      document.getElementById("searchNote").textContent = q ? `Matches for “${q}”` : "";
+
+      let firstMatchEl = null;
 
       filtered.forEach(job => {
         const card = document.createElement("div");
         card.className = "jobCard";
+
+        // mark match for animation/highlight
+        if(q){
+          card.classList.add("match");
+        }
+
+        const hasLink = !!(job.url && job.url.trim());
+        const linkHtml = hasLink
+          ? `<a class="linkBtn" href="${escapeAttr(job.url)}" target="_blank" rel="noreferrer">Link</a>`
+          : `<span class="linkBtn" style="opacity:.6; cursor:default;">No link</span>`;
 
         if(job._editing){
           card.innerHTML = `
@@ -669,7 +755,7 @@ async function autoFillFromLink(){
               <div><b>Work style</b><br><input class="miniInput" id="e_workStyle_${job.id}" value="${escapeAttr(job.workStyle)}"></div>
               <div><b>Location</b><br><input class="miniInput" id="e_location_${job.id}" value="${escapeAttr(job.location)}"></div>
               <div><b>Salary</b><br><input class="miniInput" id="e_salary_${job.id}" value="${escapeAttr(job.salary)}"></div>
-              <div><b>Link</b><br><input class="miniInput" id="e_url_${job.id}" value="${escapeAttr(job.url)}"></div>
+              <div><b>Link</b><br><input class="miniInput" id="e_url_${job.id}" value="${escapeAttr(job.url || "")}" placeholder="optional link"></div>
             </div>
 
             <div class="actionsRow">
@@ -681,7 +767,7 @@ async function autoFillFromLink(){
         } else {
           card.innerHTML = `
             <div class="jobTop">
-              <div class="tag">${escapeHtml(job.status)}</div>
+              <span class="tag">${escapeHtml(job.status)}</span>
               <select onchange="updateStatus('${job.id}', this.value)">
                 ${STATUS_ORDER.map(s => `<option ${s===job.status ? "selected":""}>${s}</option>`).join("")}
               </select>
@@ -689,14 +775,14 @@ async function autoFillFromLink(){
 
             <div class="jobText">
               <div><b>Company:</b> ${escapeHtml(job.company)}</div>
-              <div><b>Position:</b> ${escapeHtml(job.position)}</div>
-              <div><b>Work style:</b> ${escapeHtml(job.workStyle)}</div>
+              <div><b>Title:</b> ${escapeHtml(job.position)}</div>
+              <div><b>Work:</b> ${escapeHtml(job.workStyle)}</div>
               <div><b>Location:</b> ${escapeHtml(job.location)}</div>
               <div><b>Salary:</b> ${escapeHtml(job.salary)}</div>
             </div>
 
             <div class="jobLinkRow">
-              <a class="linkBtn" href="${escapeAttr(job.url)}" target="_blank" rel="noreferrer">Link</a>
+              ${linkHtml}
               <button class="smallBtn" onclick="startEdit('${job.id}')">Edit</button>
               <button class="smallBtn" onclick="deleteJob('${job.id}')">Delete</button>
             </div>
@@ -704,7 +790,14 @@ async function autoFillFromLink(){
         }
 
         grid.appendChild(card);
+
+        if(!firstMatchEl) firstMatchEl = card;
       });
+
+      // cute “zoom” behavior: scroll to the first match
+      if(popMatches && firstMatchEl){
+        firstMatchEl.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
 
       drawPie();
       drawLegend();
@@ -735,7 +828,7 @@ async function autoFillFromLink(){
       if(total === 0){
         ctx.beginPath();
         ctx.arc(cx, cy, r, 0, Math.PI*2);
-        ctx.fillStyle = "rgba(255, 247, 240, .9)";
+        ctx.fillStyle = "rgba(255, 255, 255, .65)";
         ctx.fill();
 
         ctx.fillStyle = cssVar("--text");
@@ -744,6 +837,14 @@ async function autoFillFromLink(){
         ctx.fillText("No jobs yet", cx, cy);
         return;
       }
+
+      const sliceColors = {
+        "Applied": cssVar("--p2"),
+        "Awaiting Response": cssVar("--p3"),
+        "Interview": cssVar("--p1"),
+        "Offer": cssVar("--p4"),
+        "Rejected": cssVar("--p5")
+      };
 
       let start = -Math.PI/2;
       STATUS_ORDER.forEach(status => {
@@ -755,7 +856,7 @@ async function autoFillFromLink(){
         ctx.moveTo(cx,cy);
         ctx.arc(cx, cy, r, start, start + slice);
         ctx.closePath();
-        ctx.fillStyle = PIE_COLORS[status];
+        ctx.fillStyle = sliceColors[status];
         ctx.fill();
 
         start += slice;
@@ -764,7 +865,7 @@ async function autoFillFromLink(){
       // donut hole
       ctx.beginPath();
       ctx.arc(cx, cy, r*0.58, 0, Math.PI*2);
-      ctx.fillStyle = "rgba(255,255,255,.75)";
+      ctx.fillStyle = "rgba(255,255,255,.78)";
       ctx.fill();
 
       ctx.fillStyle = cssVar("--text");
@@ -782,13 +883,21 @@ async function autoFillFromLink(){
       const counts = getStatusCounts();
       const total = Object.values(counts).reduce((a,b)=>a+b,0) || 1;
 
+      const sliceColors = {
+        "Applied": cssVar("--p2"),
+        "Awaiting Response": cssVar("--p3"),
+        "Interview": cssVar("--p1"),
+        "Offer": cssVar("--p4"),
+        "Rejected": cssVar("--p5")
+      };
+
       el.innerHTML = STATUS_ORDER.map(status => {
         const val = counts[status] || 0;
         const pct = Math.round((val/total)*100);
         return `
           <div class="legendItem">
             <div class="legendLeft">
-              <span class="dot" style="background:${PIE_COLORS[status]}"></span>
+              <span class="dot" style="background:${sliceColors[status]}"></span>
               <span class="legendName">${status}</span>
             </div>
             <div>${val} • ${pct}%</div>
@@ -809,6 +918,7 @@ async function autoFillFromLink(){
       return escapeHtml(str).replaceAll("`","&#96;");
     }
 
+    // Initial
     renderJobs();
   </script>
 </body>

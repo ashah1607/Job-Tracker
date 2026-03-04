@@ -128,21 +128,55 @@ container.appendChild(card)
 
 }
 
-function addJob(){
+async function addJob(){
 
 const link=document.getElementById("jobLink").value
 
 if(!link)return
 
+let title="New Job"
+let company="Unknown Company"
+let location="Unknown Location"
+
+try{
+
+const proxy="https://api.allorigins.win/raw?url="
+
+const res=await fetch(proxy+encodeURIComponent(link))
+
+const html=await res.text()
+
+const parser=new DOMParser()
+const doc=parser.parseFromString(html,"text/html")
+
+title=doc.querySelector("title")?.innerText || title
+
+const metaCompany=doc.querySelector('meta[property="og:site_name"]')
+if(metaCompany) company=metaCompany.content
+
+}catch(e){
+
+console.log("Autofill failed")
+
+}
+
 jobs.push({
 
-title:"New Job",
-company:"Company",
-location:"Location",
+title,
+company,
+location,
 status:"Applied",
 url:link
 
 })
+
+saveJobs()
+
+renderJobs()
+
+document.getElementById("jobLink").value=""
+
+}
 
 saveJobs()
 

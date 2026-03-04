@@ -611,23 +611,150 @@ function importJobs(){
   // --------- Improved: parse description text (works for more formats) ----------
   function parseJobDescription(text){
   const raw = (text || "").replace(/\r/g, "\n");
-  const linesAll = raw.split("\n").map(l => l.trim());
+  const linesAll = raw.split("\n").map(l => (l || "").trim());
   const lines = linesAll.filter(Boolean);
   const joined = " " + lines.join(" ") + " ";
 
-  const clean = (s) => String(s || "")
-    .replace(/\s+/g, " ")
-    .replace(/^\-+\s*/,"")
-    .replace(/\s*\|\s*.*$/,"")
-    .trim();
+  const clean = (s) => String(s || "").replace(/\s+/g, " ").trim();
 
-  const pickFirst = (...vals) => vals.find(v => v && String(v).trim()) || "";
+  // Things we NEVER want as company/title
+  const BAD_PHRASES = [
+    "about the job","premium access","see who you know","linkedin","easy apply",
+    "apply","applicant","applicants","promoted","new","save","share","report",
+    "benefits","requirements","responsibilities","qualifications",
+    "job details","job description","company overview",
+    "posted","posted on","time type","job requisition id","requisition id",
+    "locations","location",
+  ];
 
-  const JUNK_LINES = new Set([
-    "about the job","apply","locations","location","time type","posted on","job requisition id","requisition id",
-    "background","about the opportunity","how you will contribute","principal duties and responsibilities",
-    "requirements","benefits","what you will need","key responsibilities","position","role","job title","title"
-  ]);
+  function isBadValue(s){
+    const x = clean(s).toLowerCase();
+    if(!x) return true;
+    if (BAD_PHRASES.some(p => x === p || x.startsWith(p + " ") || x.includes(" " + p + " "))) return true;
+    if (/^r\d{2,}$/i.test(x)) return true; // requisition IDs like R1198
+    if (x.length < 2) return true;
+    return false;
+  }
+
+  function afterLabel(labels){
+    // Supports: "Position: X", "Position - X", "Position – X", and even "Position X" (looser)
+    for(const lab of labels){
+      const strict = new RegExp(`(?:^|\\b)${lab}\\s*[:\\-–]\\s*([^\\n]{2,220})`, "i");
+      const m1 = raw.match(strict);
+      if(m1 && m1[1] && !isBadValue(m1[1])) return clean(m1[1]);
+
+      // looser: "Position  Field Outreach Representative" (no colon)
+      const loose = new RegExp(`(?:^|\\b)${lab}\\s{1,3}([^\\n]{2,220})`, "i");
+      const m2 = raw.match(loose);
+      if(m2 && m2[1] && !isBadValue(m2[1])) return clean(m2[1]);
+    }
+    return "";
+  }
+
+  // ------------ TITLE ------------
+  // Strongest: explicit labels
+  let position = afterLabel(["position","role","job title","title"]);
+
+  // Next best: first “title-like” line (but NOT junk)
+  if(!position){
+    const titleRegex = /(intern|assistant|associate|representative|coordinator|manager|engineer|analyst|specialist|director|designer|consultant|administrator|officer)/i;
+    const firstGood = lines.find(l => !isBadValue(l) && l.length <= 140 && titleRegex.test(l));
+    if(firstGood) position = clean(firstGood);
+  }
+
+  // Final fallback: first non-bad line
+  if(!position){
+    const firstNonBad = lines.find(l => !isBadValue(l) && l.length <= 140);
+    if(firstNonBad) position = clean(firstNonBad);
+  }
+
+  // ------------ LOCATION ------------
+  let location = afterLabel(["location","locations","based in","office location"]);
+  if(!location){
+    // common: "On site, New York", "New York, USA"
+    const m = joined.match(/\b([A-Z][A-Za-z .'-]{2,45},\s?(?:USA|United States|UK|United Kingdom|Canada|India|Australia|[A-Z]{2,3}))\b/);
+    if(m && m[1] && !isBadValue(m[1])) location = clean(m[1]);
+  }
+
+  // ------------ WORK STYLE ------------
+  let workStyle = "";
+  if(/\bhybrid\b/i.test(joined)) workStyle = "Hybrid";
+  else if(/\bremote\b|\bwork from home\b|\bwfh\b/i.test(joined)) workStyle = "Remote";
+  else if(/\bon[-\s]?site\b|\bonsite\b|\bin[-\s]?person\b/i.test(joined)) workStyle = "On-site";
+
+  // if the location line itself includes onsite/remote, keep it too
+  const locLower = (location || "").toLowerCase();
+  if(!workStyle){
+    if(locLower.includes("on site") || locLower.includes("onsite")) workStyle = "On-site";
+    if(locLower.includes("remote")) workStyle = "Remote";
+    if(locLower.includes("hybrid")) workStyle = "Hybrid";
+  }
+
+  // also capture time type
+  const timeType = afterLabel(["time type","employment type"]);
+  if(timeType && !isBadValue(timeType)){
+    if(!workStyle) workStyle = timeType;
+    else workStyle = `${workStyle} • ${timeType}`;
+  }
+
+  // ------------ SALARY / PAY ------------
+  let salary = afterLabel(["salary","pay","compensation","rate"]);
+  if(!salary){
+    // ranges like $60k–$75k or $60,000 - $75,000
+    const mRange =
+      joined.match(/(\$?\s?\d{2,3}\s?[,.\s]?\d{3}\s?(?:–|-|to)\s?\$?\s?\d{2,3}\s?[,.\s]?\d{3})/i) ||
+      joined.match(/(\$\s?\d{1,3}(?:,\d{3})+\s?(?:–|-|to)\s?\$\s?\d{1,3}(?:,\d{3})+)/i);
+    if(mRange) salary = clean(mRange[1]);
+  }
+  if(!salary){
+    // “We pay $100 per sale”
+    const mPay = joined.match(/\b(?:we\s+pay|pay\s+is|pay)\s*(\$\s?\d+(?:\.\d+)?)\s*(?:per\s+(sale|hour|hr|week|month|year)|\/\s*(hr|hour))?/i);
+    if(mPay){
+      const amount = clean(mPay[1]);
+      const unit = clean(mPay[2] || mPay[3] || "");
+      salary = unit ? `${amount} per ${unit}` : amount;
+    }
+  }
+
+  // ------------ COMPANY ------------
+  let company = afterLabel(["company","employer","organization","hiring organization"]);
+
+  // Best real-world signal: "At Whizz, we are..."
+  if(!company){
+    const mAt = raw.match(/\bAt\s+([A-Z][A-Za-z0-9&.'-]+(?:\s+[A-Z][A-Za-z0-9&.'-]+){0,4})\b\s*(?:,|\s)\s*(?:we|our|i)\b/i);
+    if(mAt && mAt[1] && !isBadValue(mAt[1])) company = clean(mAt[1]);
+  }
+
+  // Also: "Whizz is a ..." / "Whizz is on a mission ..."
+  if(!company){
+    const mIs = raw.match(/\b([A-Z][A-Za-z0-9&.'-]+(?:\s+[A-Z][A-Za-z0-9&.'-]+){0,4})\s+is\s+(?:a|an|on)\b/);
+    if(mIs && mIs[1] && !isBadValue(mIs[1]) && mIs[1].length <= 40) company = clean(mIs[1]);
+  }
+
+  // Also: "Join Whizz ..."
+  if(!company){
+    const mJoin = raw.match(/\bJoin\s+([A-Z][A-Za-z0-9&.'-]+(?:\s+[A-Z][A-Za-z0-9&.'-]+){0,4})\b/i);
+    if(mJoin && mJoin[1] && !isBadValue(mJoin[1])) company = clean(mJoin[1]);
+  }
+
+  // Ford style: "The Ford Foundation’s..."
+  if(!company){
+    const mThe = raw.match(/\bThe\s+([A-Z][A-Za-z0-9&.'-]+(?:\s+[A-Z][A-Za-z0-9&.'-]+){0,6})['’]s\b/);
+    if(mThe && mThe[1] && !isBadValue(mThe[1])) company = clean(mThe[1]);
+  }
+
+  // Final cleanup: if company/title are bad, blank them so fallback can handle it
+  if(isBadValue(company)) company = "";
+  if(isBadValue(position)) position = "";
+
+  return {
+    company: company || "",
+    position: position || "",
+    location: location || "",
+    workStyle: workStyle || "",
+    salary: salary || ""
+  };
+}
 
   function isJunkLine(s){
     const x = (s || "").trim().toLowerCase();
@@ -910,6 +1037,20 @@ function importJobs(){
     }
 
     const parsed = parseJobDescription(desc);
+    // If parser is unsure, ask you (so it NEVER saves junk like “Premium Access”)
+let companyFixed = parsed.company;
+let positionFixed = parsed.position;
+
+if(!companyFixed){
+  companyFixed = prompt("Couldn’t confidently find the company. What’s the company name?", "") || "";
+}
+if(!positionFixed){
+  positionFixed = prompt("Couldn’t confidently find the job title. What’s the title?", "") || "";
+}
+
+// write back
+parsed.company = companyFixed.trim();
+parsed.position = positionFixed.trim();
 
     const job = {
       id: crypto.randomUUID(),

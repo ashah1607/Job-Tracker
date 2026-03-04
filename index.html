@@ -701,6 +701,22 @@
   filter: drop-shadow(0 12px 18px rgba(111,91,99,.18));
   will-change: transform, opacity;
 }
+   /* ---- Interview sparkle pulse ---- */
+@keyframes sparklePulse {
+  0% { transform: scale(1); filter: drop-shadow(0 0 0 rgba(246,180,196,0)); }
+  40% { transform: scale(1.02); filter: drop-shadow(0 12px 18px rgba(246,180,196,.35)); }
+  100% { transform: scale(1); filter: drop-shadow(0 0 0 rgba(246,180,196,0)); }
+}
+.jobCard.sparklePulse { animation: sparklePulse 1s ease-out; }
+
+.sparkleFx{
+  position: fixed;
+  z-index: 9997;
+  font-size: 16px;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  will-change: transform, opacity;
+}
     @media (max-width: 1050px){
       .jobsGrid{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .main{ grid-template-columns: 340px 1fr; }
@@ -1043,6 +1059,29 @@ function planeSendAnimation(){
   ], { duration: 650, easing: "cubic-bezier(.2,.9,.2,1)" });
 
   setTimeout(()=> plane.remove(), 700);
+}
+    // ✨ Sparkles around a card (Interview)
+function sparkleBurstAround(el){
+  if(!el) return;
+  const r = el.getBoundingClientRect();
+  const cx = r.left + r.width/2;
+  const cy = r.top + 22;
+
+  const sparkles = ["✨","💖","🫧","✨","💖"];
+  sparkles.forEach((s, i) => {
+    const x = cx + (i-2)*18;
+    const y = cy + (i%2 ? 12 : 0);
+    const sp = spawnFx(s, "sparkleFx", x, y);
+    if(!sp) return;
+
+    sp.animate([
+      { opacity: 0, transform: "translate(-50%,-50%) scale(.7)" },
+      { opacity: 1, transform: "translate(-50%,-50%) scale(1.1)" },
+      { opacity: 0, transform: "translate(-50%,-50%) scale(.9) translateY(-14px)" }
+    ], { duration: 850, easing: "ease-out", delay: i*40 });
+
+    setTimeout(()=> sp.remove(), 950+i*40);
+  });
 }
     // ----------------- Helpers -----------------
     function cssVar(name){
@@ -1659,6 +1698,15 @@ function planeSendAnimation(){
       else if(newStatus === "Rejected"){ toast("Lame (their loss) 🙄"); }
       else toast("Updated ✨");
       renderJobs(false);
+
+if(newStatus === "Interview"){
+  const card = document.getElementById(`card_${id}`);
+  if(card){
+    card.classList.add("sparklePulse");
+    sparkleBurstAround(card);
+    setTimeout(()=> card.classList.remove("sparklePulse"), 1100);
+  }
+}
     }
 
     function deleteJob(id){

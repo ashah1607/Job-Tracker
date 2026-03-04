@@ -417,13 +417,15 @@
         <button class="pillBtn" onclick="addJob()">ADD JOB</button>
       </div>
 
-      <div class="controlRow">
-        <div class="pillInput">
-          <label>Search</label>
-          <input id="search" placeholder="company, position, location..." />
-        </div>
-        <button class="pillBtn" onclick="renderJobs()">SEARCH JOB</button>
-      </div>
+    <div class="controlRow" style="grid-template-columns: 1fr 240px 240px;">
+  <div class="pillInput">
+    <label>Job Link</label>
+    <input id="jobLink" placeholder="paste link here..." />
+  </div>
+
+  <button class="pillBtn" onclick="autoFillFromLink()">AUTO-FILL</button>
+  <button class="pillBtn" onclick="addJob()">ADD JOB</button>
+</div>
     </div>
 
     <div class="main">
@@ -493,6 +495,27 @@
       localStorage.setItem("jobs_delusion_dashboard", JSON.stringify(jobs));
     }
 
+async function autoFillFromLink(){
+  const url = document.getElementById("jobLink").value.trim();
+  if(!url) return;
+
+  // Optional: show loading in the button
+  try{
+    const r = await fetch(`/api/autofill?url=${encodeURIComponent(url)}`);
+    const data = await r.json();
+
+    if(data?.title) document.getElementById("position").value = data.title;
+    if(data?.company) document.getElementById("company").value = data.company;
+    if(data?.location) document.getElementById("location").value = data.location;
+    if(data?.salary) document.getElementById("salary").value = data.salary;
+    if(data?.workStyle) document.getElementById("workStyle").value = data.workStyle;
+
+  } catch(e){
+    // If it fails, you can still fill manually
+    alert("Auto-fill couldn't read this link. You can still add it manually ✨");
+  }
+}
+    
     function addJob(){
       const url = document.getElementById("jobLink").value.trim();
       if(!url) return;

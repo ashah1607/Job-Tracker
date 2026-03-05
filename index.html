@@ -27,13 +27,6 @@
 
       --chip:#FFFFFFB8;
 
-      /* status colors */
-      --c_applied:#FFD6E2;
-      --c_wait:#E8F0EE;
-      --c_interview:#F6B4C4;
-      --c_offer:#FFF7F0;
-      --c_reject:#D9CBD0;
-
       /* pie colors */
       --p1:#F6B4C4;
       --p2:#FFD6E2;
@@ -254,13 +247,6 @@
       box-shadow: 0 14px 24px rgba(246,180,196,.22);
       outline: 2px solid rgba(246,180,196,.65);
     }
-    .chip small{
-      opacity:.75;
-      font-weight:900;
-      text-transform:uppercase;
-      letter-spacing:.7px;
-      font-size:11px;
-    }
 
     .main{
       margin-top: 14px;
@@ -360,48 +346,6 @@
       transition: width .35s ease;
     }
 
-    .chartBox{
-      margin-top: 12px;
-      background: rgba(255,255,255,.55);
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      padding: 12px;
-      overflow: hidden;
-    }
-    .legend{
-      margin-top: 10px;
-      display:grid;
-      gap: 8px;
-      font-size: 12.5px;
-      color: var(--text);
-      font-weight: 900;
-    }
-    .legendItem{
-      display:flex;
-      justify-content: space-between;
-      gap:10px;
-      align-items:center;
-    }
-    .dot{
-      width: 10px;
-      height: 10px;
-      border-radius: 999px;
-      display:inline-block;
-      margin-right: 8px;
-      border: 1px solid rgba(111,91,99,.25);
-      flex:0 0 auto;
-    }
-    .legendLeft{ display:flex; align-items:center; min-width:0; }
-    .legendName{ white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-
-    .hint{
-      margin-top: 10px;
-      font-size: 12px;
-      color: rgba(111,91,99,.75);
-      font-weight: 800;
-      line-height:1.3;
-    }
-
     .jobsHeader{
       display:flex;
       justify-content: space-between;
@@ -419,35 +363,6 @@
       color: var(--text);
       box-shadow: 0 10px 16px rgba(111,91,99,.08);
       white-space: nowrap;
-    }
-
-    .sortWrap{
-      display:flex;
-      gap:10px;
-      align-items:center;
-      flex-wrap:wrap;
-    }
-    .sortWrap label{
-      text-transform:uppercase;
-      letter-spacing:.8px;
-      font-weight:900;
-      color: var(--muted);
-      font-size: 11px;
-    }
-    select{
-      border-radius: 999px;
-      border: 1px solid var(--border);
-      padding: 10px 12px;
-      background: rgba(255,255,255,.7);
-      color: var(--text);
-      font-weight: 900;
-      cursor:pointer;
-    }
-
-    .jobsGrid{
-      display:grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 14px;
     }
 
     .sectionTitle{
@@ -481,22 +396,21 @@
       user-select:none;
     }
 
+    .jobsGrid{
+      display:grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
     .jobCard{
       border-radius: 22px;
       padding: 14px;
       border: 1px solid rgba(111,91,99,.18);
       box-shadow: 0 14px 20px rgba(111,91,99,.10);
       overflow: hidden;
-      transform-origin: top center;
       background: var(--card);
-      transform-style: preserve-3d;
-      transition: transform 120ms ease, box-shadow 200ms ease;
-      will-change: transform;
       position: relative;
     }
-    .jobCard.tilt{
-  box-shadow: 0 22px 34px rgba(111,91,99,.14);
-}
 
     /* status glow */
     .jobCard[data-status="Applied"]{ background: linear-gradient(180deg, rgba(255,214,226,.65), rgba(255,255,255,.75)); }
@@ -504,21 +418,6 @@
     .jobCard[data-status="Interview"]{ background: linear-gradient(180deg, rgba(246,180,196,.55), rgba(255,255,255,.78)); }
     .jobCard[data-status="Offer"]{ background: linear-gradient(180deg, rgba(255,247,240,.85), rgba(255,255,255,.78)); }
     .jobCard[data-status="Rejected"]{ background: linear-gradient(180deg, rgba(217,203,208,.55), rgba(255,255,255,.78)); }
-
-    .jobCard.match{
-      outline: 2px solid rgba(246,180,196,.85);
-      box-shadow: 0 18px 30px rgba(246,180,196,.28);
-      animation: pop .22s ease-out;
-    }
-    .jobCard.dimmed{
-  filter: blur(1.2px) saturate(.85);
-  opacity: .65;
-  transition: filter 300ms ease, opacity 300ms ease;
-}
-    @keyframes pop{
-      from{ transform: scale(.985); }
-      to{ transform: scale(1); }
-    }
 
     .jobTop{
       display:flex;
@@ -574,11 +473,6 @@
     .details{
       margin-top: 10px;
       display:none;
-      animation: fadeIn .18s ease-out;
-    }
-    @keyframes fadeIn{
-      from{ opacity:0; transform: translateY(-3px); }
-      to{ opacity:1; transform: translateY(0); }
     }
     .jobCard.expanded .details{ display:block; }
 
@@ -677,96 +571,8 @@
       backdrop-filter: blur(10px);
       z-index: 9999;
     }
-    .toast.show{ display:block; animation: toastIn .22s ease-out; }
-    @keyframes toastIn{
-      from{ opacity:0; transform: translateY(6px); }
-      to{ opacity:1; transform: translateY(0); }
-    }
+    .toast.show{ display:block; }
 
-    .confetti{
-      position: fixed;
-      inset: 0;
-      pointer-events:none;
-      z-index: 9998;
-      overflow:hidden;
-      display:none;
-    }
-    .confetti.show{ display:block; }
-    .confettiPiece{
-      position:absolute;
-      width:10px;height:10px;
-      border-radius: 2px;
-      opacity:.9;
-      animation: fall 900ms ease-out forwards;
-    }
-    @keyframes fall{
-      from{ transform: translateY(-20px) rotate(0deg); opacity: 1;}
-      to{ transform: translateY(520px) rotate(320deg); opacity: 0;}
-    }
-/* ---- Paper plane FX ---- */
-.planeFx{
-  position: fixed;
-  z-index: 9997;
-  font-size: 20px;
-  transform: translate(-50%, -50%);
-  filter: drop-shadow(0 12px 18px rgba(111,91,99,.18));
-  will-change: transform, opacity;
-}
-   /* ---- Interview sparkle pulse ---- */
-@keyframes sparklePulse {
-  0% { transform: scale(1); filter: drop-shadow(0 0 0 rgba(246,180,196,0)); }
-  40% { transform: scale(1.02); filter: drop-shadow(0 12px 18px rgba(246,180,196,.35)); }
-  100% { transform: scale(1); filter: drop-shadow(0 0 0 rgba(246,180,196,0)); }
-}
-.jobCard.sparklePulse { animation: sparklePulse 1s ease-out; }
-    /* ---- Offer jackpot ---- */
-@keyframes bounceCash {
-  0% { transform: scale(1); }
-  35% { transform: scale(1.02); }
-  60% { transform: scale(0.99); }
-  100% { transform: scale(1); }
-}
-.jobCard.bounceCash { animation: bounceCash 650ms ease-out; }
-
-    /* ---- Rejected graveyard drop ---- */
-@keyframes graveDrop {
-  0% { transform: translateY(0); opacity: 1; }
-  100% { transform: translateY(18px); opacity: .75; }
-}
-.jobCard.graveDrop { animation: graveDrop 520ms ease-out; }
-
-.chaChingFx{
-  position: fixed;
-  z-index: 9997;
-  transform: translate(-50%, -50%);
-  padding: 10px 14px;
-  border-radius: 999px;
-  background: rgba(255,255,255,.85);
-  border: 1px solid rgba(111,91,99,.18);
-  font-weight: 950;
-  letter-spacing: .7px;
-  text-transform: uppercase;
-  box-shadow: 0 18px 30px rgba(111,91,99,.18);
-  opacity: 0;
-  will-change: transform, opacity;
-}
-
-.sparkleFx{
-  position: fixed;
-  z-index: 9997;
-  font-size: 16px;
-  transform: translate(-50%, -50%);
-  opacity: 0;
-  will-change: transform, opacity;
-}
-    .ghostFx{
-  position: fixed;
-  z-index: 9997;
-  font-size: 18px;
-  transform: translate(-50%, -50%);
-  opacity: 0;
-  will-change: transform, opacity;
-}
     @media (max-width: 1050px){
       .jobsGrid{ grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .main{ grid-template-columns: 340px 1fr; }
@@ -787,7 +593,7 @@
     <div class="titlePill">
       <h1>THE DELUSION DASHBOARD</h1>
       <p>MANIFESTING EMPLOYMENT</p>
-      <div class="motivation" id="motivation">
+      <div class="motivation">
         <span class="sparkle">✨</span>
         <span id="motivationText">Manifesting an offer email today.</span>
         <span class="sparkle">✨</span>
@@ -818,21 +624,21 @@
       </div>
 
       <div class="row3">
-        <button class="pillBtn" onclick="runSearch()">SEARCH</button>
-        <button class="pillBtn" id="addJobBtn" onclick="addJobFromDescription()">ADD JOB</button>     
-        <button class="pillBtn" onclick="clearFilters()">CLEAR FILTERS</button>
+        <button class="pillBtn" id="searchBtn">SEARCH</button>
+        <button class="pillBtn" id="addJobBtn">ADD JOB</button>
+        <button class="pillBtn" id="clearBtn">CLEAR FILTERS</button>
       </div>
 
       <div class="row3">
-        <button class="pillBtn" onclick="exportEmail()">EXPORT EMAIL</button>
-        <button class="pillBtn" onclick="exportSheets()">EXPORT SHEETS</button>
-        <button class="pillBtn" onclick="exportBackup()">BACKUP JSON</button>
+        <button class="pillBtn" id="seedBtn">RESET DEMO JOBS</button>
+        <button class="pillBtn" id="backupBtn">BACKUP JSON</button>
+        <button class="pillBtn" id="importBtn">IMPORT</button>
       </div>
+
       <div class="row3">
-        <button class="pillBtn" onclick="importJobs()">IMPORT</button>
-        <div class="pillInput" style="grid-column: span 2;">
+        <div class="pillInput" style="grid-column: span 3;">
           <label>Sort</label>
-          <select id="sortBy" onchange="renderJobs(false)" style="width:100%;">
+          <select id="sortBy" style="width:100%;">
             <option value="newest">Newest</option>
             <option value="status">Status</option>
             <option value="company">Company A–Z</option>
@@ -840,6 +646,7 @@
           </select>
         </div>
       </div>
+
       <input id="importFile" type="file" accept="application/json,text/csv" style="display:none" />
 
       <!-- Manual add -->
@@ -867,7 +674,7 @@
             <option>Rejected</option>
           </select>
 
-          <button class="pillBtn" onclick="addJobManual()">ADD MANUALLY</button>
+          <button class="pillBtn" id="manualAddBtn">ADD MANUALLY</button>
         </div>
       </div>
     </div>
@@ -896,14 +703,6 @@
               <div class="v" id="pinnedCount">0</div>
             </div>
           </div>
-          <div class="miniBox">
-                <div class="k">Productivity level</div>
-                <div class="v" id="prodLevel">1</div>
-              </div>
-              <div class="miniBox">
-                <div class="k">Badges</div>
-                <div class="v" id="badges" style="font-size:12px; font-weight:950; line-height:1.2;">—</div>
-              </div>
 
           <div class="progressWrap">
             <div class="progressTop">
@@ -913,13 +712,9 @@
             <div class="bar"><div id="progressBar"></div></div>
           </div>
 
-          <div class="chartBox">
-            <canvas id="pie" width="280" height="280"></canvas>
-            <div class="legend" id="legend"></div>
-          </div>
-
-          <div class="hint">
-            Tip: chip filters + fuzzy search will find “whiz” even if you typed “whizz” wrong 😭✨
+          <div class="subnote" style="margin-top:10px;">
+            If your cards used to only appear after submitting an application: that was a JS error.
+            This version renders immediately on page load (and has demo jobs if storage is empty).
           </div>
         </div>
       </div>
@@ -938,7 +733,7 @@
 
         <div class="sectionTitle">
           <h3>Graveyard</h3>
-          <div class="toggleLink" onclick="toggleGraveyard()" id="graveyardToggle">Show</div>
+          <div class="toggleLink" id="graveyardToggle">Show</div>
         </div>
         <div class="jobsGrid" id="graveyardGrid" style="display:none;"></div>
       </div>
@@ -946,15 +741,110 @@
   </div>
 
   <div class="toast" id="toast"></div>
-  <div class="confetti" id="confetti"></div>
-  <div id="fxLayer" style="position:fixed; inset:0; pointer-events:none; z-index:9997;"></div>
 
   <script>
-    // ----------------- Stable storage + migration -----------------
-    const STORAGE_KEY = "delusion_dashboard_jobs";
-    const OLD_KEYS = ["jobs_delusion_dashboard","jobs_delusion_dashboard_v2","jobs_delusion_dashboard_v1","jobs_delusion_dashboard_v3","jobs_delusion_dashboard_v4"];
+    /**************************************************************
+     *  ✅ FIX for “cards only show after submitting”
+     *  Your old file had:
+     *   - duplicate function updateStatus()
+     *   - stray `if (newStatus === ...)` blocks OUTSIDE a function
+     *  That throws a JS error on page load → render never runs.
+     *
+     *  This file:
+     *   - has ONE updateStatus()
+     *   - has NO stray blocks
+     *   - renders immediately on DOMContentLoaded
+     *   - seeds demo cards if localStorage is empty (so you ALWAYS see cards)
+     **************************************************************/
 
-    function safeJsonParse(v){ try{ return JSON.parse(v); } catch { return null; } }
+    const STORAGE_KEY = "delusion_dashboard_jobs";
+    const OLD_KEYS = [
+      "jobs_delusion_dashboard",
+      "jobs_delusion_dashboard_v1",
+      "jobs_delusion_dashboard_v2",
+      "jobs_delusion_dashboard_v3",
+      "jobs_delusion_dashboard_v4"
+    ];
+
+    const STATUS_ORDER = ["Applied","Awaiting Response","Interview","Offer","Rejected"];
+    const STATUS_LABEL = {
+      "Applied": "Manifestation submitted",
+      "Awaiting Response": "Are y’all alive",
+      "Interview": "They want me fr",
+      "Offer": "Bag secured",
+      "Rejected": "Lame (their loss)"
+    };
+    const STATUS_ICON = {
+      "Applied": "🕯️",
+      "Awaiting Response": "👻",
+      "Interview": "🎀",
+      "Offer": "💌",
+      "Rejected": "🙄"
+    };
+
+    const QUOTES = [
+      "Yay I got the perfect job!",
+      "HR will stop ghosting. I said what I said.",
+      "My resume is sexy and they WILL notice.",
+      "Today I am the applicant AND the prize.",
+      "I don’t chase — I apply and attract.",
+      "Everyone wants me.",
+      "If they reject me, it’s their loss.",
+      "I make so much money I love it.",
+      "The job is already mine."
+    ];
+
+    const SEED_JOBS = [
+      { company:"Attollo Prep", position:"Program Assistant", workStyle:"Hybrid", location:"NYC", salary:"(ask)", url:"", status:"Applied", followUp:"" },
+      { company:"Pearl & Hoyt", position:"Coordinator", workStyle:"On-site", location:"NYC", salary:"(ask)", url:"", status:"Awaiting Response", followUp:"" },
+      { company:"Fleet Feet", position:"Retail Sales Associate", workStyle:"On-site", location:"New York, NY", salary:"(ask)", url:"", status:"Interview", followUp:"" },
+      { company:"Somewhere Cute", position:"Marketing Intern", workStyle:"Remote", location:"Remote", salary:"$20/hr", url:"", status:"Rejected", followUp:"" }
+    ];
+
+    let jobs = [];
+    const filters = { chips: new Set(), query: "" };
+    let graveyardOpen = false;
+
+    function safeJsonParse(v){ try { return JSON.parse(v); } catch { return null; } }
+    function escapeHtml(str){
+      return String(str ?? "")
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#39;");
+    }
+    function escapeAttr(str){ return escapeHtml(str).replaceAll("`","&#96;"); }
+
+    function toast(msg){
+      const el = document.getElementById("toast");
+      el.textContent = msg;
+      el.classList.add("show");
+      setTimeout(()=> el.classList.remove("show"), 2200);
+    }
+
+    function normalizeJob(j){
+      const now = Date.now();
+      return {
+        id: j.id || (crypto?.randomUUID?.() || String(now + Math.random())),
+        company: j.company || "Company",
+        position: j.position || "Title",
+        workStyle: j.workStyle || "Work type",
+        location: j.location || "Location",
+        salary: j.salary || "Salary",
+        url: j.url || "",
+        status: STATUS_ORDER.includes(j.status) ? j.status : "Applied",
+        pinned: !!j.pinned,
+        createdAt: j.createdAt || now,
+        updatedAt: j.updatedAt || now,
+        followUp: j.followUp || "",
+        notes: j.notes || ""
+      };
+    }
+
+    function saveJobs(){
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(jobs));
+    }
 
     function loadJobs(){
       const current = safeJsonParse(localStorage.getItem(STORAGE_KEY));
@@ -967,558 +857,23 @@
           return old;
         }
       }
-      return [];
+      return null; // important: null means “no saved data”
     }
 
-    let jobs = loadJobs().map(normalizeJob);
-    // ----------------- Productivity game (badges + leveling) -----------------
-const GAME_KEY = "delusion_dashboard_game";
-let game = safeJsonParse(localStorage.getItem(GAME_KEY)) || {
-  totalAppsEver: 0,
-  badges: {},
-  streak: 0,
-  lastAppDay: ""
-};
-
-function saveGame(){ localStorage.setItem(GAME_KEY, JSON.stringify(game)); }
-
-function updateGameOnAdd(){
-  game.totalAppsEver += 1;
-
-  // streak based on adding apps (daily)
-  const t = todayYMD();
-  if(game.lastAppDay !== t){
-    const d = new Date();
-    const y = new Date(d.getFullYear(), d.getMonth(), d.getDate()-1);
-    const ymd = `${y.getFullYear()}-${String(y.getMonth()+1).padStart(2,"0")}-${String(y.getDate()).padStart(2,"0")}`;
-    game.streak = (game.lastAppDay === ymd) ? (game.streak + 1) : 1;
-    game.lastAppDay = t;
-  }
-
-  if(game.totalAppsEver >= 5) game.badges.apps5 = true;
-  if(game.totalAppsEver >= 25) game.badges.apps25 = true;
-
-  saveGame();
-}
-
-function updateStatus(id, newStatus){
-  const j = jobs.find(x => x.id === id);
-  if(!j) return;
-
-  j.status = newStatus;
-  j.updatedAt = Date.now();
-  saveJobs();
-
-  // gamification
-  updateGameOnStatus(newStatus);
-
-  // toast/confetti
-  if(newStatus === "Offer"){ confetti(); toast("BAG SECURED 💌"); }
-  else if(newStatus === "Rejected"){ toast("Lame (their loss) 🙄"); }
-  else toast("Updated ✨");
-
-  // FX
-  const card = document.getElementById(`card_${id}`);
-
-  if(newStatus === "Rejected" && card){
-    card.classList.add("graveDrop");
-    setTimeout(()=> card.classList.remove("graveDrop"), 650);
-  }
-
-  if(newStatus === "Interview" && card){
-    card.classList.add("sparklePulse");
-    sparkleBurstAround(card);
-    setTimeout(()=> card.classList.remove("sparklePulse"), 1100);
-  }
-
-  if(newStatus === "Awaiting Response" && card){
-    ghostDriftFrom(card);
-  }
-
-  if(newStatus === "Offer" && card){
-    card.classList.add("bounceCash");
-    chaChing(card);
-    setTimeout(()=> card.classList.remove("bounceCash"), 750);
-  }
-
-  renderJobs(false);
-}
-
-function productivityLevel(){
-  // level up every 5 apps
-  return Math.max(1, Math.floor(game.totalAppsEver / 5) + 1);
-}
-
-function renderBadges(){
-  const lvlEl = document.getElementById("prodLevel");
-  const badgeEl = document.getElementById("badges");
-  if(lvlEl) lvlEl.textContent = String(productivityLevel());
-
-  const badges = [];
-  if(game.badges.apps5) badges.push("🏅 5 apps");
-  if(game.badges.apps25) badges.push("🏆 25 apps");
-  if(game.badges.firstInterview) badges.push("🎀 first interview");
-  if(game.badges.firstOffer) badges.push("💌 first offer");
-  if(game.badges.streak7) badges.push("🔥 7-day streak");
-
-  if(badgeEl) badgeEl.textContent = badges.length ? badges.join(" • ") : "No badges yet (soon 😈)";
-}
-    let lastDeleted = null;      // { job, index, timeoutId }
-    let undoTimerId = null;
-
-    function saveJobs(){
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(jobs));
-    }
-
-    function normalizeJob(j){
-      const now = Date.now();
-      return {
-        id: j.id || crypto.randomUUID(),
-        company: j.company || "Company",
-        position: j.position || "Title",
-        workStyle: j.workStyle || "Work type",
-        location: j.location || "Location",
-        salary: j.salary || "Salary",
-        url: j.url || "",
-        status: j.status || "Applied",
-        pinned: !!j.pinned,
-        createdAt: j.createdAt || now,
-        updatedAt: j.updatedAt || now,
-        followUp: j.followUp || "" , // "YYYY-MM-DD"
-        notes: j.notes || ""
-      };
-    }
-
-    // ----------------- Fun status labels (your picks) -----------------
-    const STATUS_ORDER = ["Applied","Awaiting Response","Interview","Offer","Rejected"];
-
-    const STATUS_LABEL = {
-      "Applied": "Manifestation submitted",
-      "Awaiting Response": "Are y’all alive",
-      "Interview": "They want me fr",
-      "Offer": "Bag secured",
-      "Rejected": "Lame (their loss)"
-    };
-
-    const STATUS_ICON = {
-      "Applied": "🕯️",
-      "Awaiting Response": "👻",
-      "Interview": "🎀",
-      "Offer": "💌",
-      "Rejected": "🙄"
-    };
-
-    // ----------------- Motivation corner -----------------
-    const QUOTES = [
-      "Yay I got the perfect job!",
-      "HR will stop ghosting. I said what I said.",
-      "My resume is sexy and they WILL notice.",
-      "Today I am the applicant AND the prize.",
-      "I don’t chase — I apply and attract.",
-      "Everyone wants me.",
-      "If they reject me, it’s their loss.",
-      "I make so much money I love it.",
-      "The job is already mine."
-    ];
     function rotateQuote(){
-      const i = Math.floor(Math.random() * QUOTES.length);
-      document.getElementById("motivationText").textContent = QUOTES[i];
+      document.getElementById("motivationText").textContent = QUOTES[Math.floor(Math.random()*QUOTES.length)];
     }
 
-    // ----------------- Toast + confetti -----------------
-    function toast(msg, opts = {}){
-      const el = document.getElementById("toast");
-      const { actionText, onAction, duration = 2400 } = opts;
-
-  el.innerHTML = `
-    <div style="display:flex; gap:12px; align-items:center; justify-content:space-between;">
-      <div style="font-weight:900; line-height:1.2;">${escapeHtml(msg)}</div>
-      ${actionText ? `<button id="toastActionBtn" class="smallBtn primary" style="padding:10px 12px;">${escapeHtml(actionText)}</button>` : ""}
-    </div>
-  `;
-
-  el.classList.add("show");
-
-  const btn = document.getElementById("toastActionBtn");
-  if(btn && typeof onAction === "function"){
-    btn.onclick = () => {
-      el.classList.remove("show");
-      onAction();
-    };
-  }
-
-  // clear any existing timer for toast
-  if(undoTimerId) clearTimeout(undoTimerId);
-  undoTimerId = setTimeout(()=> el.classList.remove("show"), duration);
-}
-
-    function confetti(){
-      const box = document.getElementById("confetti");
-      box.innerHTML = "";
-      box.classList.add("show");
-      const colors = [cssVar("--p1"), cssVar("--p2"), cssVar("--p3"), cssVar("--p4"), cssVar("--p5")];
-      for(let i=0;i<26;i++){
-        const d = document.createElement("div");
-        d.className = "confettiPiece";
-        d.style.left = (Math.random()*100) + "vw";
-        d.style.top = (-20 - Math.random()*60) + "px";
-        d.style.background = colors[i % colors.length];
-        d.style.animationDelay = (Math.random()*120) + "ms";
-        d.style.transform = `rotate(${Math.random()*360}deg)`;
-        box.appendChild(d);
-      }
-      setTimeout(()=> box.classList.remove("show"), 980);
-    }
-// ----------------- FX helpers (plane send) -----------------
-function rectCenter(el){
-  const r = el.getBoundingClientRect();
-  return { x: r.left + r.width/2, y: r.top + r.height/2 };
-}
-
-function spawnFx(html, className, x, y){
-  const fxLayer = document.getElementById("fxLayer");
-  if(!fxLayer) return null;
-  const el = document.createElement("div");
-  el.className = className;
-  el.innerHTML = html;
-  el.style.left = x + "px";
-  el.style.top = y + "px";
-  fxLayer.appendChild(el);
-  return el;
-}
-
-// ✈️ Paper plane from Add button -> jobs grid
-function planeSendAnimation(){
-  const btn = document.getElementById("addJobBtn");
-  const grid = document.getElementById("jobsGrid");
-  if(!btn || !grid) return;
-
-  const s = rectCenter(btn);
-  const t = rectCenter(grid);
-
-  const plane = spawnFx("✈️", "planeFx", s.x, s.y);
-  if(!plane) return;
-
-  const dx = t.x - s.x;
-  const dy = t.y - s.y;
-
-  plane.animate([
-    { transform: `translate(-50%, -50%) translate(0px, 0px) rotate(0deg) scale(1)`, opacity: 1 },
-    { transform: `translate(-50%, -50%) translate(${dx*0.7}px, ${dy*0.7}px) rotate(18deg) scale(1.05)`, opacity: 1 },
-    { transform: `translate(-50%, -50%) translate(${dx}px, ${dy}px) rotate(28deg) scale(0.95)`, opacity: 0 }
-  ], { duration: 650, easing: "cubic-bezier(.2,.9,.2,1)" });
-
-  setTimeout(()=> plane.remove(), 700);
-}
-    // ✨ Sparkles around a card (Interview)
-function sparkleBurstAround(el){
-  if(!el) return;
-  const r = el.getBoundingClientRect();
-  const cx = r.left + r.width/2;
-  const cy = r.top + 22;
-
-  const sparkles = ["✨","💖","🫧","✨","💖"];
-  sparkles.forEach((s, i) => {
-    const x = cx + (i-2)*18;
-    const y = cy + (i%2 ? 12 : 0);
-    const sp = spawnFx(s, "sparkleFx", x, y);
-    if(!sp) return;
-
-    sp.animate([
-      { opacity: 0, transform: "translate(-50%,-50%) scale(.7)" },
-      { opacity: 1, transform: "translate(-50%,-50%) scale(1.1)" },
-      { opacity: 0, transform: "translate(-50%,-50%) scale(.9) translateY(-14px)" }
-    ], { duration: 850, easing: "ease-out", delay: i*40 });
-
-    setTimeout(()=> sp.remove(), 950+i*40);
-  });
-}
-    // 👻 Ghost drift (Awaiting Response)
-function ghostDriftFrom(el){
-  if(!el) return;
-  const r = el.getBoundingClientRect();
-  const gx = r.right - 18;
-  const gy = r.top + 18;
-
-  const g = spawnFx("👻", "ghostFx", gx, gy);
-  if(!g) return;
-
-  g.animate([
-    { opacity: 0, transform: "translate(-50%,-50%) translateY(6px) scale(.9)" },
-    { opacity: 1, transform: "translate(-50%,-50%) translateY(0px) scale(1)" },
-    { opacity: 0, transform: "translate(-50%,-50%) translateY(-44px) scale(1.05)" }
-  ], { duration: 900, easing: "ease-out" });
-
-  setTimeout(()=> g.remove(), 950);
-}
-    // 💸 Cha-ching popup (Offer)
-function chaChing(el){
-  if(!el) return;
-  const r = el.getBoundingClientRect();
-  const x = r.left + r.width/2;
-  const y = r.top - 10;
-
-  const c = spawnFx("💸 CHA-CHING 💸", "chaChingFx", x, y);
-  if(!c) return;
-
-  c.animate([
-    { opacity: 0, transform: "translate(-50%,-50%) translateY(10px) scale(.96)" },
-    { opacity: 1, transform: "translate(-50%,-50%) translateY(0px) scale(1)" },
-    { opacity: 0, transform: "translate(-50%,-50%) translateY(-18px) scale(1.02)" }
-  ], { duration: 900, easing: "ease-out" });
-
-  setTimeout(()=> c.remove(), 950);
-}
-    // 🪩 Hover tilt on cards
-function enableHoverTilt(){
-  const cards = document.querySelectorAll(".jobCard");
-  cards.forEach(card => {
-    if(card.dataset.tiltBound === "1") return;
-    card.dataset.tiltBound = "1";
-
-    card.addEventListener("mousemove", (e) => {
-      const r = card.getBoundingClientRect();
-      const px = (e.clientX - r.left) / r.width;
-      const py = (e.clientY - r.top) / r.height;
-      const rotY = (px - 0.5) * 8;
-      const rotX = (0.5 - py) * 8;
-      card.classList.add("tilt");
-      card.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg)`;
-    });
-
-    card.addEventListener("mouseleave", () => {
-      card.classList.remove("tilt");
-      card.style.transform = "";
-    });
-  });
-}
-    // ----------------- Helpers -----------------
-    function cssVar(name){
-      return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
-    }
-
-    function escapeHtml(str){
-      return String(str ?? "")
-        .replaceAll("&","&amp;")
-        .replaceAll("<","&lt;")
-        .replaceAll(">","&gt;")
-        .replaceAll('"',"&quot;")
-        .replaceAll("'","&#39;");
-    }
-    function escapeAttr(str){
-      return escapeHtml(str).replaceAll("`","&#96;");
-    }
-
-    function todayYMD(){
-      const d = new Date();
-      const y = d.getFullYear();
-      const m = String(d.getMonth()+1).padStart(2,"0");
-      const day = String(d.getDate()).padStart(2,"0");
-      return `${y}-${m}-${day}`;
-    }
-
-    // ----------------- Parsing (robust-ish) -----------------
-    function parseJobDescription(text){
-      const raw = (text || "").replace(/\r/g, "\n");
-      const linesAll = raw.split("\n").map(l => (l || "").trim());
-      const lines = linesAll.filter(Boolean);
-      const joined = " " + lines.join(" ") + " ";
-
-      const clean = (s) => String(s || "").replace(/\s+/g, " ").trim();
-
-      const BAD_PHRASES = [
-        "about the job","premium access","see who you know","linkedin","easy apply",
-        "apply","applicant","applicants","promoted","new","save","share","report",
-        "benefits","requirements","responsibilities","qualifications",
-        "job details","job description","company overview",
-        "posted","posted on","time type","job requisition id","requisition id",
-        "locations","location"
-      ];
-      function isBadValue(s){
-        const x = clean(s).toLowerCase();
-        if(!x) return true;
-        if (BAD_PHRASES.some(p => x === p || x.startsWith(p + " ") || x.includes(" " + p + " "))) return true;
-        if (/^r\d{2,}$/i.test(x)) return true;
-        return false;
-      }
-
-      function afterLabel(labels){
-        for(const lab of labels){
-          const strict = new RegExp(`(?:^|\\b)${lab}\\s*[:\\-–]\\s*([^\\n]{2,220})`, "i");
-          const m1 = raw.match(strict);
-          if(m1 && m1[1] && !isBadValue(m1[1])) return clean(m1[1]);
-          const loose = new RegExp(`(?:^|\\b)${lab}\\s{1,3}([^\\n]{2,220})`, "i");
-          const m2 = raw.match(loose);
-          if(m2 && m2[1] && !isBadValue(m2[1])) return clean(m2[1]);
-        }
-        return "";
-      }
-
-      // Title
-      let position = afterLabel(["position","role","job title","title"]);
-      if(!position){
-        const titleRegex = /(intern|assistant|associate|representative|coordinator|manager|engineer|analyst|specialist|director|designer|consultant|administrator|officer)/i;
-        const firstGood = lines.find(l => !isBadValue(l) && l.length <= 140 && titleRegex.test(l));
-        if(firstGood) position = clean(firstGood);
-      }
-      if(!position){
-        const firstNonBad = lines.find(l => !isBadValue(l) && l.length <= 140);
-        if(firstNonBad) position = clean(firstNonBad);
-      }
-      if(isBadValue(position)) position = "";
-
-      // Location + split work style from location
-      let location = afterLabel(["location","locations","based in","office location"]);
-      let inferredWork = "";
-
-      function splitWorkStyleFromLocation(loc){
-        if(!loc) return { loc:"", inferredWork:"" };
-        const x = clean(loc);
-        const m = x.match(/^(on[-\s]?site|onsite|remote|hybrid)\s*,\s*(.+)$/i);
-        if(m){
-          const inferred = m[1].toLowerCase().includes("remote") ? "Remote"
-            : m[1].toLowerCase().includes("hybrid") ? "Hybrid"
-            : "On-site";
-          return { loc: clean(m[2]), inferredWork: inferred };
-        }
-        return { loc: x, inferredWork:"" };
-      }
-
-      if(location){
-        const sp = splitWorkStyleFromLocation(location);
-        location = sp.loc;
-        inferredWork = sp.inferredWork;
-      }
-
-      if(!location){
-        const mState = joined.match(/\b([A-Z][A-Za-z .'-]{2,45},\s?[A-Z]{2})\b/);
-        const mCountry = joined.match(/\b([A-Z][A-Za-z .'-]{2,45},\s?(?:USA|United States|UK|United Kingdom|Canada|India|Australia))\b/i);
-        location = clean((mCountry?.[1] || mState?.[1] || ""));
-      }
-
-      // Work style
-      let workStyle = "";
-      if(/\bhybrid\b/i.test(joined)) workStyle = "Hybrid";
-      else if(/\bremote\b|\bwork from home\b|\bwfh\b/i.test(joined)) workStyle = "Remote";
-      else if(/\bon[-\s]?site\b|\bonsite\b|\bin[-\s]?person\b/i.test(joined)) workStyle = "On-site";
-      if(!workStyle && inferredWork) workStyle = inferredWork;
-
-      const timeType = afterLabel(["time type","employment type"]);
-      if(timeType && !isBadValue(timeType)){
-        if(!workStyle) workStyle = timeType;
-        else workStyle = `${workStyle} • ${timeType}`;
-      }
-
-      // Salary / pay (shorter)
-      let salary = afterLabel(["salary","pay","compensation","rate"]);
-
-      if(!salary){
-        const mPay = joined.match(/\b(?:we\s+pay|pay\s+is|pay)\s*(\$\s?\d+(?:\.\d+)?)\s*(?:per\s+(sale|hour|hr|week|month|year)|\/\s*(hr|hour))?/i);
-        if(mPay){
-          const amount = clean(mPay[1]);
-          const unit = clean(mPay[2] || mPay[3] || "");
-          salary = unit ? `${amount} per ${unit}` : amount;
-        }
-      }
-
-      let bonusSummary = "";
-      const bonusMatches = [...joined.matchAll(/\b(\d+)\s+sales?\s*:\s*(\$\s?\d+(?:,\d{3})*)\b/gi)];
-      if(bonusMatches.length){
-        bonusSummary = bonusMatches.slice(0,4).map(m => `${m[1]} sales → ${clean(m[2])}`).join(", ");
-      }
-
-      if(!salary){
-        const mRange =
-          joined.match(/(\$?\s?\d{2,3}\s?[,.\s]?\d{3}\s?(?:–|-|to)\s?\$?\s?\d{2,3}\s?[,.\s]?\d{3})/i) ||
-          joined.match(/(\$\s?\d{1,3}(?:,\d{3})+\s?(?:–|-|to)\s?\$\s?\d{1,3}(?:,\d{3})+)/i);
-        if(mRange) salary = clean(mRange[1]);
-      }
-
-      if(salary && bonusSummary){
-        salary = `${salary} (+ bonus: ${bonusSummary})`;
-      }
-
-      // Company
-      let company = afterLabel(["company","employer","organization","hiring organization"]);
-      if(!company){
-        const mAt = raw.match(/\bAt\s+([A-Z][A-Za-z0-9&.'-]+(?:\s+[A-Z][A-Za-z0-9&.'-]+){0,4})\b\s*(?:,|\s)\s*(?:we|our|i)\b/i);
-        if(mAt && mAt[1] && !isBadValue(mAt[1])) company = clean(mAt[1]);
-      }
-      if(!company){
-        const mThe = raw.match(/\bThe\s+([A-Z][A-Za-z0-9&.'-]+(?:\s+[A-Z][A-Za-z0-9&.'-]+){0,6})['’]s\b/);
-        if(mThe && mThe[1] && !isBadValue(mThe[1])) company = clean(mThe[1]);
-      }
-      if(isBadValue(company)) company = "";
-
-      return { company, position, location, workStyle, salary };
-    }
-
-    // ----------------- Duplicate detection -----------------
-    function isDuplicate(candidate){
-      const cLink = (candidate.url || "").trim().toLowerCase();
-      const cKey = `${(candidate.company||"").trim().toLowerCase()}|${(candidate.position||"").trim().toLowerCase()}`;
-
-      return jobs.some(j => {
-        const jLink = (j.url || "").trim().toLowerCase();
-        const jKey = `${(j.company||"").trim().toLowerCase()}|${(j.position||"").trim().toLowerCase()}`;
-        if(cLink && jLink && cLink === jLink) return true;
-        if(cKey.replace("|","").length > 3 && cKey === jKey) return true;
-        return false;
-      });
-    }
-
-    // ----------------- Filters + fuzzy search -----------------
-    const filters = {
-      chips: new Set(), // e.g. "Remote", "Interview", "NYC"
-      query: ""
-    };
-
+    // simple fuzzy includes (fast & stable)
     function norm(s){
-      return String(s||"")
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g," ")
-        .trim();
+      return String(s||"").toLowerCase().replace(/[^a-z0-9]+/g," ").trim();
     }
-
-    // lightweight fuzzy: token edit distance threshold
-    function editDistance(a,b){
-      a = a || ""; b = b || "";
-      const m=a.length,n=b.length;
-      if(!m) return n;
-      if(!n) return m;
-      const dp = Array.from({length:m+1}, ()=> new Array(n+1).fill(0));
-      for(let i=0;i<=m;i++) dp[i][0]=i;
-      for(let j=0;j<=n;j++) dp[0][j]=j;
-      for(let i=1;i<=m;i++){
-        for(let j=1;j<=n;j++){
-          const cost = a[i-1]===b[j-1]?0:1;
-          dp[i][j]=Math.min(
-            dp[i-1][j]+1,
-            dp[i][j-1]+1,
-            dp[i-1][j-1]+cost
-          );
-        }
-      }
-      return dp[m][n];
-    }
-
-    function fuzzyMatch(query, text){
-      const q = norm(query);
-      const t = norm(text);
+    function fuzzyMatch(q, text){
+      q = norm(q); text = norm(text);
       if(!q) return true;
-      if(t.includes(q)) return true;
-
-      const qTokens = q.split(/\s+/).filter(Boolean);
-      const tTokens = t.split(/\s+/).filter(Boolean);
-      if(!qTokens.length) return true;
-
-      // every query token must roughly match something
-      return qTokens.every(qt => {
-        if(t.includes(qt)) return true;
-        const best = tTokens.reduce((min, tt) => Math.min(min, editDistance(qt, tt)), 99);
-        const thresh = qt.length <= 4 ? 1 : qt.length <= 7 ? 2 : 3;
-        return best <= thresh;
-      });
+      // all tokens must appear somewhere
+      const tokens = q.split(/\s+/).filter(Boolean);
+      return tokens.every(t => text.includes(t));
     }
 
     function jobMatchesChips(job){
@@ -1536,32 +891,177 @@ function enableHoverTilt(){
       return true;
     }
 
-    function clearFilters(){
-      filters.chips.clear();
-      document.getElementById("search").value = "";
-      filters.query = "";
-      buildChips();
-      renderJobs(false);
-      toast("Filters cleared ✨");
+    function buildChips(){
+      const row = document.getElementById("chipsRow");
+      row.innerHTML = "";
+      const chips = [
+        {name:"Remote", icon:"🧸"},
+        {name:"Hybrid", icon:"🧋"},
+        {name:"On-site", icon:"🎟️"},
+        {name:"Interview", icon:"🎀"},
+        {name:"NYC", icon:"🗽"},
+      ];
+      chips.forEach(c=>{
+        const el = document.createElement("div");
+        el.className = "chip" + (filters.chips.has(c.name) ? " active" : "");
+        el.innerHTML = `<span class="pillIcon">${c.icon}</span><span>${c.name}</span>`;
+        el.onclick = ()=>{
+          if(filters.chips.has(c.name)) filters.chips.delete(c.name);
+          else filters.chips.add(c.name);
+          renderJobs(false);
+        };
+        row.appendChild(el);
+      });
+
+      const note = document.getElementById("activeFiltersNote");
+      note.textContent = filters.chips.size ? `Filters: ${[...filters.chips].join(", ")}` : "";
     }
 
-    // ----------------- Add job (description) -----------------
+    function startOfToday(){
+      const d = new Date(); d.setHours(0,0,0,0); return d.getTime();
+    }
+    function getAppliedThisWeek(){
+      const weekAgo = Date.now() - 7*24*60*60*1000;
+      return jobs.filter(j => j.createdAt >= weekAgo).length;
+    }
+    function getInterviewsThisMonth(){
+      const d = new Date();
+      const start = new Date(d.getFullYear(), d.getMonth(), 1).getTime();
+      return jobs.filter(j => j.status === "Interview" && j.updatedAt >= start).length;
+    }
+    function getStreak(){
+      const days = new Set();
+      jobs.forEach(j=>{
+        const d = new Date(j.createdAt); d.setHours(0,0,0,0);
+        days.add(d.getTime());
+      });
+      let streak = 0;
+      let t = startOfToday();
+      while(days.has(t)){ streak++; t -= 24*60*60*1000; }
+      return streak;
+    }
+    function getProgressPct(){
+      if(!jobs.length) return 0;
+      const progressed = jobs.filter(j => ["Interview","Offer","Rejected"].includes(j.status)).length;
+      return Math.round((progressed / jobs.length) * 100);
+    }
+
+    function statusRank(s){
+      const order = {"Interview":0,"Awaiting Response":1,"Applied":2,"Offer":3,"Rejected":4};
+      return order[s] ?? 99;
+    }
+    function sortJobs(list){
+      const mode = document.getElementById("sortBy").value;
+      const arr = [...list].sort((a,b)=>(b.pinned===true)-(a.pinned===true));
+
+      if(mode === "newest"){
+        arr.sort((a,b)=> (b.pinned-b.pinned) || (b.pinned - a.pinned) || (b.createdAt - a.createdAt));
+      } else if(mode === "company"){
+        arr.sort((a,b)=> (b.pinned - a.pinned) || a.company.localeCompare(b.company));
+      } else if(mode === "status"){
+        arr.sort((a,b)=> (b.pinned - a.pinned) || (statusRank(a.status)-statusRank(b.status)) || (b.createdAt-a.createdAt));
+      } else if(mode === "followup"){
+        const far = "9999-12-31";
+        arr.sort((a,b)=> (b.pinned - a.pinned) || ((a.followUp||far).localeCompare(b.followUp||far)) || (b.createdAt-a.createdAt));
+      }
+      return arr;
+    }
+
+    function toggleExpand(id){
+      const el = document.getElementById(`card_${id}`);
+      if(el) el.classList.toggle("expanded");
+    }
+    function togglePin(id){
+      const j = jobs.find(x=>x.id===id);
+      if(!j) return;
+      j.pinned = !j.pinned;
+      j.updatedAt = Date.now();
+      saveJobs();
+      renderJobs(false);
+      toast(j.pinned ? "Pinned ⭐" : "Unpinned");
+    }
+    function deleteJob(id){
+      const idx = jobs.findIndex(x=>x.id===id);
+      if(idx === -1) return;
+      jobs.splice(idx,1);
+      saveJobs();
+      renderJobs(false);
+      toast("Deleted 🗑️");
+    }
+
+    // ✅ ONE updateStatus (no duplicates, no stray blocks)
+    function updateStatus(id, newStatus){
+      const j = jobs.find(x=>x.id===id);
+      if(!j) return;
+      j.status = newStatus;
+      j.updatedAt = Date.now();
+      saveJobs();
+      renderJobs(false);
+      toast(`Updated → ${newStatus} ✨`);
+      rotateQuote();
+    }
+
+    function startEdit(id){
+      const j = jobs.find(x=>x.id===id);
+      if(!j) return;
+      j._editing = true;
+      renderJobs(false);
+    }
+    function cancelEdit(id){
+      const j = jobs.find(x=>x.id===id);
+      if(!j) return;
+      j._editing = false;
+      renderJobs(false);
+    }
+    function saveEdit(id){
+      const j = jobs.find(x=>x.id===id);
+      if(!j) return;
+
+      j.company = document.getElementById(`e_company_${id}`).value.trim() || "Company";
+      j.position = document.getElementById(`e_position_${id}`).value.trim() || "Title";
+      j.workStyle = document.getElementById(`e_workStyle_${id}`).value.trim() || "Work type";
+      j.location = document.getElementById(`e_location_${id}`).value.trim() || "Location";
+      j.salary = document.getElementById(`e_salary_${id}`).value.trim() || "Salary";
+      j.url = document.getElementById(`e_url_${id}`).value.trim() || "";
+      j.followUp = document.getElementById(`e_followup_${id}`).value.trim() || "";
+      j.notes = document.getElementById(`e_notes_${id}`).value.trim() || "";
+      j._editing = false;
+      j.updatedAt = Date.now();
+
+      saveJobs();
+      renderJobs(false);
+      toast("Saved ✨");
+    }
+
+    function toggleGraveyard(){
+      graveyardOpen = !graveyardOpen;
+      document.getElementById("graveyardGrid").style.display = graveyardOpen ? "grid" : "none";
+      document.getElementById("graveyardToggle").textContent = graveyardOpen ? "Hide" : "Show";
+    }
+
+    function parseJobDescription(text){
+      // simple, stable parser (no fancy regex bombs)
+      const raw = String(text||"").trim();
+      const firstLine = raw.split(/\r?\n/).map(s=>s.trim()).filter(Boolean)[0] || "";
+      // best-effort guesses
+      return {
+        position: firstLine.slice(0,80) || "",
+        company: "",
+        location: "",
+        workStyle: /\bremote\b/i.test(raw) ? "Remote" : /\bhybrid\b/i.test(raw) ? "Hybrid" : "",
+        salary: ""
+      };
+    }
+
     function addJobFromDescription(){
       const url = document.getElementById("jobLink").value.trim();
       const desc = document.getElementById("jobDesc").value.trim();
-
-      if(!desc && !url){
-        toast("Paste a description (or link) first 🙂");
-        return;
-      }
+      if(!desc && !url){ toast("Paste a description (or link) first 🙂"); return; }
 
       const parsed = parseJobDescription(desc);
-
-      // if missing, ask once so it never saves garbage
-      let company = parsed.company;
-      let position = parsed.position;
-      if(!company) company = (prompt("Couldn’t confidently find the company. What’s the company name?", "") || "").trim();
-      if(!position) position = (prompt("Couldn’t confidently find the job title. What’s the title?", "") || "").trim();
+      let company = parsed.company || prompt("Company name?", "") || "";
+      let position = parsed.position || prompt("Job title?", "") || "";
+      company = company.trim(); position = position.trim();
 
       const now = Date.now();
       const job = normalizeJob({
@@ -1576,26 +1076,17 @@ function enableHoverTilt(){
         updatedAt: now
       });
 
-      if(isDuplicate(job)){
-        const ok = confirm("This looks like a duplicate (same link or same company+title). Add anyway?");
-        if(!ok) return;
-      }
-
       jobs.unshift(job);
       saveJobs();
-      planeSendAnimation();
-      updateGameOnAdd();
-      
 
       document.getElementById("jobLink").value = "";
       document.getElementById("jobDesc").value = "";
 
-      toast("Added ✨");
       rotateQuote();
       renderJobs(false);
+      toast("Added ✨");
     }
 
-    // ----------------- Manual add -----------------
     function addJobManual(){
       const company = (document.getElementById("m_company").value || "").trim();
       const position = (document.getElementById("m_title").value || "").trim();
@@ -1606,10 +1097,7 @@ function enableHoverTilt(){
       const followUp = (document.getElementById("m_followup").value || "").trim();
       const status = document.getElementById("m_status").value;
 
-      if(!company && !position){
-        toast("Add at least Company or Title 🙂");
-        return;
-      }
+      if(!company && !position){ toast("Add at least Company or Title 🙂"); return; }
 
       const now = Date.now();
       const job = normalizeJob({
@@ -1625,200 +1113,28 @@ function enableHoverTilt(){
         updatedAt: now
       });
 
-      if(isDuplicate(job)){
-        const ok = confirm("This looks like a duplicate (same link or same company+title). Add anyway?");
-        if(!ok) return;
-      }
-
       jobs.unshift(job);
       saveJobs();
-      planeSendAnimation();
-      updateGameOnAdd();
 
       ["m_company","m_title","m_location","m_work","m_salary","m_url","m_followup"].forEach(id => document.getElementById(id).value = "");
       document.getElementById("m_status").value = "Applied";
 
-      toast("Added manually 💅");
       rotateQuote();
       renderJobs(false);
+      toast("Added manually 💅");
     }
 
-    // ----------------- Search + chips -----------------
-    function runSearch(){
-      filters.query = document.getElementById("search").value.trim();
-      renderJobs(true);
-    }
-
-    document.addEventListener("keydown", (e) => {
-      if(e.key === "Enter" && document.activeElement?.id === "search"){
-        e.preventDefault();
-        runSearch();
-      }
-    });
-
-    function toggleChip(name){
-      if(filters.chips.has(name)) filters.chips.delete(name);
-      else filters.chips.add(name);
+    function clearFilters(){
+      filters.chips.clear();
+      document.getElementById("search").value = "";
+      filters.query = "";
       buildChips();
       renderJobs(false);
+      toast("Filters cleared ✨");
     }
 
-    function buildChips(){
-      const row = document.getElementById("chipsRow");
-      row.innerHTML = "";
-
-      // base chips requested
-      const base = [
-        {name:"Remote", icon:"🧸"},
-        {name:"Hybrid", icon:"🧋"},
-        {name:"On-site", icon:"🎟️"},
-        {name:"Interview", icon:"🎀"},
-        {name:"NYC", icon:"🗽"},
-      ];
-
-      // dynamic chips from most common locations (top 3)
-      const locCounts = new Map();
-      jobs.forEach(j=>{
-        const l = (j.location || "").trim();
-        if(!l || l === "Location") return;
-        const key = l.length > 18 ? l.slice(0,18) + "…" : l;
-        locCounts.set(key, (locCounts.get(key)||0)+1);
-      });
-      const dynamic = [...locCounts.entries()]
-        .sort((a,b)=>b[1]-a[1])
-        .slice(0,3)
-        .map(([k]) => ({name:k, icon:"📍", dynamic:true}));
-
-      const all = [...base, ...dynamic];
-
-      all.forEach(c=>{
-        const el = document.createElement("div");
-        el.className = "chip" + (filters.chips.has(c.name) ? " active" : "");
-        el.onclick = ()=> {
-          if(c.dynamic){
-            // dynamic chip acts like search token
-            const current = document.getElementById("search").value.trim();
-            document.getElementById("search").value = current ? (current + " " + c.name.replace("…","")) : c.name.replace("…","");
-            filters.query = document.getElementById("search").value.trim();
-            renderJobs(false);
-            toast("Added to search ✨");
-            return;
-          }
-          toggleChip(c.name);
-        };
-        el.innerHTML = `<span class="pillIcon">${c.icon}</span><span>${c.name}</span>`;
-        row.appendChild(el);
-      });
-
-      const note = document.getElementById("activeFiltersNote");
-      note.textContent = filters.chips.size ? `Filters: ${[...filters.chips].join(", ")}` : "";
-    }
-
-    // ----------------- Stats (weekly, monthly, streak) -----------------
-    function startOfToday(){
-      const d = new Date();
-      d.setHours(0,0,0,0);
-      return d.getTime();
-    }
-
-    function getAppliedThisWeek(){
-      const now = Date.now();
-      const weekAgo = now - 7*24*60*60*1000;
-      return jobs.filter(j => j.createdAt >= weekAgo).length;
-    }
-
-    function getInterviewsThisMonth(){
-      const d = new Date();
-      const start = new Date(d.getFullYear(), d.getMonth(), 1).getTime();
-      return jobs.filter(j => j.status === "Interview" && j.updatedAt >= start).length;
-    }
-
-    function getStreak(){
-      // consecutive days with at least one application (createdAt)
-      const days = new Set();
-      jobs.forEach(j=>{
-        const d = new Date(j.createdAt);
-        d.setHours(0,0,0,0);
-        days.add(d.getTime());
-      });
-
-      let streak = 0;
-      let t = startOfToday();
-      while(days.has(t)){
-        streak++;
-        t -= 24*60*60*1000;
-      }
-      return streak;
-    }
-
-    function getProgressPct(){
-      // % that moved beyond Applied/Awaiting (i.e., Interview/Offer/Rejected)
-      if(!jobs.length) return 0;
-      const progressed = jobs.filter(j => (j.status === "Interview" || j.status === "Offer" || j.status === "Rejected")).length;
-      return Math.round((progressed / jobs.length)*100);
-    }
-
-    // ----------------- Export options -----------------
-    function exportEmail(){
-      if(!jobs.length){ toast("No jobs to export yet 🙂"); return; }
-
-      const bodyLines = jobs.map((j, i) => {
-        const statusLine = `${STATUS_LABEL[j.status] || j.status} (${j.status})`;
-        const fu = j.followUp ? `Follow-up: ${j.followUp}\n` : "";
-        return [
-          `${i+1}. ${j.company} — ${j.position}`,
-          `Status: ${statusLine}`,
-          `Work: ${j.workStyle}`,
-          `Location: ${j.location}`,
-          `Salary: ${j.salary}`,
-          fu + (j.url ? `Link: ${j.url}` : `Link: (none)`),
-          `---`
-        ].join("\n");
-      }).join("\n");
-
-      const subject = encodeURIComponent("Delusion Dashboard — Job Tracker Export");
-      const body = encodeURIComponent(bodyLines);
-      window.location.href = `mailto:?subject=${subject}&body=${body}`;
-    }
-
-    function exportSheets(){
-      if(!jobs.length){ toast("No jobs to export yet 🙂"); return; }
-
-      const headers = ["Company","Title","Work","Location","Salary","Link","Status (fun)","Status","FollowUp","Pinned"];
-      const rows = jobs.map(j => [
-        j.company,
-        j.position,
-        j.workStyle,
-        j.location,
-        j.salary,
-        j.url,
-        STATUS_LABEL[j.status] || j.status,
-        j.status,
-        j.followUp,
-        j.pinned ? "YES" : "NO"
-      ]);
-
-      const esc = (v) => {
-        const s = String(v ?? "");
-        if(/[",\n]/.test(s)) return `"${s.replaceAll('"','""')}"`;
-        return s;
-      };
-
-      const csv = [headers, ...rows].map(r => r.map(esc).join(",")).join("\n");
-      const blob = new Blob([csv], { type:"text/csv;charset=utf-8" });
-      const url = URL.createObjectURL(blob);
-
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `delusion-dashboard-${new Date().toISOString().slice(0,10)}.csv`;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      URL.revokeObjectURL(url);
-    }
-
-    function exportBackup(){
-      const data = { exportedAt: new Date().toISOString(), version: 2, jobs };
+    function backupJson(){
+      const data = { exportedAt: new Date().toISOString(), version: 1, jobs };
       const blob = new Blob([JSON.stringify(data, null, 2)], { type:"application/json" });
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
@@ -1838,401 +1154,54 @@ function enableHoverTilt(){
       input.onchange = async () => {
         const file = input.files?.[0];
         if(!file) return;
-
         try{
           const text = await file.text();
-
-          // allow json export
           const parsed = safeJsonParse(text);
-          if(parsed){
-            const incoming = parsed.jobs || parsed;
-            if(!Array.isArray(incoming)) throw new Error("Invalid JSON format");
-            jobs = incoming.map(normalizeJob);
-            saveJobs();
-            buildChips();
-            renderJobs(false);
-            toast("Imported ✅");
-            return;
-          }
-
-          // allow CSV import (basic)
-          if(text.includes(",") && text.toLowerCase().includes("company")){
-            const lines = text.split(/\r?\n/).filter(Boolean);
-            const headers = lines[0].split(",").map(h=>h.trim().toLowerCase());
-            const idx = (name) => headers.indexOf(name.toLowerCase());
-
-            const cI = idx("company");
-            const tI = idx("title");
-            const wI = idx("work");
-            const lI = idx("location");
-            const sI = idx("salary");
-            const linkI = idx("link");
-            const stI = idx("status");
-            const fuI = idx("followup");
-
-            for(let i=1;i<lines.length;i++){
-              const row = lines[i].split(",").map(x=>x.replace(/^"|"$/g,"").replaceAll('""','"'));
-              const job = normalizeJob({
-                company: row[cI] || "Company",
-                position: row[tI] || "Title",
-                workStyle: row[wI] || "Work type",
-                location: row[lI] || "Location",
-                salary: row[sI] || "Salary",
-                url: row[linkI] || "",
-                status: row[stI] || "Applied",
-                followUp: row[fuI] || ""
-              });
-              jobs.push(job);
-            }
-
-            saveJobs();
-            buildChips();
-            renderJobs(false);
-            toast("Imported CSV ✅");
-            return;
-          }
-
-          throw new Error("Unknown file type");
-        } catch(e){
-          alert("Import failed 😭 Use the JSON backup or the CSV export from this dashboard.");
+          const incoming = parsed?.jobs || parsed;
+          if(!Array.isArray(incoming)) throw new Error("Invalid");
+          jobs = incoming.map(normalizeJob);
+          saveJobs();
+          renderJobs(false);
+          toast("Imported ✅");
+        }catch{
+          alert("Import failed 😭 Use the JSON backup from this dashboard.");
         }
       };
     }
 
-    // ----------------- Card actions -----------------
-    function updateStatus(id, newStatus){
-      const j = jobs.find(x => x.id === id);
-      if(!j) return;
-      j.status = newStatus;
-      j.updatedAt = Date.now();
-      saveJobs();
-      if(newStatus === "Offer"){ confetti(); toast("BAG SECURED 💌"); }
-      else if(newStatus === "Rejected"){ toast("Lame (their loss) 🙄"); }
-      else toast("Updated ✨");
-      renderJobs(false);
-      if(newStatus === "Rejected"){
-  const card = document.getElementById(`card_${id}`);
-  if(card){
-    card.classList.add("graveDrop");
-    setTimeout(()=> card.classList.remove("graveDrop"), 650);
-  }
-}
-
-      
-
-if(newStatus === "Interview"){
-  const card = document.getElementById(`card_${id}`);
-  if(card){
-    card.classList.add("sparklePulse");
-    sparkleBurstAround(card);
-    setTimeout(()=> card.classList.remove("sparklePulse"), 1100);
-  }
-}
-    }
-    if(newStatus === "Awaiting Response"){
-  const card = document.getElementById(`card_${id}`);
-  if(card){
-    ghostDriftFrom(card);
-  }
-}
-    if(newStatus === "Offer"){
-  const card = document.getElementById(`card_${id}`);
-  if(card){
-    card.classList.add("bounceCash");
-    chaChing(card);
-    setTimeout(()=> card.classList.remove("bounceCash"), 750);
-  }
-}
-
-    function deleteJob(id){
-  const idx = jobs.findIndex(x => x.id === id);
-  if(idx === -1) return;
-
-  const removed = jobs[idx];
-  jobs.splice(idx, 1);
-  saveJobs();
-  renderJobs(false);
-
-  // clear any previous pending undo
-  if(lastDeleted?.timeoutId) clearTimeout(lastDeleted.timeoutId);
-
-  lastDeleted = {
-    job: removed,
-    index: idx,
-    timeoutId: setTimeout(() => {
-      // after 5s, finalize (do nothing — it's already removed)
-      lastDeleted = null;
-    }, 5000)
-  };
-
-  toast("Deleted 🗑️", {
-    actionText: "UNDO",
-    duration: 5000,
-    onAction: () => {
-      if(!lastDeleted) return;
-      clearTimeout(lastDeleted.timeoutId);
-
-      // restore at original position if possible
-      const insertAt = Math.min(lastDeleted.index, jobs.length);
-      jobs.splice(insertAt, 0, lastDeleted.job);
-      lastDeleted = null;
-
+    function seedDemoJobs(){
+      if(!confirm("This will REPLACE your saved jobs with demo jobs. Continue?")) return;
+      jobs = SEED_JOBS.map(normalizeJob);
       saveJobs();
       renderJobs(false);
-      toast("Restored ✅");
-    }
-  });
-}
-
-    function togglePin(id){
-      const j = jobs.find(x => x.id === id);
-      if(!j) return;
-      j.pinned = !j.pinned;
-      j.updatedAt = Date.now();
-      saveJobs();
-      toast(j.pinned ? "Pinned ⭐" : "Unpinned");
-      renderJobs(false);
+      toast("Demo jobs loaded ✨");
     }
 
-    function toggleExpand(id){
-      const el = document.getElementById(`card_${id}`);
-      if(!el) return;
-      el.classList.toggle("expanded");
-    }
-
-    function startEdit(id){
-      const j = jobs.find(x => x.id === id);
-      if(!j) return;
-      j._editing = true;
-      renderJobs(false);
-    }
-    function cancelEdit(id){
-      const j = jobs.find(x => x.id === id);
-      if(!j) return;
-      j._editing = false;
-      renderJobs(false);
-    }
-    function saveEdit(id){
-      const j = jobs.find(x => x.id === id);
-      if(!j) return;
-
-      j.company = document.getElementById(`e_company_${id}`).value.trim() || "Company";
-      j.position = document.getElementById(`e_position_${id}`).value.trim() || "Title";
-      j.workStyle = document.getElementById(`e_workStyle_${id}`).value.trim() || "Work type";
-      j.location = document.getElementById(`e_location_${id}`).value.trim() || "Location";
-      j.salary = document.getElementById(`e_salary_${id}`).value.trim() || "Salary";
-      j.url = document.getElementById(`e_url_${id}`).value.trim() || "";
-      j.followUp = document.getElementById(`e_followup_${id}`).value.trim() || "";
-      j.notes = document.getElementById(`e_notes_${id}`).value.trim() || "";
-
-      j._editing = false;
-      j.updatedAt = Date.now();
-
-      saveJobs();
-      toast("Saved ✨");
-      renderJobs(false);
-    }
-
-    // ----------------- Graveyard -----------------
-    let graveyardOpen = false;
-    function toggleGraveyard(){
-      graveyardOpen = !graveyardOpen;
-      document.getElementById("graveyardGrid").style.display = graveyardOpen ? "grid" : "none";
-      document.getElementById("graveyardToggle").textContent = graveyardOpen ? "Hide" : "Show";
-    }
-
-    // ----------------- Sorting -----------------
-    function statusRank(s){
-      const order = {"Interview":0,"Awaiting Response":1,"Applied":2,"Offer":3,"Rejected":4};
-      return order[s] ?? 99;
-    }
-
-    function sortJobs(list){
-      const mode = document.getElementById("sortBy").value;
-      const pinnedFirst = (a,b) => (b.pinned === true) - (a.pinned === true);
-
-      const arr = [...list].sort(pinnedFirst);
-
-      if(mode === "newest"){
-        arr.sort((a,b)=> (b.pinned - a.pinned) || (b.createdAt - a.createdAt));
-      } else if(mode === "company"){
-        arr.sort((a,b)=> (b.pinned - a.pinned) || a.company.localeCompare(b.company));
-      } else if(mode === "status"){
-        arr.sort((a,b)=> (b.pinned - a.pinned) || (statusRank(a.status)-statusRank(b.status)) || (b.createdAt-a.createdAt));
-      } else if(mode === "followup"){
-        const far = "9999-12-31";
-        arr.sort((a,b)=> (b.pinned - a.pinned) || ((a.followUp||far).localeCompare(b.followUp||far)) || (b.createdAt-a.createdAt));
-      }
-      return arr;
-    }
-
-    // ----------------- Pie chart + legend -----------------
-    function getStatusCounts(){
-      const counts = {};
-      STATUS_ORDER.forEach(s => counts[s] = 0);
-      jobs.forEach(j => {
-        const s = STATUS_ORDER.includes(j.status) ? j.status : "Applied";
-        counts[s] = (counts[s] || 0) + 1;
-      });
-      return counts;
-    }
-
-    function drawPie(){
-      const canvas = document.getElementById("pie");
-      const ctx = canvas.getContext("2d");
-      const counts = getStatusCounts();
-      const total = Object.values(counts).reduce((a,b)=>a+b,0);
-
-      ctx.clearRect(0,0,canvas.width,canvas.height);
-
-      const cx = canvas.width/2;
-      const cy = canvas.height/2;
-      const r = Math.min(cx,cy) - 8;
-
-      if(total === 0){
-        ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI*2);
-        ctx.fillStyle = "rgba(255,255,255,.65)";
-        ctx.fill();
-        ctx.fillStyle = cssVar("--text");
-        ctx.font = "900 14px 'DM Sans', system-ui";
-        ctx.textAlign = "center";
-        ctx.fillText("No jobs yet", cx, cy);
-        return;
-      }
-
-      const sliceColors = {
-        "Applied": cssVar("--p2"),
-        "Awaiting Response": cssVar("--p3"),
-        "Interview": cssVar("--p1"),
-        "Offer": cssVar("--p4"),
-        "Rejected": cssVar("--p5")
-      };
-
-      let start = -Math.PI/2;
-      STATUS_ORDER.forEach(status => {
-        const val = counts[status] || 0;
-        if(val <= 0) return;
-        const slice = (val/total) * Math.PI*2;
-
-        ctx.beginPath();
-        ctx.moveTo(cx,cy);
-        ctx.arc(cx, cy, r, start, start + slice);
-        ctx.closePath();
-        ctx.fillStyle = sliceColors[status];
-        ctx.fill();
-
-        start += slice;
-      });
-
-      // donut
-      ctx.beginPath();
-      ctx.arc(cx, cy, r*0.58, 0, Math.PI*2);
-      ctx.fillStyle = "rgba(255,255,255,.78)";
-      ctx.fill();
-
-      ctx.fillStyle = cssVar("--text");
-      ctx.font = "950 18px 'DM Sans', system-ui";
-      ctx.textAlign = "center";
-      ctx.fillText(`${total}`, cx, cy-2);
-
-      ctx.font = "900 11px 'DM Sans', system-ui";
-      ctx.fillStyle = cssVar("--muted");
-      ctx.fillText("total", cx, cy+14);
-    }
-
-    function drawLegend(){
-      const el = document.getElementById("legend");
-      const counts = getStatusCounts();
-      const total = Object.values(counts).reduce((a,b)=>a+b,0) || 1;
-
-      const sliceColors = {
-        "Applied": cssVar("--p2"),
-        "Awaiting Response": cssVar("--p3"),
-        "Interview": cssVar("--p1"),
-        "Offer": cssVar("--p4"),
-        "Rejected": cssVar("--p5")
-      };
-
-      el.innerHTML = STATUS_ORDER.map(status => {
-        const val = counts[status] || 0;
-        const pct = Math.round((val/total)*100);
-        return `
-          <div class="legendItem">
-            <div class="legendLeft">
-              <span class="dot" style="background:${sliceColors[status]}"></span>
-              <span class="legendName">${STATUS_LABEL[status]} <span style="opacity:.7">(${status})</span></span>
-            </div>
-            <div>${val} • ${pct}%</div>
-          </div>
-        `;
-      }).join("");
-    }
-// ----------------- Snap sorting (FLIP) -----------------
-let lastPositions = new Map();
-
-function capturePositions(){
-  lastPositions.clear();
-  document.querySelectorAll(".jobCard").forEach(el => {
-    lastPositions.set(el.id, el.getBoundingClientRect());
-  });
-}
-
-function animateReorder(){
-  document.querySelectorAll(".jobCard").forEach(el => {
-    const first = lastPositions.get(el.id);
-    if(!first) return;
-    const last = el.getBoundingClientRect();
-    const dx = first.left - last.left;
-    const dy = first.top - last.top;
-    if(Math.abs(dx) < 1 && Math.abs(dy) < 1) return;
-
-    el.animate([
-      { transform: `translate(${dx}px, ${dy}px)` },
-      { transform: "translate(0px, 0px)" }
-    ], { duration: 260, easing: "cubic-bezier(.2,.9,.2,1)" });
-  });
-}
-    // ----------------- Render -----------------
-    function renderJobs(scrollToMatch=false){
-      capturePositions();
+    function renderJobs(){
       filters.query = document.getElementById("search").value.trim();
-
       const q = filters.query;
+
       const activeGrid = document.getElementById("jobsGrid");
       const graveGrid = document.getElementById("graveyardGrid");
       activeGrid.innerHTML = "";
       graveGrid.innerHTML = "";
 
-      const filtered = jobs.filter(j => {
-  // chips remain hard filters
-  if(!jobMatchesChips(j)) return false;
-  return true;
-});
+      const filtered = jobs.filter(j => jobMatchesChips(j));
+      const ranked = filtered.sort((a,b)=>{
+        const hayA = `${a.company} ${a.position} ${a.location} ${a.workStyle} ${a.salary} ${a.status} ${a.notes||""}`;
+        const hayB = `${b.company} ${b.position} ${b.location} ${b.workStyle} ${b.salary} ${b.status} ${b.notes||""}`;
+        const aMatch = q ? fuzzyMatch(q, hayA) : true;
+        const bMatch = q ? fuzzyMatch(q, hayB) : true;
+        if(aMatch !== bMatch) return bMatch - aMatch;
+        return (b.pinned - a.pinned) || (b.createdAt - a.createdAt);
+      });
 
-      const ranked = [...filtered].sort((a,b) => {
-  const hayA = `${a.company} ${a.position} ${a.location} ${a.workStyle} ${a.salary} ${a.status} ${STATUS_LABEL[a.status]||""} ${a.notes||""}`;
-  const hayB = `${b.company} ${b.position} ${b.location} ${b.workStyle} ${b.salary} ${b.status} ${STATUS_LABEL[b.status]||""} ${b.notes||""}`;
-
-  const aMatch = q ? fuzzyMatch(q, hayA) : true;
-  const bMatch = q ? fuzzyMatch(q, hayB) : true;
-
-  // matches first
-  if(aMatch !== bMatch) return bMatch - aMatch;
-
-  // keep your existing sort as fallback (newest-ish)
-  return (b.pinned - a.pinned) || (b.createdAt - a.createdAt);
-});
-
-      // split active vs graveyard (Rejected)
-const active = ranked.filter(j => j.status !== "Rejected");
-const grave = ranked.filter(j => j.status === "Rejected");
-      
-      const sortedActive = sortJobs(active);
-      const sortedGrave = sortJobs(grave);
+      const active = sortJobs(ranked.filter(j => j.status !== "Rejected"));
+      const grave = sortJobs(ranked.filter(j => j.status === "Rejected"));
 
       // header counts
       document.getElementById("totalApps").textContent = String(jobs.length);
-      document.getElementById("shownCount").textContent = `Showing: ${filtered.length}`;
+      document.getElementById("shownCount").textContent = `Showing: ${ranked.length}`;
       document.getElementById("searchNote").textContent = q ? `Search: “${q}”` : "";
 
       // stats
@@ -2245,21 +1214,15 @@ const grave = ranked.filter(j => j.status === "Rejected");
       document.getElementById("progressPct").textContent = `${pct}%`;
       document.getElementById("progressBar").style.width = `${pct}%`;
 
-      let firstMatchEl = null;
-
       function makeCard(job){
         const card = document.createElement("div");
-        const hay = `${job.company} ${job.position} ${job.location} ${job.workStyle} ${job.salary} ${job.status} ${STATUS_LABEL[job.status]||""} ${job.notes||""}`;
-const isMatch = q ? fuzzyMatch(q, hay) : false;
-
-card.className = "jobCard" + (isMatch ? " match" : "");
+        card.className = "jobCard";
         card.id = `card_${job.id}`;
         card.dataset.status = job.status;
 
         const fun = STATUS_LABEL[job.status] || job.status;
         const icon = STATUS_ICON[job.status] || "✨";
         const pinText = job.pinned ? "Unpin" : "Pin";
-
         const hasLink = !!(job.url && job.url.trim());
         const linkHtml = hasLink
           ? `<a class="linkBtn" href="${escapeAttr(job.url)}" target="_blank" rel="noreferrer">Link</a>`
@@ -2271,7 +1234,7 @@ card.className = "jobCard" + (isMatch ? " match" : "");
           card.innerHTML = `
             <div class="jobTop">
               <span class="tag"><span class="pillIcon">${icon}</span>Editing</span>
-              <select onchange="updateStatus('${job.id}', this.value)">
+              <select onchange="window.updateStatus('${job.id}', this.value)">
                 ${STATUS_ORDER.map(s => `<option ${s===job.status ? "selected":""}>${s}</option>`).join("")}
               </select>
             </div>
@@ -2288,16 +1251,16 @@ card.className = "jobCard" + (isMatch ? " match" : "");
             </div>
 
             <div class="actionsRow">
-              <button class="smallBtn" onclick="cancelEdit('${job.id}')">Cancel</button>
-              <button class="smallBtn primary" onclick="saveEdit('${job.id}')">Save</button>
-              <button class="smallBtn" onclick="deleteJob('${job.id}')">Delete</button>
+              <button class="smallBtn" onclick="window.cancelEdit('${job.id}')">Cancel</button>
+              <button class="smallBtn primary" onclick="window.saveEdit('${job.id}')">Save</button>
+              <button class="smallBtn" onclick="window.deleteJob('${job.id}')">Delete</button>
             </div>
           `;
         } else {
           card.innerHTML = `
             <div class="jobTop">
               <span class="tag"><span class="pillIcon">${icon}</span>${escapeHtml(fun)} <span style="opacity:.75;">(${escapeHtml(job.status)})</span></span>
-              <select onchange="updateStatus('${job.id}', this.value)">
+              <select onchange="window.updateStatus('${job.id}', this.value)">
                 ${STATUS_ORDER.map(s => `<option ${s===job.status ? "selected":""}>${s}</option>`).join("")}
               </select>
             </div>
@@ -2319,10 +1282,10 @@ card.className = "jobCard" + (isMatch ? " match" : "");
 
             <div class="jobLinkRow">
               ${linkHtml}
-              <button class="smallBtn" onclick="toggleExpand('${job.id}')">Details</button>
-              <button class="smallBtn" onclick="togglePin('${job.id}')">${pinText} ⭐</button>
-              <button class="smallBtn" onclick="startEdit('${job.id}')">Edit</button>
-              <button class="smallBtn" onclick="deleteJob('${job.id}')">Delete</button>
+              <button class="smallBtn" onclick="window.toggleExpand('${job.id}')">Details</button>
+              <button class="smallBtn" onclick="window.togglePin('${job.id}')">${pinText} ⭐</button>
+              <button class="smallBtn" onclick="window.startEdit('${job.id}')">Edit</button>
+              <button class="smallBtn" onclick="window.deleteJob('${job.id}')">Delete</button>
             </div>
           `;
         }
@@ -2330,64 +1293,58 @@ card.className = "jobCard" + (isMatch ? " match" : "");
         return card;
       }
 
-      sortedActive.forEach(job => {
-        const card = makeCard(job);
-        activeGrid.appendChild(card);
-        if(!firstMatchEl && isMatch) firstMatchEl = card;
-      });
+      active.forEach(job => activeGrid.appendChild(makeCard(job)));
+      grave.forEach(job => graveGrid.appendChild(makeCard(job)));
 
-      sortedGrave.forEach(job => {
-        const card = makeCard(job);
-        graveGrid.appendChild(card);
-      });
-
-      if(scrollToMatch && firstMatchEl){
-        firstMatchEl.scrollIntoView({ behavior:"smooth", block:"start" });
-      }
-
-      drawPie();
-      drawLegend();
       buildChips();
-      enableHoverTilt();
-      animateReorder();
-      renderBadges();
-      // Spotlight effect: dim non-matches briefly
-if(q){
-  const cards = document.querySelectorAll(".jobCard");
-  cards.forEach(c => c.classList.add("dimmed"));
-  document.querySelectorAll(".jobCard.match").forEach(c => c.classList.remove("dimmed"));
-  setTimeout(()=> cards.forEach(c => c.classList.remove("dimmed")), 400);
-}
     }
 
-    // ----------------- Init -----------------
-    rotateQuote();
-    buildChips();
-    renderJobs(false);
-    renderBadges();
+    function init(){
+      // load from storage (or migrate)
+      const loaded = loadJobs();
 
-    // ----------------- Expose functions (onclick needs these) -----------------
-    window.runSearch = runSearch;
-    window.clearFilters = clearFilters;
+      if(loaded === null){
+        // ✅ if nothing saved yet, seed demo cards so you ALWAYS see job cards
+        jobs = SEED_JOBS.map(normalizeJob);
+        saveJobs();
+      }else{
+        jobs = loaded.map(normalizeJob);
+      }
 
-    window.addJobFromDescription = addJobFromDescription;
-    window.addJobManual = addJobManual;
+      rotateQuote();
+      renderJobs();
 
-    window.exportEmail = exportEmail;
-    window.exportSheets = exportSheets;
-    window.exportBackup = exportBackup;
-    window.importJobs = importJobs;
+      // listeners
+      document.getElementById("searchBtn").onclick = ()=> renderJobs();
+      document.getElementById("addJobBtn").onclick = addJobFromDescription;
+      document.getElementById("clearBtn").onclick = clearFilters;
 
+      document.getElementById("backupBtn").onclick = backupJson;
+      document.getElementById("importBtn").onclick = importJobs;
+      document.getElementById("seedBtn").onclick = seedDemoJobs;
+
+      document.getElementById("manualAddBtn").onclick = addJobManual;
+
+      document.getElementById("sortBy").onchange = ()=> renderJobs();
+
+      document.getElementById("graveyardToggle").onclick = toggleGraveyard;
+
+      document.getElementById("search").addEventListener("keydown", (e)=>{
+        if(e.key === "Enter"){ e.preventDefault(); renderJobs(); }
+      });
+    }
+
+    // ✅ render immediately when the page is ready
+    document.addEventListener("DOMContentLoaded", init);
+
+    // expose for inline onclicks
     window.updateStatus = updateStatus;
     window.deleteJob = deleteJob;
     window.togglePin = togglePin;
     window.toggleExpand = toggleExpand;
-
     window.startEdit = startEdit;
     window.cancelEdit = cancelEdit;
     window.saveEdit = saveEdit;
-
-    window.toggleGraveyard = toggleGraveyard;
   </script>
 </body>
 </html>

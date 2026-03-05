@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>The Delusion Dashboard</title>
 
-  <!-- Cute font -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@500;700;800;900&display=swap" rel="stylesheet">
@@ -26,13 +25,6 @@
       --btnHover:#F39FB4;
 
       --chip:#FFFFFFB8;
-
-      /* pie colors */
-      --p1:#F6B4C4;
-      --p2:#FFD6E2;
-      --p3:#E8F0EE;
-      --p4:#FFF7F0;
-      --p5:#6F5B63;
     }
 
     *{ box-sizing:border-box; }
@@ -629,14 +621,26 @@
         <button class="pillBtn" id="clearBtn">CLEAR FILTERS</button>
       </div>
 
-      <div class="row3">
-        <button class="pillBtn" id="seedBtn">RESET DEMO JOBS</button>
-        <button class="pillBtn" id="backupBtn">BACKUP JSON</button>
-        <button class="pillBtn" id="importBtn">IMPORT</button>
+      <!-- ✅ NEW: Paste Table -->
+      <div class="textareaWrap">
+        <div class="labelRow">
+          <label>Paste Table (Excel / Google Sheets)</label>
+          <span class="subnote">Paste rows like: COMPANY ⇥ POSITION ⇥ LINK ⇥ LOCATION ⇥ STATUS/NOTES</span>
+        </div>
+        <textarea id="bulkTable" placeholder="COMPANY    POSITION    LINK    Location    STATUS
+Ford Foundation    Program Assistant + Talent Pool    https://...    NYC    talent pool applied
+..."></textarea>
+        <div class="row3" style="margin-top:10px;">
+          <button class="pillBtn" id="bulkAddBtn">ADD TABLE ROWS</button>
+          <button class="pillBtn" id="bulkClearBtn">CLEAR TABLE</button>
+          <button class="pillBtn" id="seedBtn">RESET DEMO JOBS</button>
+        </div>
       </div>
 
       <div class="row3">
-        <div class="pillInput" style="grid-column: span 3;">
+        <button class="pillBtn" id="backupBtn">BACKUP JSON</button>
+        <button class="pillBtn" id="importBtn">IMPORT</button>
+        <div class="pillInput">
           <label>Sort</label>
           <select id="sortBy" style="width:100%;">
             <option value="newest">Newest</option>
@@ -713,8 +717,7 @@
           </div>
 
           <div class="subnote" style="margin-top:10px;">
-            If your cards used to only appear after submitting an application: that was a JS error.
-            This version renders immediately on page load (and has demo jobs if storage is empty).
+            Paste your spreadsheet rows in the “Paste Table” box and hit ADD TABLE ROWS.
           </div>
         </div>
       </div>
@@ -743,20 +746,6 @@
   <div class="toast" id="toast"></div>
 
   <script>
-    /**************************************************************
-     *  ✅ FIX for “cards only show after submitting”
-     *  Your old file had:
-     *   - duplicate function updateStatus()
-     *   - stray `if (newStatus === ...)` blocks OUTSIDE a function
-     *  That throws a JS error on page load → render never runs.
-     *
-     *  This file:
-     *   - has ONE updateStatus()
-     *   - has NO stray blocks
-     *   - renders immediately on DOMContentLoaded
-     *   - seeds demo cards if localStorage is empty (so you ALWAYS see cards)
-     **************************************************************/
-
     const STORAGE_KEY = "delusion_dashboard_jobs";
     const OLD_KEYS = [
       "jobs_delusion_dashboard",
@@ -795,10 +784,8 @@
     ];
 
     const SEED_JOBS = [
-      { company:"Attollo Prep", position:"Program Assistant", workStyle:"Hybrid", location:"NYC", salary:"(ask)", url:"", status:"Applied", followUp:"" },
-      { company:"Pearl & Hoyt", position:"Coordinator", workStyle:"On-site", location:"NYC", salary:"(ask)", url:"", status:"Awaiting Response", followUp:"" },
-      { company:"Fleet Feet", position:"Retail Sales Associate", workStyle:"On-site", location:"New York, NY", salary:"(ask)", url:"", status:"Interview", followUp:"" },
-      { company:"Somewhere Cute", position:"Marketing Intern", workStyle:"Remote", location:"Remote", salary:"$20/hr", url:"", status:"Rejected", followUp:"" }
+      { company:"Ford Foundation", position:"Program Assistant", workStyle:"On-site", location:"NYC", salary:"", url:"", status:"Applied", followUp:"", notes:"talent pool applied" },
+      { company:"FINRA", position:"Media Relations Intern", workStyle:"On-site", location:"NYC", salary:"$22-$31", url:"", status:"Awaiting Response", followUp:"", notes:"" }
     ];
 
     let jobs = [];
@@ -842,9 +829,7 @@
       };
     }
 
-    function saveJobs(){
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(jobs));
-    }
+    function saveJobs(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(jobs)); }
 
     function loadJobs(){
       const current = safeJsonParse(localStorage.getItem(STORAGE_KEY));
@@ -857,21 +842,17 @@
           return old;
         }
       }
-      return null; // important: null means “no saved data”
+      return null;
     }
 
     function rotateQuote(){
       document.getElementById("motivationText").textContent = QUOTES[Math.floor(Math.random()*QUOTES.length)];
     }
 
-    // simple fuzzy includes (fast & stable)
-    function norm(s){
-      return String(s||"").toLowerCase().replace(/[^a-z0-9]+/g," ").trim();
-    }
+    function norm(s){ return String(s||"").toLowerCase().replace(/[^a-z0-9]+/g," ").trim(); }
     function fuzzyMatch(q, text){
       q = norm(q); text = norm(text);
       if(!q) return true;
-      // all tokens must appear somewhere
       const tokens = q.split(/\s+/).filter(Boolean);
       return tokens.every(t => text.includes(t));
     }
@@ -908,7 +889,7 @@
         el.onclick = ()=>{
           if(filters.chips.has(c.name)) filters.chips.delete(c.name);
           else filters.chips.add(c.name);
-          renderJobs(false);
+          renderJobs();
         };
         row.appendChild(el);
       });
@@ -917,9 +898,7 @@
       note.textContent = filters.chips.size ? `Filters: ${[...filters.chips].join(", ")}` : "";
     }
 
-    function startOfToday(){
-      const d = new Date(); d.setHours(0,0,0,0); return d.getTime();
-    }
+    function startOfToday(){ const d = new Date(); d.setHours(0,0,0,0); return d.getTime(); }
     function getAppliedThisWeek(){
       const weekAgo = Date.now() - 7*24*60*60*1000;
       return jobs.filter(j => j.createdAt >= weekAgo).length;
@@ -953,9 +932,8 @@
     function sortJobs(list){
       const mode = document.getElementById("sortBy").value;
       const arr = [...list].sort((a,b)=>(b.pinned===true)-(a.pinned===true));
-
       if(mode === "newest"){
-        arr.sort((a,b)=> (b.pinned-b.pinned) || (b.pinned - a.pinned) || (b.createdAt - a.createdAt));
+        arr.sort((a,b)=> (b.pinned - a.pinned) || (b.createdAt - a.createdAt));
       } else if(mode === "company"){
         arr.sort((a,b)=> (b.pinned - a.pinned) || a.company.localeCompare(b.company));
       } else if(mode === "status"){
@@ -977,7 +955,7 @@
       j.pinned = !j.pinned;
       j.updatedAt = Date.now();
       saveJobs();
-      renderJobs(false);
+      renderJobs();
       toast(j.pinned ? "Pinned ⭐" : "Unpinned");
     }
     function deleteJob(id){
@@ -985,18 +963,17 @@
       if(idx === -1) return;
       jobs.splice(idx,1);
       saveJobs();
-      renderJobs(false);
+      renderJobs();
       toast("Deleted 🗑️");
     }
 
-    // ✅ ONE updateStatus (no duplicates, no stray blocks)
     function updateStatus(id, newStatus){
       const j = jobs.find(x=>x.id===id);
       if(!j) return;
       j.status = newStatus;
       j.updatedAt = Date.now();
       saveJobs();
-      renderJobs(false);
+      renderJobs();
       toast(`Updated → ${newStatus} ✨`);
       rotateQuote();
     }
@@ -1005,13 +982,13 @@
       const j = jobs.find(x=>x.id===id);
       if(!j) return;
       j._editing = true;
-      renderJobs(false);
+      renderJobs();
     }
     function cancelEdit(id){
       const j = jobs.find(x=>x.id===id);
       if(!j) return;
       j._editing = false;
-      renderJobs(false);
+      renderJobs();
     }
     function saveEdit(id){
       const j = jobs.find(x=>x.id===id);
@@ -1029,7 +1006,7 @@
       j.updatedAt = Date.now();
 
       saveJobs();
-      renderJobs(false);
+      renderJobs();
       toast("Saved ✨");
     }
 
@@ -1039,98 +1016,96 @@
       document.getElementById("graveyardToggle").textContent = graveyardOpen ? "Hide" : "Show";
     }
 
-    function parseJobDescription(text){
-      // simple, stable parser (no fancy regex bombs)
-      const raw = String(text||"").trim();
-      const firstLine = raw.split(/\r?\n/).map(s=>s.trim()).filter(Boolean)[0] || "";
-      // best-effort guesses
-      return {
-        position: firstLine.slice(0,80) || "",
-        company: "",
-        location: "",
-        workStyle: /\bremote\b/i.test(raw) ? "Remote" : /\bhybrid\b/i.test(raw) ? "Hybrid" : "",
-        salary: ""
+    // ✅ NEW: Bulk table parser (TSV from Excel/Sheets)
+    // Accepts:
+    // COMPANY \t POSITION \t LINK \t LOCATION \t STATUS/NOTES (optional extra columns)
+    function bulkAddFromTable(){
+      const text = document.getElementById("bulkTable").value || "";
+      const lines = text.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+      if(!lines.length){ toast("Paste your table first 🙂"); return; }
+
+      // detect delimiter (tabs are typical, but spaces happen)
+      const hasTabs = lines.some(l => l.includes("\t"));
+      const splitLine = (l) => {
+        if(hasTabs) return l.split("\t").map(x => x.trim());
+        // fallback: 2+ spaces as columns
+        return l.split(/ {2,}/).map(x => x.trim());
       };
-    }
 
-    function addJobFromDescription(){
-      const url = document.getElementById("jobLink").value.trim();
-      const desc = document.getElementById("jobDesc").value.trim();
-      if(!desc && !url){ toast("Paste a description (or link) first 🙂"); return; }
+      // drop header row if it looks like a header
+      const header = splitLine(lines[0]).map(x => x.toLowerCase());
+      const looksLikeHeader =
+        header.includes("company") || header.includes("position") || header.includes("link") || header.includes("location") || header.includes("status");
+      const startIndex = looksLikeHeader ? 1 : 0;
 
-      const parsed = parseJobDescription(desc);
-      let company = parsed.company || prompt("Company name?", "") || "";
-      let position = parsed.position || prompt("Job title?", "") || "";
-      company = company.trim(); position = position.trim();
+      let added = 0;
 
-      const now = Date.now();
-      const job = normalizeJob({
-        company: company || "Company",
-        position: position || "Title",
-        location: parsed.location || "Location",
-        workStyle: parsed.workStyle || "Work type",
-        salary: parsed.salary || "Salary",
-        url,
-        status: "Applied",
-        createdAt: now,
-        updatedAt: now
-      });
+      for(let i = startIndex; i < lines.length; i++){
+        const cols = splitLine(lines[i]);
 
-      jobs.unshift(job);
+        const company = (cols[0] || "").trim();
+        const position = (cols[1] || "").trim();
+        const link = (cols[2] || "").trim();
+        const location = (cols[3] || "").trim();
+
+        // 5th col: can be status or notes/salary/etc.
+        const col5 = (cols[4] || "").trim();
+
+        // If you accidentally put salary in the 5th column (like 60-80k), we store it as salary.
+        const looksLikeSalary = /\$?\s?\d+\s?(?:-|–|to)\s?\$?\s?\d+/i.test(col5) || /\$\s?\d+/i.test(col5) || /\bhr\b|\bhour\b/i.test(col5);
+
+        // default status + notes
+        let status = "Applied";
+        let notes = "";
+        let salary = "Salary";
+
+        if(looksLikeSalary){
+          salary = col5;
+        } else if(col5){
+          // if user wrote "interview" / "offer" / "rejected" etc, map it
+          const s = col5.toLowerCase();
+          if(s.includes("reject")) status = "Rejected";
+          else if(s.includes("offer")) status = "Offer";
+          else if(s.includes("interview")) status = "Interview";
+          else if(s.includes("await") || s.includes("waiting") || s.includes("ghost") || s.includes("response")) status = "Awaiting Response";
+          else if(s.includes("applied")) status = "Applied";
+
+          notes = col5; // keep the original text as notes always
+        }
+
+        // extra columns beyond 5 get appended to notes
+        if(cols.length > 5){
+          const extra = cols.slice(5).filter(Boolean).join(" | ");
+          if(extra){
+            notes = notes ? (notes + " | " + extra) : extra;
+          }
+        }
+
+        if(!company && !position) continue;
+
+        jobs.unshift(normalizeJob({
+          company: company || "Company",
+          position: position || "Title",
+          url: link,
+          location: location || "Location",
+          workStyle: "On-site",
+          salary,
+          status,
+          notes
+        }));
+
+        added++;
+      }
+
       saveJobs();
-
-      document.getElementById("jobLink").value = "";
-      document.getElementById("jobDesc").value = "";
-
+      renderJobs();
       rotateQuote();
-      renderJobs(false);
-      toast("Added ✨");
+      toast(`Added ${added} row(s) ✨`);
     }
 
-    function addJobManual(){
-      const company = (document.getElementById("m_company").value || "").trim();
-      const position = (document.getElementById("m_title").value || "").trim();
-      const location = (document.getElementById("m_location").value || "").trim();
-      const workStyle = (document.getElementById("m_work").value || "").trim();
-      const salary = (document.getElementById("m_salary").value || "").trim();
-      const url = (document.getElementById("m_url").value || "").trim();
-      const followUp = (document.getElementById("m_followup").value || "").trim();
-      const status = document.getElementById("m_status").value;
-
-      if(!company && !position){ toast("Add at least Company or Title 🙂"); return; }
-
-      const now = Date.now();
-      const job = normalizeJob({
-        company: company || "Company",
-        position: position || "Title",
-        location: location || "Location",
-        workStyle: workStyle || "Work type",
-        salary: salary || "Salary",
-        url,
-        status,
-        followUp,
-        createdAt: now,
-        updatedAt: now
-      });
-
-      jobs.unshift(job);
-      saveJobs();
-
-      ["m_company","m_title","m_location","m_work","m_salary","m_url","m_followup"].forEach(id => document.getElementById(id).value = "");
-      document.getElementById("m_status").value = "Applied";
-
-      rotateQuote();
-      renderJobs(false);
-      toast("Added manually 💅");
-    }
-
-    function clearFilters(){
-      filters.chips.clear();
-      document.getElementById("search").value = "";
-      filters.query = "";
-      buildChips();
-      renderJobs(false);
-      toast("Filters cleared ✨");
+    function clearBulkTable(){
+      document.getElementById("bulkTable").value = "";
+      toast("Cleared ✨");
     }
 
     function backupJson(){
@@ -1161,7 +1136,7 @@
           if(!Array.isArray(incoming)) throw new Error("Invalid");
           jobs = incoming.map(normalizeJob);
           saveJobs();
-          renderJobs(false);
+          renderJobs();
           toast("Imported ✅");
         }catch{
           alert("Import failed 😭 Use the JSON backup from this dashboard.");
@@ -1173,7 +1148,7 @@
       if(!confirm("This will REPLACE your saved jobs with demo jobs. Continue?")) return;
       jobs = SEED_JOBS.map(normalizeJob);
       saveJobs();
-      renderJobs(false);
+      renderJobs();
       toast("Demo jobs loaded ✨");
     }
 
@@ -1199,12 +1174,10 @@
       const active = sortJobs(ranked.filter(j => j.status !== "Rejected"));
       const grave = sortJobs(ranked.filter(j => j.status === "Rejected"));
 
-      // header counts
       document.getElementById("totalApps").textContent = String(jobs.length);
       document.getElementById("shownCount").textContent = `Showing: ${ranked.length}`;
       document.getElementById("searchNote").textContent = q ? `Search: “${q}”` : "";
 
-      // stats
       document.getElementById("appliedWeek").textContent = String(getAppliedThisWeek());
       document.getElementById("interviewsMonth").textContent = String(getInterviewsThisMonth());
       document.getElementById("streak").textContent = `${getStreak()} days`;
@@ -1234,7 +1207,7 @@
           card.innerHTML = `
             <div class="jobTop">
               <span class="tag"><span class="pillIcon">${icon}</span>Editing</span>
-              <select onchange="window.updateStatus('${job.id}', this.value)">
+              <select onchange="updateStatus('${job.id}', this.value)">
                 ${STATUS_ORDER.map(s => `<option ${s===job.status ? "selected":""}>${s}</option>`).join("")}
               </select>
             </div>
@@ -1251,16 +1224,16 @@
             </div>
 
             <div class="actionsRow">
-              <button class="smallBtn" onclick="window.cancelEdit('${job.id}')">Cancel</button>
-              <button class="smallBtn primary" onclick="window.saveEdit('${job.id}')">Save</button>
-              <button class="smallBtn" onclick="window.deleteJob('${job.id}')">Delete</button>
+              <button class="smallBtn" onclick="cancelEdit('${job.id}')">Cancel</button>
+              <button class="smallBtn primary" onclick="saveEdit('${job.id}')">Save</button>
+              <button class="smallBtn" onclick="deleteJob('${job.id}')">Delete</button>
             </div>
           `;
         } else {
           card.innerHTML = `
             <div class="jobTop">
               <span class="tag"><span class="pillIcon">${icon}</span>${escapeHtml(fun)} <span style="opacity:.75;">(${escapeHtml(job.status)})</span></span>
-              <select onchange="window.updateStatus('${job.id}', this.value)">
+              <select onchange="updateStatus('${job.id}', this.value)">
                 ${STATUS_ORDER.map(s => `<option ${s===job.status ? "selected":""}>${s}</option>`).join("")}
               </select>
             </div>
@@ -1282,10 +1255,10 @@
 
             <div class="jobLinkRow">
               ${linkHtml}
-              <button class="smallBtn" onclick="window.toggleExpand('${job.id}')">Details</button>
-              <button class="smallBtn" onclick="window.togglePin('${job.id}')">${pinText} ⭐</button>
-              <button class="smallBtn" onclick="window.startEdit('${job.id}')">Edit</button>
-              <button class="smallBtn" onclick="window.deleteJob('${job.id}')">Delete</button>
+              <button class="smallBtn" onclick="toggleExpand('${job.id}')">Details</button>
+              <button class="smallBtn" onclick="togglePin('${job.id}')">${pinText} ⭐</button>
+              <button class="smallBtn" onclick="startEdit('${job.id}')">Edit</button>
+              <button class="smallBtn" onclick="deleteJob('${job.id}')">Delete</button>
             </div>
           `;
         }
@@ -1300,33 +1273,96 @@
     }
 
     function init(){
-      // load from storage (or migrate)
       const loaded = loadJobs();
-
       if(loaded === null){
-        // ✅ if nothing saved yet, seed demo cards so you ALWAYS see job cards
         jobs = SEED_JOBS.map(normalizeJob);
         saveJobs();
-      }else{
+      } else {
         jobs = loaded.map(normalizeJob);
       }
 
       rotateQuote();
       renderJobs();
 
-      // listeners
       document.getElementById("searchBtn").onclick = ()=> renderJobs();
-      document.getElementById("addJobBtn").onclick = addJobFromDescription;
-      document.getElementById("clearBtn").onclick = clearFilters;
+      document.getElementById("addJobBtn").onclick = ()=> {
+        // keep the simple add (company/title prompts)
+        const url = document.getElementById("jobLink").value.trim();
+        const desc = document.getElementById("jobDesc").value.trim();
+        if(!desc && !url){ toast("Paste a description (or link) first 🙂"); return; }
+
+        const firstLine = desc.split(/\r?\n/).map(s=>s.trim()).filter(Boolean)[0] || "";
+        let company = prompt("Company name?", "") || "";
+        let position = firstLine || (prompt("Job title?", "") || "");
+        company = company.trim(); position = position.trim();
+
+        jobs.unshift(normalizeJob({
+          company: company || "Company",
+          position: position || "Title",
+          url,
+          location: "Location",
+          workStyle: "Work type",
+          salary: "Salary",
+          status: "Applied",
+          notes: ""
+        }));
+
+        saveJobs();
+        document.getElementById("jobLink").value = "";
+        document.getElementById("jobDesc").value = "";
+        renderJobs();
+        rotateQuote();
+        toast("Added ✨");
+      };
+      document.getElementById("clearBtn").onclick = ()=> {
+        filters.chips.clear();
+        document.getElementById("search").value = "";
+        filters.query = "";
+        buildChips();
+        renderJobs();
+        toast("Filters cleared ✨");
+      };
+
+      document.getElementById("bulkAddBtn").onclick = bulkAddFromTable;
+      document.getElementById("bulkClearBtn").onclick = clearBulkTable;
 
       document.getElementById("backupBtn").onclick = backupJson;
       document.getElementById("importBtn").onclick = importJobs;
       document.getElementById("seedBtn").onclick = seedDemoJobs;
 
-      document.getElementById("manualAddBtn").onclick = addJobManual;
+      document.getElementById("manualAddBtn").onclick = ()=> {
+        const company = (document.getElementById("m_company").value || "").trim();
+        const position = (document.getElementById("m_title").value || "").trim();
+        const location = (document.getElementById("m_location").value || "").trim();
+        const workStyle = (document.getElementById("m_work").value || "").trim();
+        const salary = (document.getElementById("m_salary").value || "").trim();
+        const url = (document.getElementById("m_url").value || "").trim();
+        const followUp = (document.getElementById("m_followup").value || "").trim();
+        const status = document.getElementById("m_status").value;
+
+        if(!company && !position){ toast("Add at least Company or Title 🙂"); return; }
+
+        jobs.unshift(normalizeJob({
+          company: company || "Company",
+          position: position || "Title",
+          location: location || "Location",
+          workStyle: workStyle || "Work type",
+          salary: salary || "Salary",
+          url,
+          status,
+          followUp
+        }));
+
+        saveJobs();
+        ["m_company","m_title","m_location","m_work","m_salary","m_url","m_followup"].forEach(id => document.getElementById(id).value = "");
+        document.getElementById("m_status").value = "Applied";
+
+        renderJobs();
+        rotateQuote();
+        toast("Added manually 💅");
+      };
 
       document.getElementById("sortBy").onchange = ()=> renderJobs();
-
       document.getElementById("graveyardToggle").onclick = toggleGraveyard;
 
       document.getElementById("search").addEventListener("keydown", (e)=>{
@@ -1334,7 +1370,6 @@
       });
     }
 
-    // ✅ render immediately when the page is ready
     document.addEventListener("DOMContentLoaded", init);
 
     // expose for inline onclicks

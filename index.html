@@ -489,8 +489,14 @@
       overflow: hidden;
       transform-origin: top center;
       background: var(--card);
+      transform-style: preserve-3d;
+      transition: transform 120ms ease, box-shadow 200ms ease;
+      will-change: transform;
       position: relative;
     }
+    .jobCard.tilt{
+  box-shadow: 0 22px 34px rgba(111,91,99,.14);
+}
 
     /* status glow */
     .jobCard[data-status="Applied"]{ background: linear-gradient(180deg, rgba(255,214,226,.65), rgba(255,255,255,.75)); }
@@ -504,6 +510,11 @@
       box-shadow: 0 18px 30px rgba(246,180,196,.28);
       animation: pop .22s ease-out;
     }
+    .jobCard.dimmed{
+  filter: blur(1.2px) saturate(.85);
+  opacity: .65;
+  transition: filter 300ms ease, opacity 300ms ease;
+}
     @keyframes pop{
       from{ transform: scale(.985); }
       to{ transform: scale(1); }
@@ -708,6 +719,37 @@
   100% { transform: scale(1); filter: drop-shadow(0 0 0 rgba(246,180,196,0)); }
 }
 .jobCard.sparklePulse { animation: sparklePulse 1s ease-out; }
+    /* ---- Offer jackpot ---- */
+@keyframes bounceCash {
+  0% { transform: scale(1); }
+  35% { transform: scale(1.02); }
+  60% { transform: scale(0.99); }
+  100% { transform: scale(1); }
+}
+.jobCard.bounceCash { animation: bounceCash 650ms ease-out; }
+
+    /* ---- Rejected graveyard drop ---- */
+@keyframes graveDrop {
+  0% { transform: translateY(0); opacity: 1; }
+  100% { transform: translateY(18px); opacity: .75; }
+}
+.jobCard.graveDrop { animation: graveDrop 520ms ease-out; }
+
+.chaChingFx{
+  position: fixed;
+  z-index: 9997;
+  transform: translate(-50%, -50%);
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.85);
+  border: 1px solid rgba(111,91,99,.18);
+  font-weight: 950;
+  letter-spacing: .7px;
+  text-transform: uppercase;
+  box-shadow: 0 18px 30px rgba(111,91,99,.18);
+  opacity: 0;
+  will-change: transform, opacity;
+}
 
 .sparkleFx{
   position: fixed;
@@ -854,6 +896,14 @@
               <div class="v" id="pinnedCount">0</div>
             </div>
           </div>
+          <div class="miniBox">
+                <div class="k">Productivity level</div>
+                <div class="v" id="prodLevel">1</div>
+              </div>
+              <div class="miniBox">
+                <div class="k">Badges</div>
+                <div class="v" id="badges" style="font-size:12px; font-weight:950; line-height:1.2;">—</div>
+              </div>
 
           <div class="progressWrap">
             <div class="progressTop">
@@ -921,6 +971,98 @@
     }
 
     let jobs = loadJobs().map(normalizeJob);
+    // ----------------- Productivity game (badges + leveling) -----------------
+const GAME_KEY = "delusion_dashboard_game";
+let game = safeJsonParse(localStorage.getItem(GAME_KEY)) || {
+  totalAppsEver: 0,
+  badges: {},
+  streak: 0,
+  lastAppDay: ""
+};
+
+function saveGame(){ localStorage.setItem(GAME_KEY, JSON.stringify(game)); }
+
+function updateGameOnAdd(){
+  game.totalAppsEver += 1;
+
+  // streak based on adding apps (daily)
+  const t = todayYMD();
+  if(game.lastAppDay !== t){
+    const d = new Date();
+    const y = new Date(d.getFullYear(), d.getMonth(), d.getDate()-1);
+    const ymd = `${y.getFullYear()}-${String(y.getMonth()+1).padStart(2,"0")}-${String(y.getDate()).padStart(2,"0")}`;
+    game.streak = (game.lastAppDay === ymd) ? (game.streak + 1) : 1;
+    game.lastAppDay = t;
+  }
+
+  if(game.totalAppsEver >= 5) game.badges.apps5 = true;
+  if(game.totalAppsEver >= 25) game.badges.apps25 = true;
+
+  saveGame();
+}
+
+function updateStatus(id, newStatus){
+  const j = jobs.find(x => x.id === id);
+  if(!j) return;
+
+  j.status = newStatus;
+  j.updatedAt = Date.now();
+  saveJobs();
+
+  // gamification
+  updateGameOnStatus(newStatus);
+
+  // toast/confetti
+  if(newStatus === "Offer"){ confetti(); toast("BAG SECURED 💌"); }
+  else if(newStatus === "Rejected"){ toast("Lame (their loss) 🙄"); }
+  else toast("Updated ✨");
+
+  // FX
+  const card = document.getElementById(`card_${id}`);
+
+  if(newStatus === "Rejected" && card){
+    card.classList.add("graveDrop");
+    setTimeout(()=> card.classList.remove("graveDrop"), 650);
+  }
+
+  if(newStatus === "Interview" && card){
+    card.classList.add("sparklePulse");
+    sparkleBurstAround(card);
+    setTimeout(()=> card.classList.remove("sparklePulse"), 1100);
+  }
+
+  if(newStatus === "Awaiting Response" && card){
+    ghostDriftFrom(card);
+  }
+
+  if(newStatus === "Offer" && card){
+    card.classList.add("bounceCash");
+    chaChing(card);
+    setTimeout(()=> card.classList.remove("bounceCash"), 750);
+  }
+
+  renderJobs(false);
+}
+
+function productivityLevel(){
+  // level up every 5 apps
+  return Math.max(1, Math.floor(game.totalAppsEver / 5) + 1);
+}
+
+function renderBadges(){
+  const lvlEl = document.getElementById("prodLevel");
+  const badgeEl = document.getElementById("badges");
+  if(lvlEl) lvlEl.textContent = String(productivityLevel());
+
+  const badges = [];
+  if(game.badges.apps5) badges.push("🏅 5 apps");
+  if(game.badges.apps25) badges.push("🏆 25 apps");
+  if(game.badges.firstInterview) badges.push("🎀 first interview");
+  if(game.badges.firstOffer) badges.push("💌 first offer");
+  if(game.badges.streak7) badges.push("🔥 7-day streak");
+
+  if(badgeEl) badgeEl.textContent = badges.length ? badges.join(" • ") : "No badges yet (soon 😈)";
+}
     let lastDeleted = null;      // { job, index, timeoutId }
     let undoTimerId = null;
 
@@ -1108,6 +1250,47 @@ function ghostDriftFrom(el){
   ], { duration: 900, easing: "ease-out" });
 
   setTimeout(()=> g.remove(), 950);
+}
+    // 💸 Cha-ching popup (Offer)
+function chaChing(el){
+  if(!el) return;
+  const r = el.getBoundingClientRect();
+  const x = r.left + r.width/2;
+  const y = r.top - 10;
+
+  const c = spawnFx("💸 CHA-CHING 💸", "chaChingFx", x, y);
+  if(!c) return;
+
+  c.animate([
+    { opacity: 0, transform: "translate(-50%,-50%) translateY(10px) scale(.96)" },
+    { opacity: 1, transform: "translate(-50%,-50%) translateY(0px) scale(1)" },
+    { opacity: 0, transform: "translate(-50%,-50%) translateY(-18px) scale(1.02)" }
+  ], { duration: 900, easing: "ease-out" });
+
+  setTimeout(()=> c.remove(), 950);
+}
+    // 🪩 Hover tilt on cards
+function enableHoverTilt(){
+  const cards = document.querySelectorAll(".jobCard");
+  cards.forEach(card => {
+    if(card.dataset.tiltBound === "1") return;
+    card.dataset.tiltBound = "1";
+
+    card.addEventListener("mousemove", (e) => {
+      const r = card.getBoundingClientRect();
+      const px = (e.clientX - r.left) / r.width;
+      const py = (e.clientY - r.top) / r.height;
+      const rotY = (px - 0.5) * 8;
+      const rotX = (0.5 - py) * 8;
+      card.classList.add("tilt");
+      card.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg)`;
+    });
+
+    card.addEventListener("mouseleave", () => {
+      card.classList.remove("tilt");
+      card.style.transform = "";
+    });
+  });
 }
     // ----------------- Helpers -----------------
     function cssVar(name){
@@ -1401,6 +1584,8 @@ function ghostDriftFrom(el){
       jobs.unshift(job);
       saveJobs();
       planeSendAnimation();
+      updateGameOnAdd();
+      
 
       document.getElementById("jobLink").value = "";
       document.getElementById("jobDesc").value = "";
@@ -1448,6 +1633,7 @@ function ghostDriftFrom(el){
       jobs.unshift(job);
       saveJobs();
       planeSendAnimation();
+      updateGameOnAdd();
 
       ["m_company","m_title","m_location","m_work","m_salary","m_url","m_followup"].forEach(id => document.getElementById(id).value = "");
       document.getElementById("m_status").value = "Applied";
@@ -1724,6 +1910,15 @@ function ghostDriftFrom(el){
       else if(newStatus === "Rejected"){ toast("Lame (their loss) 🙄"); }
       else toast("Updated ✨");
       renderJobs(false);
+      if(newStatus === "Rejected"){
+  const card = document.getElementById(`card_${id}`);
+  if(card){
+    card.classList.add("graveDrop");
+    setTimeout(()=> card.classList.remove("graveDrop"), 650);
+  }
+}
+
+      
 
 if(newStatus === "Interview"){
   const card = document.getElementById(`card_${id}`);
@@ -1738,6 +1933,14 @@ if(newStatus === "Interview"){
   const card = document.getElementById(`card_${id}`);
   if(card){
     ghostDriftFrom(card);
+  }
+}
+    if(newStatus === "Offer"){
+  const card = document.getElementById(`card_${id}`);
+  if(card){
+    card.classList.add("bounceCash");
+    chaChing(card);
+    setTimeout(()=> card.classList.remove("bounceCash"), 750);
   }
 }
 
@@ -1964,9 +2167,34 @@ if(newStatus === "Interview"){
         `;
       }).join("");
     }
+// ----------------- Snap sorting (FLIP) -----------------
+let lastPositions = new Map();
 
+function capturePositions(){
+  lastPositions.clear();
+  document.querySelectorAll(".jobCard").forEach(el => {
+    lastPositions.set(el.id, el.getBoundingClientRect());
+  });
+}
+
+function animateReorder(){
+  document.querySelectorAll(".jobCard").forEach(el => {
+    const first = lastPositions.get(el.id);
+    if(!first) return;
+    const last = el.getBoundingClientRect();
+    const dx = first.left - last.left;
+    const dy = first.top - last.top;
+    if(Math.abs(dx) < 1 && Math.abs(dy) < 1) return;
+
+    el.animate([
+      { transform: `translate(${dx}px, ${dy}px)` },
+      { transform: "translate(0px, 0px)" }
+    ], { duration: 260, easing: "cubic-bezier(.2,.9,.2,1)" });
+  });
+}
     // ----------------- Render -----------------
     function renderJobs(scrollToMatch=false){
+      capturePositions();
       filters.query = document.getElementById("search").value.trim();
 
       const q = filters.query;
@@ -1976,21 +2204,29 @@ if(newStatus === "Interview"){
       graveGrid.innerHTML = "";
 
       const filtered = jobs.filter(j => {
-        // chips
-        if(!jobMatchesChips(j)) return false;
+  // chips remain hard filters
+  if(!jobMatchesChips(j)) return false;
+  return true;
+});
 
-        // fuzzy search
-        if(q){
-          const hay = `${j.company} ${j.position} ${j.location} ${j.workStyle} ${j.salary} ${j.status} ${STATUS_LABEL[j.status]||""} ${j.notes||""}`;
-          if(!fuzzyMatch(q, hay)) return false;
-        }
-        return true;
-      });
+      const ranked = [...filtered].sort((a,b) => {
+  const hayA = `${a.company} ${a.position} ${a.location} ${a.workStyle} ${a.salary} ${a.status} ${STATUS_LABEL[a.status]||""} ${a.notes||""}`;
+  const hayB = `${b.company} ${b.position} ${b.location} ${b.workStyle} ${b.salary} ${b.status} ${STATUS_LABEL[b.status]||""} ${b.notes||""}`;
+
+  const aMatch = q ? fuzzyMatch(q, hayA) : true;
+  const bMatch = q ? fuzzyMatch(q, hayB) : true;
+
+  // matches first
+  if(aMatch !== bMatch) return bMatch - aMatch;
+
+  // keep your existing sort as fallback (newest-ish)
+  return (b.pinned - a.pinned) || (b.createdAt - a.createdAt);
+});
 
       // split active vs graveyard (Rejected)
-      const active = filtered.filter(j => j.status !== "Rejected");
-      const grave = filtered.filter(j => j.status === "Rejected");
-
+const active = ranked.filter(j => j.status !== "Rejected");
+const grave = ranked.filter(j => j.status === "Rejected");
+      
       const sortedActive = sortJobs(active);
       const sortedGrave = sortJobs(grave);
 
@@ -2013,7 +2249,10 @@ if(newStatus === "Interview"){
 
       function makeCard(job){
         const card = document.createElement("div");
-        card.className = "jobCard" + (q ? " match" : "");
+        const hay = `${job.company} ${job.position} ${job.location} ${job.workStyle} ${job.salary} ${job.status} ${STATUS_LABEL[job.status]||""} ${job.notes||""}`;
+const isMatch = q ? fuzzyMatch(q, hay) : false;
+
+card.className = "jobCard" + (isMatch ? " match" : "");
         card.id = `card_${job.id}`;
         card.dataset.status = job.status;
 
@@ -2094,7 +2333,7 @@ if(newStatus === "Interview"){
       sortedActive.forEach(job => {
         const card = makeCard(job);
         activeGrid.appendChild(card);
-        if(!firstMatchEl) firstMatchEl = card;
+        if(!firstMatchEl && isMatch) firstMatchEl = card;
       });
 
       sortedGrave.forEach(job => {
@@ -2109,12 +2348,23 @@ if(newStatus === "Interview"){
       drawPie();
       drawLegend();
       buildChips();
+      enableHoverTilt();
+      animateReorder();
+      renderBadges();
+      // Spotlight effect: dim non-matches briefly
+if(q){
+  const cards = document.querySelectorAll(".jobCard");
+  cards.forEach(c => c.classList.add("dimmed"));
+  document.querySelectorAll(".jobCard.match").forEach(c => c.classList.remove("dimmed"));
+  setTimeout(()=> cards.forEach(c => c.classList.remove("dimmed")), 400);
+}
     }
 
     // ----------------- Init -----------------
     rotateQuote();
     buildChips();
     renderJobs(false);
+    renderBadges();
 
     // ----------------- Expose functions (onclick needs these) -----------------
     window.runSearch = runSearch;

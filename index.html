@@ -665,7 +665,11 @@ Ford Foundation    Program Assistant + Talent Pool    https://...    NYC    tale
           <input class="miniInput" id="m_title" placeholder="Title" />
           <input class="miniInput" id="m_location" placeholder="Location (e.g., NYC)" />
 
-          <input class="miniInput" id="m_work" placeholder="Work type (Remote/Hybrid/On-site)" />
+          <select id="m_work" class="miniInput">
+              <option value="On-site" selected>On-site</option>
+              <option value="Hybrid">Hybrid</option>
+              <option value="Remote">Remote</option>
+          </select>
           <input class="miniInput" id="m_salary" placeholder="Salary / Pay" />
           <input class="miniInput" id="m_url" placeholder="Link (optional)" />
 
@@ -1354,8 +1358,8 @@ Ford Foundation    Program Assistant + Talent Pool    https://...    NYC    tale
         }));
 
         saveJobs();
-        ["m_company","m_title","m_location","m_work","m_salary","m_url","m_followup"].forEach(id => document.getElementById(id).value = "");
-        document.getElementById("m_status").value = "Applied";
+        ["m_company","m_title","m_location","m_salary","m_url","m_followup"].forEach(id => document.getElementById(id).value = "");
+        document.getElementById("m_work").value = "On-site";        document.getElementById("m_status").value = "Applied";
 
         renderJobs();
         rotateQuote();
